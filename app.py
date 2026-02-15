@@ -1,8 +1,8 @@
 import pandas as pd
 import streamlit as st
 from utils.config import sport_icon
-from utils.fonctions import *
-#from utils import fonctions as f
+#from utils.fonctions import *
+from utils import fonctions as f
 
 
 data_file = "data/races5.parquet"
@@ -24,7 +24,7 @@ with tab2:
     st.subheader("Analyse comparative : Triathlon")
 
     liste_athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
-    df_Tri = Filter_By_Sport(df_all_parquet, "Triathlon")
+    df_Tri = f.Filter_By_Sport(df_all_parquet, "Triathlon")
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
