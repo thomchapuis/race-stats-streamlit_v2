@@ -30,7 +30,7 @@ with tab2:
         
         # Appel de ta fonction de visualisation
         # Assure-toi que Viz_Radar_Triathlon utilise st.plotly_chart ou st.pyplot en interne
-        Viz_Radar_Triathlon(df_TT, liste_athletes)
+        f.Viz_Radar_Triathlon(df_TT, liste_athletes)
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
