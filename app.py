@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+from utils import sport_icon
 
 data_file = "data/races5.parquet"
 
@@ -39,19 +40,17 @@ with tab3:
         # Le premier chiffre de la liste définit la largeur relative
         cols = st.columns(len(courses_par_sport) + 1)
         
-        # Colonne 1 : Le Total Global
         with cols[0]:
             st.metric(
-                label="🏁 Total Courses", 
+                label="🏁 Total", 
                 value=f"{nb_courses:,}".replace(",", " ")
             )
-        
-        # Colonnes suivantes : Détail par sport
-        # On utilise zip(cols[1:]) pour commencer à remplir à partir de la deuxième colonne
+
         for col, (sport, nb) in zip(cols[1:], courses_par_sport.items()):
             with col:
+                label_with_icon = f"{sport_icon(sport)} {sport}"
                 st.metric(
-                    label=sport,
+                    label=label_with_icon,
                     value=f"{nb:,}".replace(",", " ")
                 )
 ########################## ########################## ########################## ########################## ########################## 
