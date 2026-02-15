@@ -26,7 +26,7 @@ with tab1:
     df_Race = df_Race.sort_values("rank")
     
     #st.write(f"Classement pour : **{liste_courses_athlete.set_index('race_id').loc[choix_course, 'race_name']}**")
-    st.write(f"📊 **Histogramme des temps :** {nom_recherche}")
+    #st.write(f"📊 **Histogramme des temps :** {nom_recherche}")
     fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')         
     st.plotly_chart(fig_histo, use_container_width=True)
 
