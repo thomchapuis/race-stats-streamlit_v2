@@ -49,24 +49,6 @@ with tab2:
                 st.metric(label="Nombre total de courses", value=nb_courses_coureur)
 
             st.divider()
-
-            # Optionnel : Afficher les sports pratiqués par ce coureur
-            st.write("**Sports pratiqués :**")
-            sports_du_coureur = df_coureur["sport"].unique()
-            
-            # On utilise ta fonction sport_icon pour chaque sport trouvé
-            cols_sports = st.columns(len(sports_du_coureur))
-            for i, sport in enumerate(sports_du_coureur):
-                with cols_sports[i]:
-                    st.write(f"{sport_icon(sport)} {sport}")
-
-            # Optionnel : Afficher la liste de ses dernières courses
-            st.write("**Historique récent :**")
-            st.dataframe(
-                df_coureur[["date", "race_name", "sport", "rank"]].sort_values("date", ascending=False).head(5),
-                use_container_width=True,
-                hide_index=True
-            )
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
