@@ -29,7 +29,9 @@ with tab2:
     # On peut proposer une liste déroulante avec recherche intégrée pour éviter les fautes de frappe
     all_athletes = sorted(df_all_parquet["name_key"].unique())
     nom_recherche = st.selectbox("Rechercher un coureur :", options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
-    
+
+
+    st.write(f.Filter_By_Athlete(df_all_parquet,nom_recherche).head())
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     st.subheader("Analyse comparative : Triathlon")
