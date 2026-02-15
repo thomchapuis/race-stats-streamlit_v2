@@ -55,12 +55,12 @@ with tab2:
     st.subheader("📊 Consulter un classement")
 
     all_races = sorted(df_all_parquet["race_name"].unique())
-    race_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
+    race_recherche1 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
 
-    if not race_recherche:
+    if not race_recherche1:
         st.warning("Veuillez sélectionner une course pour afficher le classement.")
     else:
-        df_Race = f.Filter_By_Race(df_all_parquet, race_recherche)
+        df_Race = f.Filter_By_Race(df_all_parquet, race_recherche1)
         df_Race = df_Race.sort_values("rank")
     
         # 1) Affichage de l'histogramme
@@ -203,12 +203,12 @@ with tab3:
             
             with st.container(border=True):
                 all_races = sorted(df_coureur["race_name"].unique())
-                race_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
+                race_recherche2 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
             
-                if not race_recherche:
+                if not race_recherche2:
                     st.warning("Veuillez sélectionner une course pour afficher le classement.")
                 else:
-                    df_Race = f.Filter_By_Race(df_all_parquet, race_recherche)
+                    df_Race = f.Filter_By_Race(df_all_parquet, race_recherche2)
                     fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_Race,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur, width='stretch')                    
 
