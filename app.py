@@ -21,7 +21,7 @@ with tab1:
     st.write(df_all_parquet.head())
     all_races = sorted(df_all_parquet["race_name"].unique())
     nom_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
-    df_Race = Filter_By_Race(df_all_parquet,nom_recherche)
+    df_Race = f.Filter_By_Race(df_all_parquet,nom_recherche)
     
     #st.write(f"Classement pour : **{liste_courses_athlete.set_index('race_id').loc[choix_course, 'race_name']}**")
     
