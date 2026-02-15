@@ -15,7 +15,7 @@ def load_data():
 
 df_all_parquet = load_data()
 
-tab1,tab2, tab3, tab4 = st.tabs(["Classement", "👤 Coureur","Triathlon", "⚙️ Settings"])
+tab1,tab2, tab3, tab4 = st.tabs(["Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     #st.write(df_all_parquet.head())
