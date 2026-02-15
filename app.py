@@ -20,41 +20,38 @@ with tab2:
     st.write(df_all_parquet.head())
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
-    st.metric(
-        label="Source des données",
-        value=data_file
-    )  
+    # 1) Affichage de la source de données tout en haut
+    st.metric(label="Source des données", value=data_file)
     
-    nb_courses = df_all_parquet["race_id"].nunique() 
-    st.subheader("Indicateurs clés")
-    col1, col2, _ = st.columns([1, 1, 3])
-    with col1:
-        st.metric(
-            label="Source des données",
-            value=data_file
-        )     
-    with col2:
-        st.metric(
-            label="🏁 Nombre de courses",
-            value=f"{nb_courses:,}".replace(",", " ")
-        )
-    
-    st.subheader("Sports représentés")
+    # Préparation des données
+    nb_courses = df_all_parquet["race_id"].nunique()
     courses_par_sport = (
         df_all_parquet
         .groupby("sport")["race_id"]
         .nunique()
         .sort_values(ascending=False)
     )
+    st.subheader("Indicateurs clés")
     
-    # Affichage en cartes (colonnes dynamiques)
+    # 2) Un seul gros container pour le total et le détail par sport
     with st.container(border=True):
-        cols = st.columns(len(courses_par_sport))
-    
-        for col, (sport, nb) in zip(cols, courses_par_sport.items()):
+        # On crée autant de colonnes que (Total + nombre de sports)
+        # Le premier chiffre de la liste définit la largeur relative
+        cols = st.columns(len(courses_par_sport) + 1)
+        
+        # Colonne 1 : Le Total Global
+        with cols[0]:
+            st.metric(
+                label="🏁 Total Courses", 
+                value=f"{nb_courses:,}".replace(",", " ")
+            )
+        
+        # Colonnes suivantes : Détail par sport
+        # On utilise zip(cols[1:]) pour commencer à remplir à partir de la deuxième colonne
+        for col, (sport, nb) in zip(cols[1:], courses_par_sport.items()):
             with col:
-                st.markdown(
-                    f"### {nb} {sport}s"
+                st.metric(
+                    label=sport,
+                    value=f"{nb:,}".replace(",", " ")
                 )
-
 ########################## ########################## ########################## ########################## ########################## 
