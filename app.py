@@ -163,10 +163,11 @@ with tab3:
             st.subheader("💪🏼 Meilleures Performances")
             df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
             #st.metric(label=df_solo.columns[18], value=df_solo.iloc[0, 18])
-            longest_race = df_solo.loc[df_solo['Distance'].idxmax()]
+            #longest_race = df_solo.loc[df_solo['Distance'].idxmax()]
+            longest_race_row = df_solo.loc[df_solo['Distance'].idxmax()]
             st.metric(
                 label="Plus longue course", 
-                value=f"{int(longest_race['Distance'])}"
+                value=f"{int(longest_race_row['Distance'])}"
             )
             # Affichage du nom de la course et du sport
             st.caption(f"**Course :** {row_best['race_name']}")
