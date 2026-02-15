@@ -102,13 +102,13 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     Parameters:
     - df_race: DataFrame contenant les données de la course.
     - col: Nom de la colonne contenant les temps (ex: 'time' ou 't1').
-    - names: Liste des noms des personnes dont les temps seront mis en évidence.
-
-    Utilisation: 
-    #Viz_Histogramme_Temps_Names(df_test,'time',['Thomas CHAPUIS','Théo Bompas'])
-
+    - names: Liste des noms des personnes (ou un seul nom) dont les temps seront mis en évidence.
     """
     df = df_race.copy()
+
+    # Convertir names en liste si ce n'est pas déjà le cas
+    if isinstance(names, str):
+        names = [names]
 
     # 1. Conversion des temps en format timedelta puis en minutes
     if df[col].dtype == 'object' or pd.api.types.is_timedelta64_dtype(df[col]):
@@ -121,12 +121,11 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
 
     # 2. Récupération des temps des personnes cherchées
     temps_dict = {}
-    name_dict ={}
     for name in names:
         clean_name = get_clean_key(name)
         temps = df.loc[df['name_key'] == clean_name, 'col_min'].values
-        full_name = df.loc[df['name_key'] == clean_name, 'name'].values[0]
         if len(temps) > 0:
+            full_name = df.loc[df['name_key'] == clean_name, 'name'].values[0]
             temps_dict[full_name] = temps[0]
 
     # 3. Création du titre dynamique
@@ -170,12 +169,11 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     # 8. Améliorations visuelles
     fig.update_layout(
         bargap=0.1,
-        xaxis_title="Temps (HH:MM:SS)",
+        xaxis_title="Temps",
         yaxis_title="Nombre de coureurs",
         showlegend=False,
         template='plotly_dark'
     )
-
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
