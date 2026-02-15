@@ -28,9 +28,8 @@ with tab2:
     with st.container(border=True):
         st.write("📊 **Comparaison des performances (Radar)**")
         
-        # Appel de ta fonction de visualisation
-        # Assure-toi que Viz_Radar_Triathlon utilise st.plotly_chart ou st.pyplot en interne
-        f.Viz_Radar_Triathlon(df_Tri, liste_athletes)
+        fig_radar = f.Viz_Radar_Triathlon(df_TT, liste_athletes)          
+        st.plotly_chart(fig_radar, use_container_width=True)
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
