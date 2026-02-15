@@ -67,8 +67,8 @@ with tab2:
                 use_container_width=True,
                 hide_index=True
             )
-        else:
-            st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
+    else:
+        st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     st.subheader("Analyse comparative : Triathlon")
