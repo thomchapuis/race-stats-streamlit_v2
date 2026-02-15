@@ -37,7 +37,7 @@ with tab1:
         if pd.notnull(x) else "-"
     )
     st.dataframe(
-        df_display[["rank", "name", "time", "category", "sex"]],
+        df_display,
         use_container_width=True,
         hide_index=True,
         height=400 # Fixe la hauteur pour éviter un tableau trop long
