@@ -169,8 +169,6 @@ with tab3:
                 label="Plus longue course", 
                 value=f"{longest_race_row['time']}"
             )
-            # Affichage du nom de la course et du sport
-            st.caption(f"**Course :** {row_best['race_name']}")
             
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
