@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 from utils.config import sport_icon
+from utils.config import ATHLETES
 #from utils.fonctions import *
 from utils import fonctions as f
 
@@ -15,12 +16,22 @@ def load_data():
 
 df_all_parquet = load_data()
 
-tab1,tab2, tab3 = st.tabs(["Tab1", "Tab2", "Settings ⚙️"])
+tab1,tab2, tab3, tab4 = st.tabs(["Tab1", "Tab2","Tab3", "Settings ⚙️"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.write(df_all_parquet.head())
+    
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
+    st.header("👤 Fiche Identité Coureur")
+
+    # 0) Barre de recherche
+    # On peut proposer une liste déroulante avec recherche intégrée pour éviter les fautes de frappe
+    all_athletes = sorted(df_all_parquet["athlete"].unique())
+    nom_recherche = st.selectbox("Rechercher un coureur :", options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
+    
+########################## ########################## ########################## ########################## ########################## 
+with tab3:
     st.subheader("Analyse comparative : Triathlon")
 
     liste_athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
@@ -32,7 +43,7 @@ with tab2:
         st.plotly_chart(fig_radar, use_container_width=True)
 
 ########################## ########################## ########################## ########################## ########################## 
-with tab3:
+with tab4:
     # 1) Affichage de la source de données tout en haut
     st.metric(label="Source des données", value=data_file)
     
