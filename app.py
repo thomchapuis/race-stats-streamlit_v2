@@ -163,7 +163,7 @@ with tab3:
             st.subheader("💪🏼 Meilleures Performances")
             df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
             st.metric(
-                #label=label_with_icon,
+                label="Test",
                 value=df_solo.columns
             )
             longest_race = df_solo.loc[df_solo['Distance_x'].max()]
