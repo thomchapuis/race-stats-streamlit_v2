@@ -137,7 +137,7 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
         df,
         x="col_min",
         title=f"Distribution des temps : {race_name} | {col}",
-        labels={'col_min': 'Temps (HH:MM:SS)', 'count': 'Nombre de coureurs'},
+        labels={'col_min': 'Temps', 'count': 'Nombre de coureurs'},
         nbins=30,
         template='plotly_white',
         color_discrete_sequence=['#2ecc71']
