@@ -18,15 +18,17 @@ df_all_parquet = load_data()
 tab1,tab2, tab3, tab4 = st.tabs(["Classement", "👤 Coureur","Triathlon", "⚙️ Settings"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
-    st.write(df_all_parquet.head())
+    #st.write(df_all_parquet.head())
+    st.subheader("📊 Consulter un classement")
     all_races = sorted(df_all_parquet["race_name"].unique())
     nom_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
     df_Race = f.Filter_By_Race(df_all_parquet,nom_recherche)
+    df_Race = df_Race.sort_values("rank")
     
     #st.write(f"Classement pour : **{liste_courses_athlete.set_index('race_id').loc[choix_course, 'race_name']}**")
     
     st.dataframe(
-        df_Race[["rank", "name", "time", "category", "sex"]].style.apply(highlight_athlete, axis=1),
+        df_Race[["rank", "name", "time", "category", "sex"]],
         use_container_width=True,
         hide_index=True,
         height=400 # Fixe la hauteur pour éviter un tableau trop long
