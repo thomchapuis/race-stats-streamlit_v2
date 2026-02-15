@@ -63,12 +63,11 @@ with tab2:
         df_Race = f.Filter_By_Race(df_all_parquet, race_recherche)
         df_Race = df_Race.sort_values("rank")
     
-        # Affichage de l'histogramme
-        st.write(f"📊 **Histogramme des temps :** {race_recherche}")
+        # 1) Affichage de l'histogramme
         fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
         st.plotly_chart(fig_histo, use_container_width=True)
     
-        # Affichage du classement
+        # 2) Affichage du classement
         st.write("Classement complet")
         df_display = df_Race[["rank", "name", "time", "category", "sex"]].copy()
         df_display["time"] = df_display["time"].apply(
