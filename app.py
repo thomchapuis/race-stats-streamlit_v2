@@ -23,9 +23,11 @@ df_synthese = pd.read_parquet(synthese_file)
 
 
 
-tab1,tab2, tab3, tab4 = st.tabs(["Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
+tab1,tab2, tab3, tab4 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
+    st.write(df_synthese.head())
+with tab2:
     st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
 
@@ -54,7 +56,7 @@ with tab1:
 
 
 ########################## ########################## ########################## ########################## ########################## 
-with tab2:
+with tab3:
     st.header("👤 Fiche Coureur")
     all_athletes = sorted(df_all_parquet["name_key"].unique())
     #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
@@ -154,7 +156,7 @@ with tab2:
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
-with tab3:
+with tab4:
     st.subheader("Analyse comparative : Triathlon")
 
     liste_athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
@@ -166,7 +168,7 @@ with tab3:
         st.plotly_chart(fig_radar, use_container_width=True)
 
 ########################## ########################## ########################## ########################## ########################## 
-with tab4:
+with tab5:
     # 1) Affichage de la source de données tout en haut
     st.metric(label="Source des données", value=parquet_file)
     
