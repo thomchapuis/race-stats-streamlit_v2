@@ -48,10 +48,14 @@ with tab3:
     )
     
     # Affichage en cartes (colonnes dynamiques)
-    cols = st.columns(len(courses_par_sport))
-    for col, (sport, nb) in zip(cols, courses_par_sport.items()):
-        with col:
-            with st.container(border=True):
-                st.markdown(f"**{sport}**")
-                st.markdown(f"### {nb}")
+    with st.container(border=True):
+        cols = st.columns(len(courses_par_sport))
+    
+        for col, (sport, nb) in zip(cols, courses_par_sport.items()):
+            with col:
+                st.metric(
+                    label=sport,
+                    value=f"{nb:,}".replace(",", " "),
+                )
+
 ########################## ########################## ########################## ########################## ########################## 
