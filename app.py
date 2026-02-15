@@ -83,7 +83,6 @@ with tab2:
                         )
         
             st.divider()
-            # Tu peux ajouter ici ton historique ou d'autres graphiques...
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
