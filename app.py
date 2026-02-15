@@ -88,8 +88,8 @@ with tab2:
             
 
             df_valid_ranks = df_coureur[df_coureur["rank"] > 0]
-            row_best = df_coureur.loc[df_valid_ranks["rank"].idxmin()]
-            row_worst = df_coureur.loc[df_valid_ranks["rank"].idxmax()]
+            row_best = df_valid_ranks.loc[df_valid_ranks["rank"].idxmin()]
+            row_worst = df_valid_ranks.loc[df_valid_ranks["rank"].idxmax()]
         
             col_best, col_worst = st.columns(2)
             
