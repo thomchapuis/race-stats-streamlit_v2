@@ -277,6 +277,19 @@ df_TT = Filter_By_Athlete(df_all_parquet, ["CHAPUIS Thomas", "BOMPAS Théo"])
 # 🔹 Fonction de Calcul
 # ---------------------------------------------------------------------------------------
 
+def get_clean_key(text):
+    if not isinstance(text, str): return ""
+    # 1. Suppression des accents
+    text = "".join(c for c in unicodedata.normalize('NFD', text)
+                   if unicodedata.category(c) != 'Mn')
+    # 2. Minuscules et suppression de la ponctuation de base (tirets, virgules)
+    text = text.lower().replace('-', ' ').replace(',', ' ')
+    # 3. Tri des mots (pour l'ordre Nom Prénom)
+    parts = text.split()
+    parts.sort()
+    return "".join(parts) # On colle tout pour une comparaison stricte
+
+
 def get_Rank_Percentage(df, col):
     """
     Calcule le centile (top %) pour chaque ligne basé sur une colonne de classement.
