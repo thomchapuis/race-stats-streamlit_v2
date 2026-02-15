@@ -181,8 +181,8 @@ with tab3:
                 
                 with st.container(border=True):
                     df_race_best = f.Filter_By_Race(df_coureur,row_best['race_name'])
-                    fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_race_best,'time',nom_recherche)
-                    st.plotly_chart(fig_histo_coureur, width='stretch')
+                    fig_histo_coureur_best = f.Viz_Histogramme_Temps_Names(df_race_best,'time',nom_recherche)
+                    st.plotly_chart(fig_histo_coureur_best, width='stretch')
 
                 
             with col_worst:
@@ -198,8 +198,21 @@ with tab3:
                 
                 with st.container(border=True):
                     df_race_worst = f.Filter_By_Race(df_coureur,row_worst['race_name'])
-                    fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
-                    st.plotly_chart(fig_histo_coureur, width='stretch')
+                    fig_histo_coureur_worst = f.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
+                    st.plotly_chart(fig_histo_coureur_worst, width='stretch')
+            
+            with st.container(border=True):
+                all_races = sorted(df_coureur["race_name"].unique())
+                race_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
+            
+                if not race_recherche:
+                    st.warning("Veuillez sélectionner une course pour afficher le classement.")
+                else:
+                    df_Race = f.Filter_By_Race(df_all_parquet, race_recherche)
+                    fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_Race,'time',nom_recherche)
+                    st.plotly_chart(fig_histo_coureur, width='stretch')                    
+
+    
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
