@@ -5,7 +5,6 @@ from utils.config import ATHLETES
 #from utils.fonctions import *
 from utils import fonctions as f
 
-
 data_file = "data/races5.parquet"
 
 st.set_page_config(layout="wide")
