@@ -38,30 +38,6 @@ with tab2:
     #st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
 
-    race_recherche = "BayMan"
-    all_races = sorted(df_all_parquet["race_name"].unique())
-    race_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
-    df_Race = f.Filter_By_Race(df_all_parquet,race_recherche)
-    df_Race = df_Race.sort_values("rank")
-    
-    #st.write(f"Classement pour : **{liste_courses_athlete.set_index('race_id').loc[choix_course, 'race_name']}**")
-    #st.write(f"📊 **Histogramme des temps :** {race_recherche}")
-    fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')         
-    st.plotly_chart(fig_histo, use_container_width=True)
-
-    st.write("Classement complet")
-    df_display = df_Race[["rank", "name", "time", "category", "sex"]].copy()
-    df_display["time"] = df_display["time"].apply(
-        lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}" 
-        if pd.notnull(x) else "-"
-    )
-    st.dataframe(
-        df_display,
-        use_container_width=True,
-        hide_index=True,
-        height=400 # Fixe la hauteur pour éviter un tableau trop long
-    )
-
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
