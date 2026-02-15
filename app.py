@@ -36,6 +36,12 @@ with tab2:
     if nom_recherche:
         df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
         nb_courses_coureur = df_coureur["race_id"].nunique()
+        courses_par_sport = (
+            df_all_parquet
+            .groupby("sport")["race_id"]
+            .nunique()
+            .sort_values(ascending=False)
+        )
 
         # Affichage de la "Fiche"
         with st.container(border=True):
@@ -49,6 +55,25 @@ with tab2:
                 st.metric(label="Nombre total de courses", value=nb_courses_coureur)
 
             st.divider()
+            ######
+
+            # 2) Un seul gros container pour le total et le détail par sport
+            with st.container(border=True):
+                cols = st.columns(len(courses_par_sport) + 1)
+                
+                with cols[0]:
+                    st.metric(
+                        label="🏁 Total", 
+                        value=f"{nb_courses_coureur:,}".replace(",", " ")
+                    )
+        
+                for col, (sport, nb) in zip(cols[1:], courses_par_sport.items()):
+                    with col:
+                        label_with_icon = f"{sport_icon(sport)} {sport}"
+                        st.metric(
+                            label=label_with_icon,
+                            value=f"{nb:,}".replace(",", " ")
+                        )
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
