@@ -85,26 +85,32 @@ with tab2:
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
             
-            # Calcul des classements (en ignorant les éventuelles valeurs nulles)
-            meilleur_rank = int(df_coureur["rank"].min())
-            pire_rank = int(df_coureur["rank"].max())
+            # On récupère la ligne entière pour le meilleur et le pire rang
+            # .idxmin() donne l'index de la ligne avec la valeur minimale
+            row_best = df_coureur.loc[df_coureur["rank"].idxmin()]
+            row_worst = df_coureur.loc[df_coureur["rank"].idxmax()]
         
-            col_best, col_worst, _ = st.columns([1, 1, 2])
+            col_best, col_worst = st.columns(2)
             
             with col_best:
-                st.metric(
-                    label="🥇 Meilleur Classement", 
-                    value=f"{meilleur_rank}e",
-                    delta="Top Performance",
-                    delta_color="normal"
-                )
+                with st.container(border=True):
+                    st.metric(
+                        label="🥇 Meilleur Classement", 
+                        value=f"{int(row_best['rank'])}e"
+                    )
+                    # Affichage du nom de la course et du sport
+                    st.caption(f"**Course :** {row_best['race_name']}")
+                    st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
                 
             with col_worst:
-                # On utilise delta_color="inverse" car un rang élevé est "moins bon"
-                st.metric(
-                    label="🐢 Pire Classement", 
-                    value=f"{pire_rank}e"
-                )
+                with st.container(border=True):
+                    st.metric(
+                        label="🐢 Pire Classement", 
+                        value=f"{int(row_worst['rank'])}e"
+                    )
+                    # Affichage du nom de la course et du sport
+                    st.caption(f"**Course :** {row_worst['race_name']}")
+                    st.caption(f"**Sport :** {sport_icon(row_worst['sport'])} {row_worst['sport']}")
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
