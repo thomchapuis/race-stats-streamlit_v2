@@ -20,8 +20,16 @@ def load_synthese_data(file_path):
 parquet_file = "data/races5.parquet"
 synthese_file = "data/Synthese.xlsx"
 
-df_all_parquet = load_data(parquet_file)
+df_all = load_data(parquet_file)
 df_synthese = load_synthese_data(synthese_file)
+
+df_all_parquet = pd.merge(
+    df_all, 
+    df_Synthese[['Race', 'Distance']], 
+    left_on='race_name', 
+    right_on='Race', 
+    how='left'
+)
 
 # ---------------------------------------------------------------------------------
 
@@ -32,6 +40,14 @@ tab1,tab2, tab3, tab4, tab5 = st.tabs(["Intro","Classement", "ðŸ‘¤ Coureur","ðŸš
 with tab1:
     st.write(df_synthese.head())
     #st.write(df_all_parquet.head())
+
+    dist_par_sport = (
+        df_all_parquet.drop_duplicates(subset=['race_name']) # On garde 1 ligne par course
+        .groupby('sport')['Distance']                 # On groupe par sport
+        .sum()                                        # On additionne
+    )
+
+    st.write(dist_par_sport)
     
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
