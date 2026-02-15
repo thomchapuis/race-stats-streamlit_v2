@@ -33,7 +33,10 @@ with tab1:
         hide_index=True,
         height=400 # Fixe la hauteur pour éviter un tableau trop long
     )
-    
+    st.write(f"📊 **Histogramme des temps :** {nom_recherche}")
+    fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')         
+    st.plotly_chart(fig_histo, use_container_width=True)
+
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
     st.header("👤 Fiche Coureur")
