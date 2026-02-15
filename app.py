@@ -145,7 +145,7 @@ with tab4:
         st.write("📊 **Comparaison des performances (Radar)**")
         
         fig_radar = f.Viz_Radar_Triathlon(df_Tri, liste_athletes)          
-        st.plotly_chart(fig_radar, use_container_width=True)
+        st.plotly_chart(fig_radar, width=True)
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab5:
