@@ -178,7 +178,6 @@ def Viz_Radar_Triathlon(df, names_list):
         title_text="Analyse Multi-Courses (Uniquement courses avec Splits complets)",
         template='plotly_dark'
     )
-
     return fig.show()
 
 # ---------------------------------------------------------------------------------------
@@ -200,10 +199,6 @@ def Filter_By_Year(df, year):
 
     return df[mask].reset_index(drop=True)
 
-
-#df_2026 = Filter_By_Year(df_all_parquet, 2026)
-#Viz_Sexes(df_2026)
-
 def Filter_By_Sport(df, sport):
     """
     Filtre le DataFrame pour un ou plusieurs sports.
@@ -223,9 +218,6 @@ def Filter_By_Sport(df, sport):
         print(f"⚠️ Aucun résultat pour : {sport}. Valeurs disponibles : {df['sport'].unique()[:5]}")
 
     return result
-
-#df_Trail = Filter_By_Sport(df_all_parquet, 'Trail')
-#Viz_Sexes(df_Trail)
 
 def Filter_By_Race(df, race):
     """
@@ -247,9 +239,6 @@ def Filter_By_Race(df, race):
 
     return result
 
-#df_EDT = Filter_By_Race(df_all_parquet, ["EDT23","EDT25"])
-#Viz_Sexes(df_EDT)
-
 def Filter_By_Athlete(df, name_list):
     """
     Renvoie le DataFrame complet (tous les participants) pour les courses
@@ -269,9 +258,6 @@ def Filter_By_Athlete(df, name_list):
     result = df[df['race_name'].isin(valid_races)].reset_index(drop=True)
 
     return result
-
-df_TT = Filter_By_Athlete(df_all_parquet, ["CHAPUIS Thomas", "BOMPAS Théo"])
-#df_TT['race_name'].unique()
 
 # ---------------------------------------------------------------------------------------
 # 🔹 Fonction de Calcul
