@@ -28,6 +28,8 @@ tab1,tab2, tab3, tab4, tab5 = st.tabs(["Intro","Classement", "👤 Coureur","�
 with tab1:
     st.write(df_synthese.head())
     st.write(df_all_parquet.head())
+    
+########################## ########################## ########################## ########################## ########################## 
 with tab2:
     #st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
@@ -157,6 +159,7 @@ with tab3:
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
+        
 ########################## ########################## ########################## ########################## ########################## 
 with tab4:
     st.subheader("Analyse comparative : Triathlon")
