@@ -20,13 +20,13 @@ with tab2:
 with tab3:
     nb_courses = df_all_parquet["race_id"].nunique() 
     st.subheader("Indicateurs clés")
-    col1, _ = st.columns([1, 4])
-    with col2:
+    col1, col2, _ = st.columns([1, 4])
+    with col1:
         st.metric(
             label="Source des données",
             value=data_file
         )     
-    with col1:
+    with col2:
         st.metric(
             label="🏁 Nombre de courses",
             value=f"{nb_courses:,}".replace(",", " ")
