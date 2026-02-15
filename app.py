@@ -1,10 +1,11 @@
 import pandas as pd
 import streamlit as st
 
+data_file = "data/races5.parquet"
 
 @st.cache_data
 def load_data():
-    return pd.read_parquet("data/races5.parquet")
+    return pd.read_parquet(data_file)
 
 df_all_parquet = load_data()
 
@@ -20,13 +21,18 @@ with tab3:
     nb_courses = df_all_parquet["race_id"].nunique() 
     st.subheader("Indicateurs clés")
     col1, _ = st.columns([1, 4])
+    with col2:
+        st.metric(
+            label="Source des données",
+            value=data_file
+        )     
     with col1:
         st.metric(
-            label="🏁 Nombre total de courses",
+            label="🏁 Nombre de courses",
             value=f"{nb_courses:,}".replace(",", " ")
         )
-    st.subheader("Sports représentés")
     
+    st.subheader("Sports représentés")
     courses_par_sport = (
         df_all_parquet
         .groupby("sport")["race_id"]
