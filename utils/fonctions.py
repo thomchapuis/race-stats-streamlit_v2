@@ -95,6 +95,91 @@ def Viz_Histogramme_Temps(df_race, col):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
+def Viz_Histogramme_Temps_Names(df_race, col, names):
+    """
+    Trace l'histogramme des temps pour une course donnée avec des traits verticaux pour les temps de plusieurs personnes.
+
+    Parameters:
+    - df_race: DataFrame contenant les données de la course.
+    - col: Nom de la colonne contenant les temps (ex: 'time' ou 't1').
+    - names: Liste des noms des personnes dont les temps seront mis en évidence.
+
+    Utilisation: 
+    #Viz_Histogramme_Temps_Names(df_test,'time',['Thomas CHAPUIS','Théo Bompas'])
+
+    """
+    df = df_race.copy()
+
+    # 1. Conversion des temps en format timedelta puis en minutes
+    if df[col].dtype == 'object' or pd.api.types.is_timedelta64_dtype(df[col]):
+        df['col_td'] = pd.to_timedelta(df[col])
+        df['col_min'] = df['col_td'].dt.total_seconds() / 60
+    else:
+        df['col_min'] = df[col]
+
+    df = df[df['col_min'] > 0]
+
+    # 2. Récupération des temps des personnes cherchées
+    temps_dict = {}
+    name_dict ={}
+    for name in names:
+        clean_name = get_clean_key(name)
+        temps = df.loc[df['name_key'] == clean_name, 'col_min'].values
+        full_name = df.loc[df['name_key'] == clean_name, 'name'].values[0]
+        if len(temps) > 0:
+            temps_dict[full_name] = temps[0]
+
+    # 3. Création du titre dynamique
+    race_name = df['race_name'].iloc[0] if 'race_name' in df.columns else "la course"
+
+    # 4. Tracé de l'histogramme
+    fig = px.histogram(
+        df,
+        x="col_min",
+        title=f"Distribution des temps : {race_name} | {col}",
+        labels={'col_min': 'Temps (HH:MM:SS)', 'count': 'Nombre de coureurs'},
+        nbins=30,
+        template='plotly_white',
+        color_discrete_sequence=['#2ecc71']
+    )
+
+    # 5. Ajout des traits verticaux pour chaque personne
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']  # Liste de couleurs pour les traits
+    for i, (name, temps) in enumerate(temps_dict.items()):
+        fig.add_vline(
+            x=temps,
+            line_dash="dash",
+            line_color=colors[i % len(colors)],
+            annotation_text=f"{name}",
+            annotation_position="top left",
+            annotation_textangle=-90
+        )
+
+    # 6. Calcul des bornes inférieures des barres pour les ticks
+    bin_edges = np.histogram_bin_edges(df['col_min'], bins=30)
+    tickvals = bin_edges[:-1]  # On prend la borne inférieure de chaque barre
+    ticktext = [str(pd.Timedelta(minutes=m).round('1s')).split()[2] for m in tickvals]
+
+    # 7. Mise à jour de l'axe des abscisses
+    fig.update_xaxes(
+        tickvals=tickvals,
+        ticktext=ticktext,
+        tickangle=45
+    )
+
+    # 8. Améliorations visuelles
+    fig.update_layout(
+        bargap=0.1,
+        xaxis_title="Temps (HH:MM:SS)",
+        yaxis_title="Nombre de coureurs",
+        showlegend=False,
+        template='plotly_dark'
+    )
+
+    #return fig.show() pour notebook .ipynb
+    return fig   #pour streamlit
+
+
 def Viz_Radar_Triathlon(df, names_list):
     # 1. Identifier les courses et filtrer celles qui ont les colonnes nécessaires
     required_cols = ['swim', 'bike', 'run']
