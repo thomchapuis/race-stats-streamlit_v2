@@ -88,6 +88,7 @@ with tab2:
             df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
             row_best = df_solo.loc[df_solo["rank"].idxmin()]
             row_worst = df_solo.loc[df_solo["rank"].idxmax()]
+            finishers = df_coureur.loc[df_coureur["rank"].idxmax()]
         
             col_best, col_worst = st.columns(2)
             
@@ -99,6 +100,7 @@ with tab2:
                     )
                     # Affichage du nom de la course et du sport
                     st.caption(f"**Course :** {row_best['race_name']}")
+                    st.caption(f"**Finishers :** {finishers['race_name']}")
                     st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
                 
             with col_worst:
