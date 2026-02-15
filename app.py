@@ -31,8 +31,13 @@ with tab1:
     st.plotly_chart(fig_histo, use_container_width=True)
 
     st.write("Classement complet")
+    df_display = df_Race[["rank", "name", "time", "category", "sex"]].copy()
+    df_display["time"] = df_display["time"].apply(
+        lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}" 
+        if pd.notnull(x) else "-"
+    )
     st.dataframe(
-        df_Race[["rank", "name", "time", "category", "sex"]],
+        df_display[["rank", "name", "time", "category", "sex"]],
         use_container_width=True,
         hide_index=True,
         height=400 # Fixe la hauteur pour éviter un tableau trop long
