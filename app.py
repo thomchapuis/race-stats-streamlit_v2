@@ -18,6 +18,11 @@ with tab2:
     st.write(df_all_parquet.head())
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
+    st.metric(
+        label="Source des données",
+        value=data_file
+    )  
+    
     nb_courses = df_all_parquet["race_id"].nunique() 
     st.subheader("Indicateurs clés")
     col1, col2, _ = st.columns([1, 1, 3])
