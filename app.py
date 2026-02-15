@@ -27,7 +27,7 @@ with tab2:
 
     # 0) Barre de recherche
     # On peut proposer une liste déroulante avec recherche intégrée pour éviter les fautes de frappe
-    all_athletes = sorted(df_all_parquet["athlete"].unique())
+    all_athletes = sorted(df_all_parquet["name"].unique())
     nom_recherche = st.selectbox("Rechercher un coureur :", options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
     
 ########################## ########################## ########################## ########################## ########################## 
