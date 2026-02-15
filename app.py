@@ -28,7 +28,7 @@ tab1,tab2, tab3, tab4 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triat
 with tab1:
     st.write(df_synthese.head())
 with tab2:
-    st.write(df_synthese.head())
+    #st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
 
     all_races = sorted(df_all_parquet["race_name"].unique())
