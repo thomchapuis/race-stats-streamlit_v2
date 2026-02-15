@@ -49,7 +49,8 @@ def Viz_Sexes(df_all_parquet):
     fig.update_yaxes(title="Pourcentage (%)", range=[0, 100])
     fig.update_xaxes(tickangle=-45)
 
-    return fig.show()
+    #return fig.show() pour notebook .ipynb
+    return fig   #pour streamlit
 
 def Viz_Histogramme_Temps(df_race, col):
     """
@@ -90,7 +91,9 @@ def Viz_Histogramme_Temps(df_race, col):
         showlegend=False,
         template='plotly_dark'
     )
-    return fig.show()
+    
+    #return fig.show() pour notebook .ipynb
+    return fig   #pour streamlit
 
 def Viz_Radar_Triathlon(df, names_list):
     # 1. Identifier les courses et filtrer celles qui ont les colonnes nécessaires
@@ -182,7 +185,8 @@ def Viz_Radar_Triathlon(df, names_list):
         title_text="Analyse Multi-Courses (Uniquement courses avec Splits complets)",
         template='plotly_dark'
     )
-    return fig.show()
+    #return fig.show() pour notebook .ipynb
+    return fig   #pour streamlit
 
 # ---------------------------------------------------------------------------------------
 # 🔹 Fonction de Filtre
