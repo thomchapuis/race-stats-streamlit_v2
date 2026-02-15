@@ -25,15 +25,7 @@ with tab2:
 
     liste_athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
     df_Tri = Filter_By_Sport(df_all_parquet, "Triathlon")
-    df_TT = Filter_By_Athlete(df_Tri, liste_athletes)
-    
-    # 2. Affichage du graphique Radar
-    with st.container(border=True):
-        st.write("📊 **Comparaison des performances (Radar)**")
-        
-        # Appel de ta fonction de visualisation
-        # Assure-toi que Viz_Radar_Triathlon utilise st.plotly_chart ou st.pyplot en interne
-        Viz_Radar_Triathlon(df_TT, liste_athletes)
+
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     # 1) Affichage de la source de données tout en haut
