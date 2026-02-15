@@ -29,7 +29,6 @@ with tab1:
     st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
 
-    
     all_races = sorted(df_all_parquet["race_name"].unique())
     nom_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
     df_Race = f.Filter_By_Race(df_all_parquet,nom_recherche)
