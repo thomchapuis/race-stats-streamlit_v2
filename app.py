@@ -25,7 +25,7 @@ df_synthese = load_synthese_data(synthese_file)
 
 df_all_parquet = pd.merge(
     df_all, 
-    df_Synthese[['Race', 'Distance']], 
+    df_synthese[['Race', 'Distance']], 
     left_on='race_name', 
     right_on='Race', 
     how='left'
