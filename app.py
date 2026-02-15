@@ -179,6 +179,12 @@ with tab3:
                     st.caption(f"**Participants :** {int(participants_best)}")
                     st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
                 
+                with st.container(border=True):
+                    df_race_best = Filter_By_Race(df_coureur,row_best['race_name'])
+                    fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_race_best,'time',nom_recherche)
+                    st.plotly_chart(fig_histo_coureur, width='stretch')
+
+                
             with col_worst:
                 with st.container(border=True):
                     st.metric(
@@ -189,6 +195,11 @@ with tab3:
                     st.caption(f"**Course :** {row_worst['race_name']}")
                     st.caption(f"**Participants :** {int(participants_worst)}")
                     st.caption(f"**Sport :** {sport_icon(row_worst['sport'])} {row_worst['sport']}")
+                
+                with st.container(border=True):
+                    df_race_worst = Filter_By_Race(df_coureur,row_worst['race_name'])
+                    fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
+                    st.plotly_chart(fig_histo_coureur, width='stretch')
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
