@@ -9,7 +9,7 @@ def sport_icon(sport):
     """Retourne l'icône correspondant au sport ou un drapeau par défaut."""
     return SPORT_ICONS.get(sport, "🏁")
 
-ATHLETE = [
+ATHLETES = [
     "BERGER Tristan",
     "BOMPAS Théo",
     "BOMPAS Romain",
