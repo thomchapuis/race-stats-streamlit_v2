@@ -43,24 +43,10 @@ with tab2:
             .sort_values(ascending=False)
         )
 
-        # Affichage de la "Fiche"
-        with st.container(border=True):
-            col_icon, col_txt = st.columns([1, 4])
-            
-            with col_icon:
-                st.write("# 🏃‍♂️") # Icone de profil
-            
-            with col_txt:
-                st.title(nom_recherche)
-                st.metric(label="Nombre total de courses", value=nb_courses_coureur)
-
-            st.divider()
-            ######
-
             # 2) Un seul gros container pour le total et le détail par sport
             with st.container(border=True):
                 cols = st.columns(len(courses_par_sport) + 1)
-                
+                st.title(nom_recherche)
                 with cols[0]:
                     st.metric(
                         label="🏁 Total", 
@@ -74,6 +60,7 @@ with tab2:
                             label=label_with_icon,
                             value=f"{nb:,}".replace(",", " ")
                         )
+            st.divider()
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
