@@ -31,7 +31,7 @@ with tab2:
     nom_recherche = st.selectbox("Rechercher un coureur :", options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
 
 
-    st.write(f.Filter_By_Athlete(df_all_parquet,nom_recherche).head())
+    st.write(f.Filter_By_Athlete(df_all_parquet,nom_recherche)['race'].unique())
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     st.subheader("Analyse comparative : Triathlon")
