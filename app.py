@@ -55,7 +55,7 @@ with tab2:
     st.subheader("📊 Consulter un classement")
 
     all_races = sorted(df_all_parquet["race_name"].unique())
-    race_recherche1 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
+    race_recherche1 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2")
 
     if not race_recherche1:
         st.warning("Veuillez sélectionner une course pour afficher le classement.")
@@ -84,12 +84,13 @@ with tab2:
 with tab3:
     st.header("👤 Fiche Coureur")
     all_athletes = sorted(df_all_parquet["name_key"].unique())
-    #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
+    #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...",key="selectbox_tab3_name")
     nom_recherche = st.selectbox(
         label="Recherche athlète",
         options=all_athletes, 
         index=None, 
         placeholder="Tapez le nom d'un athlète...",
+        key="selectbox_tab3_name",
         label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
     )
 
@@ -203,7 +204,7 @@ with tab3:
             
             with st.container(border=True):
                 all_races = sorted(df_coureur["race_name"].unique())
-                race_recherche2 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
+                race_recherche2 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab3_race")
             
                 if not race_recherche2:
                     st.warning("Veuillez sélectionner une course pour afficher le classement.")
