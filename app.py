@@ -6,7 +6,7 @@ from utils.config import ATHLETES
 from utils import fonctions as f
 
 parquet_file = "data/races5.parquet"
-synthese_file = "data/Synthèse.xlsx"
+synthese_file = "data/Synthese.xlsx"
 
 st.set_page_config(layout="wide")
 
@@ -27,6 +27,7 @@ tab1,tab2, tab3, tab4 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triat
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.write(df_synthese.head())
+    st.write(df_all_parquet.head())
 with tab2:
     #st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
