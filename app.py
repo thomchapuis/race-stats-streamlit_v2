@@ -83,6 +83,29 @@ with tab2:
                         )
         
             st.divider()
+            # --- NOUVELLE SECTION : RECORDS ---
+            st.subheader("🏆 Records de classement")
+            
+            # Calcul des classements (en ignorant les éventuelles valeurs nulles)
+            meilleur_rank = int(df_coureur["rank"].min())
+            pire_rank = int(df_coureur["rank"].max())
+        
+            col_best, col_worst, _ = st.columns([1, 1, 2])
+            
+            with col_best:
+                st.metric(
+                    label="🥇 Meilleur Classement", 
+                    value=f"{meilleur_rank}e",
+                    delta="Top Performance",
+                    delta_color="normal"
+                )
+                
+            with col_worst:
+                # On utilise delta_color="inverse" car un rang élevé est "moins bon"
+                st.metric(
+                    label="🐢 Pire Classement", 
+                    value=f"{pire_rank}e"
+                )
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
