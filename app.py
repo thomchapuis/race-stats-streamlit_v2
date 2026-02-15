@@ -12,16 +12,11 @@ st.set_page_config(layout="wide")
 def load_data(file_path):
     return pd.read_parquet(file_path)
 
-@st.cache_data
-def load_synthese_data(file_path):
-    df = pd.read_excel(file_path)
-    return df
-
 parquet_file = "data/races5.parquet"
 synthese_file = "data/Synthese.xlsx"
 
 df_all_parquet = load_data(parquet_file)
-df_synthese = load_synthese_data(synthese_file)
+#df_synthese = load_synthese_data(synthese_file)
 
 # ---------------------------------------------------------------------------------
 
