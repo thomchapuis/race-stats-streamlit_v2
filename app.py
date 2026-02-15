@@ -176,7 +176,7 @@ with tab3:
                     )
                     # Affichage du nom de la course et du sport
                     st.caption(f"**Course :** {row_best['race_name']}")
-                    st.caption(f"**Participants :** {int(participants_best)}")
+                    st.caption(f"**Finishers :** {int(participants_best)}")
                     st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
                 
                 with st.container(border=True):
@@ -193,7 +193,7 @@ with tab3:
                     )
                     # Affichage du nom de la course et du sport
                     st.caption(f"**Course :** {row_worst['race_name']}")
-                    st.caption(f"**Participants :** {int(participants_worst)}")
+                    st.caption(f"**Finishers :** {int(participants_worst)}")
                     st.caption(f"**Sport :** {sport_icon(row_worst['sport'])} {row_worst['sport']}")
                 
                 with st.container(border=True):
