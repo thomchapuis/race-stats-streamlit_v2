@@ -1,6 +1,9 @@
 import pandas as pd
 import streamlit as st
 from utils.config import sport_icon
+from utils.fonctions import *
+#from utils import fonctions as f
+
 
 data_file = "data/races5.parquet"
 
@@ -18,7 +21,19 @@ with tab1:
     st.write(df_all_parquet.head())
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
-    st.write(df_all_parquet.head())
+    st.subheader("Analyse comparative : Triathlon")
+
+    liste_athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
+    df_Tri = Filter_By_Sport(df_all_parquet, "Triathlon")
+    df_TT = Filter_By_Athlete(df_Tri, liste_athletes)
+    
+    # 2. Affichage du graphique Radar
+    with st.container(border=True):
+        st.write("📊 **Comparaison des performances (Radar)**")
+        
+        # Appel de ta fonction de visualisation
+        # Assure-toi que Viz_Radar_Triathlon utilise st.plotly_chart ou st.pyplot en interne
+        Viz_Radar_Triathlon(df_TT, liste_athletes)
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     # 1) Affichage de la source de données tout en haut
@@ -32,7 +47,7 @@ with tab3:
         .nunique()
         .sort_values(ascending=False)
     )
-    st.subheader("Indicateurs clés")
+    st.subheader("Nombre de courses enregistrées")
     
     # 2) Un seul gros container pour le total et le détail par sport
     with st.container(border=True):
