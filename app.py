@@ -167,7 +167,7 @@ with tab3:
             longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
             st.metric(
                 label="Plus longue course", 
-                value=f"{int(longest_race_row['time'])}"
+                value=f"{longest_race_row['time']}"
             )
             # Affichage du nom de la course et du sport
             st.caption(f"**Course :** {row_best['race_name']}")
