@@ -30,8 +30,45 @@ with tab2:
     all_athletes = sorted(df_all_parquet["name_key"].unique())
     nom_recherche = st.selectbox("Rechercher un coureur :", options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
 
-    df_filtered = f.Filter_By_Athlete(df_all_parquet,nom_recherche)
-    st.write(df_filtered['race_name'].unique())
+    #df_filtered = f.Filter_By_Athlete(df_all_parquet,nom_recherche)
+    #st.write(df_filtered['race_name'].unique())
+
+    if nom_recherche:
+        df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
+        nb_courses_coureur = df_coureur["race_id"].nunique()
+
+        # Affichage de la "Fiche"
+        with st.container(border=True):
+            col_icon, col_txt = st.columns([1, 4])
+            
+            with col_icon:
+                st.write("# 🏃‍♂️") # Icone de profil
+            
+            with col_txt:
+                st.title(nom_recherche)
+                st.metric(label="Nombre total de courses", value=nb_courses_coureur)
+
+            st.divider()
+
+            # Optionnel : Afficher les sports pratiqués par ce coureur
+            st.write("**Sports pratiqués :**")
+            sports_du_coureur = df_coureur["sport"].unique()
+            
+            # On utilise ta fonction sport_icon pour chaque sport trouvé
+            cols_sports = st.columns(len(sports_du_coureur))
+            for i, sport in enumerate(sports_du_coureur):
+                with cols_sports[i]:
+                    st.write(f"{sport_icon(sport)} {sport}")
+
+            # Optionnel : Afficher la liste de ses dernières courses
+            st.write("**Historique récent :**")
+            st.dataframe(
+                df_coureur[["date", "race_name", "sport", "rank"]].sort_values("date", ascending=False).head(5),
+                use_container_width=True,
+                hide_index=True
+            )
+        else:
+            st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     st.subheader("Analyse comparative : Triathlon")
