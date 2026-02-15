@@ -3,6 +3,7 @@ import streamlit as st
 
 data_file = "data/races5.parquet"
 
+st.set_page_config(layout="wide")
 @st.cache_data
 def load_data():
     return pd.read_parquet(data_file)
