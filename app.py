@@ -86,14 +86,12 @@ with tab3:
     all_athletes = sorted(df_all_parquet["name_key"].unique())
     #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
     nom_recherche = st.selectbox(
-        label="Recherche athlète", # Obligatoire mais sera caché
+        label="Recherche athlète",
         options=all_athletes, 
         index=None, 
         placeholder="Tapez le nom d'un athlète...",
         label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
     )
-    #df_filtered = f.Filter_By_Athlete(df_all_parquet,nom_recherche)
-    #st.write(df_filtered['race_name'].unique())
 
     if nom_recherche:
         df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
@@ -123,6 +121,13 @@ with tab3:
                     .nunique()
                     .sort_values(ascending=False)
                 )
+
+                # Calcul de la distance totale par sport
+                dist_par_sport = (
+                    df_coureur.drop_duplicates(subset=['race_name'])
+                    .groupby('sport')['Distance']
+                    .sum()
+                )
                 
                 # Sous-conteneur pour les métriques alignées horizontalement
                 # On crée (Nombre de sports + 1 pour le total) colonnes
@@ -138,12 +143,13 @@ with tab3:
                 # 2. Les métriques par SPORT dans les colonnes suivantes
                 for i, (sport, nb) in enumerate(courses_par_sport.items()):
                     with stats_cols[i + 1]:
+                        distance = dist_par_sport.get(sport, 0)
                         label_with_icon = f"{sport_icon(sport)} {sport}"
                         st.metric(
                             label=label_with_icon,
-                            value=f"{nb:,}".replace(",", " ")
+                            value=f"#{nb} | {int(distance)}km"
                         )
-        
+
             st.divider()
             
             # --- NOUVELLE SECTION : RECORDS ---
