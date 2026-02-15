@@ -25,7 +25,7 @@ df_all_parquet = load_data(parquet_file)
 tab1,tab2, tab3, tab4, tab5 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
-    st.write(df_synthese.head())
+    #st.write(df_synthese.head())
     st.write(df_all_parquet.head())
     
 ########################## ########################## ########################## ########################## ########################## 
