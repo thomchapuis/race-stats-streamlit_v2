@@ -15,14 +15,26 @@ def load_data():
 
 df_all_parquet = load_data()
 
-tab1,tab2, tab3, tab4 = st.tabs(["Tab1", "Tab2","Tab3", "Settings ⚙️"])
+tab1,tab2, tab3, tab4 = st.tabs(["Classement", "👤 Coureur","Triathlon", "⚙️ Settings"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.write(df_all_parquet.head())
+    all_races = sorted(df_all_parquet["race_name"].unique())
+    nom_recherche = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...")
+    df_Race = Filter_By_Race(df_all_parquet,nom_recherche)
+    
+    #st.write(f"Classement pour : **{liste_courses_athlete.set_index('race_id').loc[choix_course, 'race_name']}**")
+    
+    st.dataframe(
+        df_Race[["rank", "name", "time", "category", "sex"]].style.apply(highlight_athlete, axis=1),
+        use_container_width=True,
+        hide_index=True,
+        height=400 # Fixe la hauteur pour éviter un tableau trop long
+    )
     
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
-    st.header("👤 Fiche Identité Coureur")
+    st.header("👤 Fiche Coureur")
 
     # 0) Barre de recherche
     # On peut proposer une liste déroulante avec recherche intégrée pour éviter les fautes de frappe
