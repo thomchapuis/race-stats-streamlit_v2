@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 
+
 @st.cache_data
 def load_data():
     return pd.read_parquet("data/races5.parquet")
@@ -16,5 +17,31 @@ with tab2:
     st.write(df_all_parquet.head())
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
-    st.write(df_all_parquet.head())
+    nb_courses = df_all_parquet["race_id"].nunique() 
+    st.subheader("Indicateurs clés")
+    col1, _ = st.columns([1, 4])
+    with col1:
+        st.metric(
+            label="🏁 Nombre total de courses",
+            value=f"{nb_courses:,}".replace(",", " ")
+        )
+    st.subheader("Sports représentés")
+    
+    courses_par_sport = (
+        df_all_parquet
+        .groupby("sport")["race_id"]
+        .nunique()
+        .sort_values(ascending=False)
+    )
+    
+    # Affichage en cartes (colonnes dynamiques)
+    cols = st.columns(len(courses_par_sport))
+    
+    for col, (sport, nb) in zip(cols, courses_par_sport.items()):
+        with col:
+            st.metric(
+                label=sport,
+                value=f"{nb:,}".replace(",", " "),
+            )
+
 ########################## ########################## ########################## ########################## ########################## 
