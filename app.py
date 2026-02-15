@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from config import sport_icon
+from utils.config import sport_icon
 
 data_file = "data/races5.parquet"
 
