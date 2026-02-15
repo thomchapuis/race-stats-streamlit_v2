@@ -85,11 +85,9 @@ with tab2:
             
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
-            
-
-            df_valid_ranks = df_coureur[df_coureur["rank"] > 0]
-            row_best = df_valid_ranks.loc[df_valid_ranks["rank"].idxmin()]
-            row_worst = df_valid_ranks.loc[df_valid_ranks["rank"].idxmax()]
+            df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
+            row_best = df_solo.loc[df_solo["rank"].idxmin()]
+            row_worst = df_solo.loc[df_solo["rank"].idxmax()]
         
             col_best, col_worst = st.columns(2)
             
