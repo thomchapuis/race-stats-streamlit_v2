@@ -8,3 +8,18 @@ SPORT_ICONS = {
 def sport_icon(sport):
     """Retourne l'icône correspondant au sport ou un drapeau par défaut."""
     return SPORT_ICONS.get(sport, "🏁")
+
+ATHLETE = [
+    "BERGER Tristan",
+    "BOMPAS Théo",
+    "BOMPAS Romain",
+    "DELCAMP Brieuc,"
+    "CHAPUIS Thomas", 
+    "CHAPUIS Maxime", 
+    "CHAPUIS Laurent",
+    "CHAPUIS Romane",
+    "FEIDT Lucie",
+    "GODILLON Matthieu",
+    "TRIGO Severino",
+    "Tessier Myriam"
+    ]
