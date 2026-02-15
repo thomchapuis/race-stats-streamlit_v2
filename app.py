@@ -82,13 +82,14 @@ with tab2:
                         )
         
             st.divider()
+            
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
             
-            # On récupère la ligne entière pour le meilleur et le pire rang
-            # .idxmin() donne l'index de la ligne avec la valeur minimale
-            row_best = df_coureur.loc[df_coureur["rank"].idxmin()]
-            row_worst = df_coureur.loc[df_coureur["rank"].idxmax()]
+
+            df_valid_ranks = df_coureur[df_coureur["rank"] > 0]
+            row_best = df_coureur.loc[df_valid_ranks["rank"].idxmin()]
+            row_worst = df_coureur.loc[df_valid_ranks["rank"].idxmax()]
         
             col_best, col_worst = st.columns(2)
             
