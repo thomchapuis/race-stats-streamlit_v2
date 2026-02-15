@@ -53,9 +53,8 @@ with tab3:
     
         for col, (sport, nb) in zip(cols, courses_par_sport.items()):
             with col:
-                st.metric(
-                    label=sport,
-                    value=f"{nb:,}".replace(",", " "),
+                st.markdown(
+                    f"### {nb} {sport}s"
                 )
 
 ########################## ########################## ########################## ########################## ########################## 
