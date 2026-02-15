@@ -23,7 +23,7 @@ df_synthese = pd.read_parquet(synthese_file)
 
 
 
-tab1,tab2, tab3, tab4 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
+tab1,tab2, tab3, tab4, tab5 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.write(df_synthese.head())
