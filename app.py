@@ -38,8 +38,14 @@ with tab1:
 with tab2:
     st.header("👤 Fiche Coureur")
     all_athletes = sorted(df_all_parquet["name_key"].unique())
-    nom_recherche = st.selectbox(options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
-
+    #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...")
+    nom_recherche = st.selectbox(
+        label="Recherche athlète", # Obligatoire mais sera caché
+        options=all_athletes, 
+        index=None, 
+        placeholder="Tapez le nom d'un athlète...",
+        label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
+    )
     #df_filtered = f.Filter_By_Athlete(df_all_parquet,nom_recherche)
     #st.write(df_filtered['race_name'].unique())
 
