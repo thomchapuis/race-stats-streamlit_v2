@@ -180,7 +180,7 @@ with tab3:
                     st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
                 
                 with st.container(border=True):
-                    df_race_best = Filter_By_Race(df_coureur,row_best['race_name'])
+                    df_race_best = f.Filter_By_Race(df_coureur,row_best['race_name'])
                     fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_race_best,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur, width='stretch')
 
@@ -197,7 +197,7 @@ with tab3:
                     st.caption(f"**Sport :** {sport_icon(row_worst['sport'])} {row_worst['sport']}")
                 
                 with st.container(border=True):
-                    df_race_worst = Filter_By_Race(df_coureur,row_worst['race_name'])
+                    df_race_worst = f.Filter_By_Race(df_coureur,row_worst['race_name'])
                     fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur, width='stretch')
 
