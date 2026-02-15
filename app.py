@@ -42,25 +42,49 @@ with tab2:
             .nunique()
             .sort_values(ascending=False)
         )
-
-            # 2) Un seul gros container pour le total et le détail par sport
-            with st.container(border=True):
-                cols = st.columns(len(courses_par_sport) + 1)
+        # Affichage de la "Fiche"
+        with st.container(border=True):
+            # On crée deux colonnes principales : une pour l'icône, une pour tout le texte/stats
+            col_icon, col_content = st.columns([1, 5])
+            
+            with col_icon:
+                # On peut agrandir l'icône avec du HTML si besoin, ou simplement :
+                st.write("# 🏃‍♂️") 
+            
+            with col_content:
+                # Le nom de l'athlète en haut
                 st.title(nom_recherche)
-                with cols[0]:
+                
+                # Calcul des stats par sport pour CET athlète uniquement
+                courses_par_sport = (
+                    df_coureur.groupby("sport")["race_id"]
+                    .nunique()
+                    .sort_values(ascending=False)
+                )
+                
+                # Sous-conteneur pour les métriques alignées horizontalement
+                # On crée (Nombre de sports + 1 pour le total) colonnes
+                stats_cols = st.columns(len(courses_par_sport) + 1)
+                
+                # 1. La métrique TOTAL dans la première sous-colonne
+                with stats_cols[0]:
                     st.metric(
                         label="🏁 Total", 
                         value=f"{nb_courses_coureur:,}".replace(",", " ")
                     )
-        
-                for col, (sport, nb) in zip(cols[1:], courses_par_sport.items()):
-                    with col:
+                
+                # 2. Les métriques par SPORT dans les colonnes suivantes
+                for i, (sport, nb) in enumerate(courses_par_sport.items()):
+                    with stats_cols[i + 1]:
                         label_with_icon = f"{sport_icon(sport)} {sport}"
                         st.metric(
                             label=label_with_icon,
                             value=f"{nb:,}".replace(",", " ")
                         )
+        
             st.divider()
+            # Tu peux ajouter ici ton historique ou d'autres graphiques...
+
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
 ########################## ########################## ########################## ########################## ########################## 
