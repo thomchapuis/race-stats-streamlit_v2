@@ -51,7 +51,7 @@ with tab1:
     - **Contenu** : Consultez le classement en temps réel des équipes et des coureurs.
     - **Fonctionnalités** : Filtres par catégorie, tri par temps, et export des données.
     """)
-    if st.button("Aller au Classement", key="go_to_classement"):
+    st.button("Aller au Classement", key="go_to_classement"):
         #st.switch_page("pages/2_Classement.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Coureur"
@@ -60,7 +60,7 @@ with tab1:
     - **Contenu** : Suivez les performances individuelles des coureurs.
     - **Fonctionnalités** : Détails des temps de passage, historique, et statistiques.
     """)
-    if st.button("Aller à Coureur", key="go_to_coureur"):
+    st.button("Aller à Coureur", key="go_to_coureur"):
         #st.switch_page("pages/3_Coureur.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Triathlon"
@@ -69,7 +69,7 @@ with tab1:
     - **Contenu** : Informations spécifiques aux épreuves de triathlon.
     - **Fonctionnalités** : Temps de transition, classement par discipline, et analyse des performances.
     """)
-    if st.button("Aller à Triathlon", key="go_to_triathlon"):
+    st.button("Aller à Triathlon", key="go_to_triathlon"):
         #st.switch_page("pages/4_Triathlon.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Settings"
@@ -78,7 +78,7 @@ with tab1:
     - **Contenu** : Personnalisez les paramètres de l'application.
     - **Fonctionnalités** : Choix des unités, thème, et préférences d'affichage.
     """)
-    if st.button("Aller à Settings", key="go_to_settings"):
+    st.button("Aller à Settings", key="go_to_settings"):
         #st.switch_page("pages/5_Settings.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Test"
@@ -87,7 +87,7 @@ with tab1:
     - **Contenu** : Espace de test pour les nouvelles fonctionnalités.
     - **Fonctionnalités** : Expérimentations et validations techniques.
     """)
-    if st.button("Aller à Test", key="go_to_test"):
+    st.button("Aller à Test", key="go_to_test"):
        # st.switch_page("pages/6_Test.py")  # Remplacez par le chemin réel de votre page
 
     st.markdown("---")
