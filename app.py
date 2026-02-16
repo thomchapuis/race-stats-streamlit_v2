@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 from utils.config import sport_icon
 from utils.config import ATHLETES
 #from utils.fonctions import *
