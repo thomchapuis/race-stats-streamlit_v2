@@ -272,6 +272,67 @@ def Viz_Radar_Triathlon(df, names_list):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
+def Viz_Battle_percentage(df_Battle, targets):
+    """
+    Affiche un diagramme course par course des pourcentages de classement
+    Parameters:
+    - df_race: DataFrame contenant les données de la course.
+    - targets = ["chapuisthomas", "bompastheo"]
+    """
+    date_col = 'race_date' 
+    df_Battle[date_col] = pd.to_datetime(df_Battle[date_col])
+    df_Battle = df_Battle.sort_values(date_col, ascending=True)
+
+    df_plot = df_Battle.copy()
+    df_plot['Pourcentage'] = df_plot.groupby('race_name')['rank'].transform(lambda x: (x / x.max()) * 100)
+
+
+    df_plot = df_plot[df_plot['name_key'].isin(targets)]
+    df_plot['text_label'] = df_plot['Pourcentage'].round(1).astype(str) + "%"
+    df_plot = df_plot[['race_name', 'name_key', 'Pourcentage', 'text_label']].rename(
+        columns={'race_name': 'Course', 'name_key': 'Coureur'}
+    )
+
+    #df_plot['Performance_Inv'] = 100 - df_plot['Pourcentage']
+    df_plot['Performance_Inv'] = 70 - df_plot['Pourcentage']
+
+    df_plot['Val_Graph'] = df_plot.apply(
+        lambda x: -x['Performance_Inv'] if x['Coureur'] == targets[0] else x['Performance_Inv'], 
+        axis=1
+    )
+    fig = px.bar(
+        df_plot,
+        y="Course",
+        x="Val_Graph",
+        color="Coureur",
+        orientation='h',
+        text="text_label",
+        template="plotly_dark",
+        category_orders={"Course": df_plot['Course'].unique().tolist()},
+        color_discrete_map={targets[0]: "#EF553B", targets[1]: "#636EFA"}
+    )
+
+
+    fig.update_layout(
+        xaxis=dict(title='',showticklabels=False, showgrid=False, zeroline=True, zerolinecolor='gray', range=[-70, 70]),
+        yaxis=dict(title='',showticklabels=False, showgrid=False),
+        bargap=0.4,
+        showlegend=False
+    )
+
+    fig.update_traces(textposition='outside', cliponaxis=False)
+
+    for i, row in df_plot.drop_duplicates('Course').iterrows():
+        fig.add_annotation(
+            x=0, y=row['Course'],
+            text=f"<b>{row['Course']}</b>",
+            showarrow=False,
+            font=dict(size=11, color="white"),
+            bgcolor="rgba(0,0,0,0)"
+        )
+
+    #return fig.show() pour notebook .ipynb
+    return fig   #pour streamlit
 # ---------------------------------------------------------------------------------------
 # 🔹 Fonction de Filtre
 # ---------------------------------------------------------------------------------------
@@ -386,3 +447,4 @@ def get_Rank_Percentage(df, col):
     temp_df['rank_percentage'] = (temp_df[col] / total_participants) * 100
 
     return temp_df['rank_percentage']
+
