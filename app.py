@@ -35,9 +35,13 @@ df_all_parquet = pd.merge(
 
 
 
-tab1,tab2, tab3, tab4, tab5 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings"])
+tab1,tab2, tab3, tab4, tab5, tab6 = st.tabs(["Intro","Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
+    st.write(df_synthese.head())
+
+########################## ########################## ########################## ########################## ########################## 
+with tab6:
     st.write(df_synthese.head())
     #st.write(df_all_parquet.head())
 
