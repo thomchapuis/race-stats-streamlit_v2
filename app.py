@@ -286,67 +286,24 @@ with tab5:
                 )
 ########################## ########################## ########################## ########################## ########################## 
 
-
-# Exemple de données (à remplacer par vos données réelles)
-data = {
-    "courses": ["Trail 1", "Triathlon 2", "Marathon 3", "Relais 4"],
-    "athlete1": {"name": "Thomas CHAPUIS", "rankings": [15, 17, 5, 8]},
-    "athlete2": {"name": "Théo BOMPAS", "rankings": [18, 30, 3, 12]}
-}
-
-# Onglet "Battle"
 with tab7:
-    st.header("🔥 Battle Mode")
-    # Sélection des athlètes (à remplacer par vos données réelles)
-    athlete_options = ["Thomas CHAPUIS", "Théo BOMPAS", "Marie MARTIN", "Jean DUPONT"]
-    athlete1 = st.selectbox("Athlète 1", athlete_options, index=0)
-    athlete2 = st.selectbox("Athlète 2", athlete_options, index=1)
+    st.title("⚔️ Battle : Duel de Performance")
     
-    # Données pour le graphique (exemple)
-    courses = data["courses"]
-    rankings1 = data["athlete1"]["rankings"]
-    rankings2 = data["athlete2"]["rankings"]
+    # --- 1. BARRE DE SÉLECTION (SIDEBAR OU TOP) ---
+    # On récupère la liste des athlètes pour les menus déroulants
+    all_athletes = sorted(df_all_parquet['name'].unique())
     
-    # Préparation des données pour Plotly (format divergent)
-    df = pd.DataFrame({
-        "Course": courses,
-        f"{athlete1}": [-x for x in rankings1],  # Valeurs négatives pour l'athlète 1 (gauche)
-        f"{athlete2}": rankings2                # Valeurs positives pour l'athlète 2 (droite)
-    })
+    col_sel1, col_sel2 = st.columns(2)
     
-    # Création du graphique divergent
-    fig = px.bar(
-        df,
-        x=[f"{athlete1}", f"{athlete2}"],
-        y="Course",
-        title=f"Comparaison des classements : {athlete1} vs {athlete2}",
-        labels={"value": "Classement", "variable": "Athlète", "Course": "Course"},
-        color_discrete_sequence=[ "#1f77b4", "#ff7f0e"],  # Couleurs distinctes
-        barmode="relative",  # Mode relatif pour les barres divergentes
-        width=800,
-        height=500
-    )
+    with col_sel1:
+        athlete1 = st.selectbox("Sélectionner le premier coureur", all_athletes, index=0,key="selectbox_Battle_name1")
+        key1 = df_all_parquet.loc[df_all_parquet['name'] == athlete1, 'name_key'].iloc[0]
     
-    # Personnalisation du graphique
-    fig.update_layout(
-        yaxis={"categoryorder": "total ascending"},  # Trier les courses par ordre alphabétique
-        xaxis={"tickvals": [-30, -20, -10, 0, 10, 20, 30]},  # Graduations personnalisées
-        legend_title_text="Athlète",
-        bargap=0.2  # Espace entre les barres
-    )
+    with col_sel2:
+        athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=1,key="selectbox_Battle_name1")
+        key2 = df_all_parquet.loc[df_all_parquet['name'] == athlete2, 'name_key'].iloc[0]
     
-    # Ajouter une ligne verticale à x=0 pour marquer le centre
-    fig.add_vline(x=0, line_width=2, line_color="black", line_dash="dash")
+    st.divider()
     
-    # Affichage du graphique
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Explication des résultats
-    st.subheader("Analyse")
-    better_courses_athlete1 = [course for i, course in enumerate(courses) if rankings1[i] < rankings2[i]]
-    better_courses_athlete2 = [course for i, course in enumerate(courses) if rankings2[i] < rankings1[i]]
-    
-    st.markdown(f"""
-    - **{athlete1}** a de meilleurs classements sur : **{', '.join(better_courses_athlete1) if better_courses_athlete1 else 'Aucune'}**
-    - **{athlete2}** a de meilleurs classements sur : **{', '.join(better_courses_athlete2) if better_courses_athlete2 else 'Aucune'}**
-    """)
+    # --- 2. SECTION STATISTIQUES (COLONNES GAUCHE / DROITE) ---
+    col_stats_left, col_stats_right = st.columns(2)
