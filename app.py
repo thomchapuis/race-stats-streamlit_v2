@@ -35,7 +35,7 @@ df_all_parquet = pd.merge(
 
 
 
-tab1,tab2, tab3, tab4, tab5, tab6 = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test"])
+tab1,tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "Battle"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -284,3 +284,63 @@ with tab5:
                     value=f"{nb:,}".replace(",", " ")
                 )
 ########################## ########################## ########################## ########################## ########################## 
+
+
+# Exemple de données (à remplacer par vos données réelles)
+data = {
+    "courses": ["Trail 1", "Triathlon 2", "Marathon 3", "Relais 4"],
+    "athlete1": {"name": "Thomas CHAPUIS", "rankings": [15, 17, 5, 8]},
+    "athlete2": {"name": "Théo BOMPAS", "rankings": [18, 30, 3, 12]}
+}
+
+# Onglet "Battle"
+with tab7:
+    st.header("🔥 Battle Mode")
+    # Sélection des athlètes (à remplacer par vos données réelles)
+    athlete_options = ["Thomas CHAPUIS", "Théo BOMPAS", "Marie MARTIN", "Jean DUPONT"]
+    athlete1 = st.selectbox("Athlète 1", athlete_options, index=0)
+    athlete2 = st.selectbox("Athlète 2", athlete_options, index=1)
+
+    # Données pour le graphique (exemple)
+    courses = data["courses"]
+    rankings1 = data["athlete1"]["rankings"]
+    rankings2 = data["athlete2"]["rankings"]
+    
+    # Préparation des données pour Plotly
+    df = pd.DataFrame({
+        "Course": courses * 2,
+        "Athlète": [athlete1] * len(courses) + [athlete2] * len(courses),
+        "Classement": rankings1 + rankings2
+    })
+    
+    # Création du graphique
+    fig = px.bar(
+        df,
+        x="Classement",
+        y="Course",
+        color="Athlète",
+        barmode="group",
+        orientation="h",  # Barres horizontales
+        title=f"Comparaison des classements : {athlete1} vs {athlete2}",
+        labels={"Classement": "Position", "Course": "Course"},
+        color_discrete_sequence=["#1f77b4", "#ff7f0e"],  # Couleurs distinctes
+        width=800,
+        height=500
+    )
+    
+    # Personnalisation du graphique
+    fig.update_layout(
+        yaxis={"categoryorder": "total ascending"},  # Trier les courses par ordre alphabétique
+        xaxis={"dtick": 1},  # Afficher toutes les graduations sur l'axe X
+        legend_title_text="Athlète"
+    )
+    
+    # Affichage du graphique
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Explication des résultats
+    st.subheader("Analyse")
+    st.markdown(f"""
+    - **{athlete1}** a de meilleurs classements sur : {', '.join([course for i, course in enumerate(courses) if rankings1[i] < rankings2[i]])}
+    - **{athlete2}** a de meilleurs classements sur : {', '.join([course for i, course in enumerate(courses) if rankings2[i] < rankings1[i]])}
+    """)
