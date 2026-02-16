@@ -36,7 +36,7 @@ df_all_parquet = pd.merge(
 
 
 
-tab1,tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "Battle"])
+tab1,tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -291,17 +291,15 @@ with tab7:
     
     # --- 1. BARRE DE SÉLECTION (SIDEBAR OU TOP) ---
     # On récupère la liste des athlètes pour les menus déroulants
-    all_athletes = sorted(df_all_parquet['name'].unique())
+    all_athletes = sorted(df_all_parquet['name_key'].unique())
     
     col_sel1, col_sel2 = st.columns(2)
     
     with col_sel1:
         athlete1 = st.selectbox("Sélectionner le premier coureur", all_athletes, index=0,key="selectbox_Battle_name1")
-        key1 = df_all_parquet.loc[df_all_parquet['name'] == athlete1, 'name_key'].iloc[0]
     
     with col_sel2:
         athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=1,key="selectbox_Battle_name2")
-        key2 = df_all_parquet.loc[df_all_parquet['name'] == athlete2, 'name_key'].iloc[0]
     
     st.divider()
     
