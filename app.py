@@ -305,3 +305,8 @@ with tab7:
     
     # --- 2. SECTION STATISTIQUES (COLONNES GAUCHE / DROITE) ---
     col_stats_left, col_stats_right = st.columns(2)
+
+    st.divider()
+    
+    df_Battle = f.Filter_By_Athlete(df_all_parquet, [athlete1,athlete2])
+    f.Viz_Battle_percentage(df_Battle, targets)
