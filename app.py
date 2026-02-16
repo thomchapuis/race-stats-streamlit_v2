@@ -300,7 +300,7 @@ with tab7:
         key1 = df_all_parquet.loc[df_all_parquet['name'] == athlete1, 'name_key'].iloc[0]
     
     with col_sel2:
-        athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=1,key="selectbox_Battle_name1")
+        athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=1,key="selectbox_Battle_name2")
         key2 = df_all_parquet.loc[df_all_parquet['name'] == athlete2, 'name_key'].iloc[0]
     
     st.divider()
