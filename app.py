@@ -310,4 +310,6 @@ with tab7:
 
     targets =  [athlete1,athlete2]
     df_Battle = f.Filter_By_Athlete(df_all_parquet,targets)
-    f.Viz_Battle_percentage(df_Battle, targets)
+    
+    fig_Battle = f.Viz_Battle_percentage(df_Battle, targets)
+    st.plotly_chart(fig_Battle, use_container_width=True)
