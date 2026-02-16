@@ -307,6 +307,7 @@ with tab7:
     col_stats_left, col_stats_right = st.columns(2)
 
     st.divider()
-    
-    df_Battle = f.Filter_By_Athlete(df_all_parquet, [athlete1,athlete2])
+
+    targets =  [athlete1,athlete2]
+    df_Battle = f.Filter_By_Athlete(df_all_parquet,targets)
     f.Viz_Battle_percentage(df_Battle, targets)
