@@ -42,56 +42,8 @@ with tab1:
     st.markdown("""
     Bienvenue dans l'application de suivi des Performances !
 
-    Voici une brève description de chaque page :
-    """)
-
-    # Description de la page "Classement"
-    st.subheader("📊 Classement")
-    st.markdown("""
-    - **Contenu** : Consultez le classement en temps réel des équipes et des coureurs.
-    - **Fonctionnalités** : Filtres par catégorie, tri par temps, et export des données.
-    """)
-    st.button("Aller au Classement", key="go_to_classement"):
-        #st.switch_page("pages/2_Classement.py")  # Remplacez par le chemin réel de votre page
-
-    # Description de la page "Coureur"
-    st.subheader("👤 Coureur")
-    st.markdown("""
-    - **Contenu** : Suivez les performances individuelles des coureurs.
-    - **Fonctionnalités** : Détails des temps de passage, historique, et statistiques.
-    """)
-    st.button("Aller à Coureur", key="go_to_coureur"):
-        #st.switch_page("pages/3_Coureur.py")  # Remplacez par le chemin réel de votre page
-
-    # Description de la page "Triathlon"
-    st.subheader("🚲 Triathlon")
-    st.markdown("""
-    - **Contenu** : Informations spécifiques aux épreuves de triathlon.
-    - **Fonctionnalités** : Temps de transition, classement par discipline, et analyse des performances.
-    """)
-    st.button("Aller à Triathlon", key="go_to_triathlon"):
-        #st.switch_page("pages/4_Triathlon.py")  # Remplacez par le chemin réel de votre page
-
-    # Description de la page "Settings"
-    st.subheader("⚙️ Settings")
-    st.markdown("""
-    - **Contenu** : Personnalisez les paramètres de l'application.
-    - **Fonctionnalités** : Choix des unités, thème, et préférences d'affichage.
-    """)
-    st.button("Aller à Settings", key="go_to_settings"):
-        #st.switch_page("pages/5_Settings.py")  # Remplacez par le chemin réel de votre page
-
-    # Description de la page "Test"
-    st.subheader("🧪 Test")
-    st.markdown("""
-    - **Contenu** : Espace de test pour les nouvelles fonctionnalités.
-    - **Fonctionnalités** : Expérimentations et validations techniques.
-    """)
-    st.button("Aller à Test", key="go_to_test"):
-       # st.switch_page("pages/6_Test.py")  # Remplacez par le chemin réel de votre page
-
     st.markdown("---")
-    st.caption("© 2026 - Application Maquisards")
+    st.caption("© 2026 - Application de suivi")
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab6:
