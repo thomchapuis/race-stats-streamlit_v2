@@ -294,7 +294,7 @@ def Viz_Battle_percentage(df_Battle, targets):
     )
 
     #df_plot['Performance_Inv'] = 100 - df_plot['Pourcentage']
-    df_plot['Performance_Inv'] = 70 - df_plot['Pourcentage']
+    df_plot['Performance_Inv'] = 90 - df_plot['Pourcentage']
 
     df_plot['Val_Graph'] = df_plot.apply(
         lambda x: -x['Performance_Inv'] if x['Coureur'] == targets[0] else x['Performance_Inv'], 
@@ -314,7 +314,7 @@ def Viz_Battle_percentage(df_Battle, targets):
 
 
     fig.update_layout(
-        xaxis=dict(title='',showticklabels=False, showgrid=False, zeroline=True, zerolinecolor='gray', range=[-70, 70]),
+        xaxis=dict(title='',showticklabels=False, showgrid=False, zeroline=True, zerolinecolor='gray', range=[-90, 90]),
         yaxis=dict(title='',showticklabels=False, showgrid=False),
         bargap=0.4,
         showlegend=False
