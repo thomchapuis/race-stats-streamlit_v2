@@ -301,30 +301,28 @@ with tab7:
     athlete_options = ["Thomas CHAPUIS", "Théo BOMPAS", "Marie MARTIN", "Jean DUPONT"]
     athlete1 = st.selectbox("Athlète 1", athlete_options, index=0)
     athlete2 = st.selectbox("Athlète 2", athlete_options, index=1)
-
+    
     # Données pour le graphique (exemple)
     courses = data["courses"]
     rankings1 = data["athlete1"]["rankings"]
     rankings2 = data["athlete2"]["rankings"]
     
-    # Préparation des données pour Plotly
+    # Préparation des données pour Plotly (format divergent)
     df = pd.DataFrame({
-        "Course": courses * 2,
-        "Athlète": [athlete1] * len(courses) + [athlete2] * len(courses),
-        "Classement": rankings1 + rankings2
+        "Course": courses,
+        f"{athlete1}": [-x for x in rankings1],  # Valeurs négatives pour l'athlète 1 (gauche)
+        f"{athlete2}": rankings2                # Valeurs positives pour l'athlète 2 (droite)
     })
     
-    # Création du graphique
+    # Création du graphique divergent
     fig = px.bar(
         df,
-        x="Classement",
+        x=[f"{athlete1}", f"{athlete2}"],
         y="Course",
-        color="Athlète",
-        barmode="group",
-        orientation="h",  # Barres horizontales
         title=f"Comparaison des classements : {athlete1} vs {athlete2}",
-        labels={"Classement": "Position", "Course": "Course"},
-        color_discrete_sequence=["#1f77b4", "#ff7f0e"],  # Couleurs distinctes
+        labels={"value": "Classement", "variable": "Athlète", "Course": "Course"},
+        color_discrete_sequence=[ "#1f77b4", "#ff7f0e"],  # Couleurs distinctes
+        barmode="relative",  # Mode relatif pour les barres divergentes
         width=800,
         height=500
     )
@@ -332,16 +330,23 @@ with tab7:
     # Personnalisation du graphique
     fig.update_layout(
         yaxis={"categoryorder": "total ascending"},  # Trier les courses par ordre alphabétique
-        xaxis={"dtick": 1},  # Afficher toutes les graduations sur l'axe X
-        legend_title_text="Athlète"
+        xaxis={"tickvals": [-30, -20, -10, 0, 10, 20, 30]},  # Graduations personnalisées
+        legend_title_text="Athlète",
+        bargap=0.2  # Espace entre les barres
     )
+    
+    # Ajouter une ligne verticale à x=0 pour marquer le centre
+    fig.add_vline(x=0, line_width=2, line_color="black", line_dash="dash")
     
     # Affichage du graphique
     st.plotly_chart(fig, use_container_width=True)
     
     # Explication des résultats
     st.subheader("Analyse")
+    better_courses_athlete1 = [course for i, course in enumerate(courses) if rankings1[i] < rankings2[i]]
+    better_courses_athlete2 = [course for i, course in enumerate(courses) if rankings2[i] < rankings1[i]]
+    
     st.markdown(f"""
-    - **{athlete1}** a de meilleurs classements sur : {', '.join([course for i, course in enumerate(courses) if rankings1[i] < rankings2[i]])}
-    - **{athlete2}** a de meilleurs classements sur : {', '.join([course for i, course in enumerate(courses) if rankings2[i] < rankings1[i]])}
+    - **{athlete1}** a de meilleurs classements sur : **{', '.join(better_courses_athlete1) if better_courses_athlete1 else 'Aucune'}**
+    - **{athlete2}** a de meilleurs classements sur : **{', '.join(better_courses_athlete2) if better_courses_athlete2 else 'Aucune'}**
     """)
