@@ -52,7 +52,7 @@ with tab1:
     - **Fonctionnalités** : Filtres par catégorie, tri par temps, et export des données.
     """)
     if st.button("Aller au Classement", key="go_to_classement"):
-        st.switch_page("pages/2_Classement.py")  # Remplacez par le chemin réel de votre page
+        #st.switch_page("pages/2_Classement.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Coureur"
     st.subheader("👤 Coureur")
@@ -61,7 +61,7 @@ with tab1:
     - **Fonctionnalités** : Détails des temps de passage, historique, et statistiques.
     """)
     if st.button("Aller à Coureur", key="go_to_coureur"):
-        st.switch_page("pages/3_Coureur.py")  # Remplacez par le chemin réel de votre page
+        #st.switch_page("pages/3_Coureur.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Triathlon"
     st.subheader("🚲 Triathlon")
@@ -70,7 +70,7 @@ with tab1:
     - **Fonctionnalités** : Temps de transition, classement par discipline, et analyse des performances.
     """)
     if st.button("Aller à Triathlon", key="go_to_triathlon"):
-        st.switch_page("pages/4_Triathlon.py")  # Remplacez par le chemin réel de votre page
+        #st.switch_page("pages/4_Triathlon.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Settings"
     st.subheader("⚙️ Settings")
@@ -79,7 +79,7 @@ with tab1:
     - **Fonctionnalités** : Choix des unités, thème, et préférences d'affichage.
     """)
     if st.button("Aller à Settings", key="go_to_settings"):
-        st.switch_page("pages/5_Settings.py")  # Remplacez par le chemin réel de votre page
+        #st.switch_page("pages/5_Settings.py")  # Remplacez par le chemin réel de votre page
 
     # Description de la page "Test"
     st.subheader("🧪 Test")
@@ -88,7 +88,7 @@ with tab1:
     - **Fonctionnalités** : Expérimentations et validations techniques.
     """)
     if st.button("Aller à Test", key="go_to_test"):
-        st.switch_page("pages/6_Test.py")  # Remplacez par le chemin réel de votre page
+       # st.switch_page("pages/6_Test.py")  # Remplacez par le chemin réel de votre page
 
     st.markdown("---")
     st.caption("© 2026 - Application Maquisards")
