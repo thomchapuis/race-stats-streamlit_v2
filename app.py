@@ -39,8 +39,7 @@ tab1,tab2, tab3, tab4, tab5, tab6 = st.tabs(["Intro","📊 Classement", "👤 Co
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
-    st.markdown("""
-    Bienvenue dans l'application de suivi des Performances !
+    st.markdown("Bienvenue dans l'application de suivi des Performances !")
 
     st.markdown("---")
     st.caption("© 2026 - Application de suivi")
