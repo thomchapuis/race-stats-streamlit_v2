@@ -75,8 +75,12 @@ with tab2:
         # 1) Affichage de l'histogramme
         fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
         st.plotly_chart(fig_histo, use_container_width=True)
-    
-        # 2) Affichage du classement
+
+        2) Affichage
+        fig_Sex = f.Viz_Sex(df_Race)
+        st.plotly_chart(fig_Sex, use_container_width=True)
+        
+        # 3) Affichage du classement
         st.write("Classement complet")
         df_display = df_Race[["rank", "name", "time", "category", "sex"]].copy()
         df_display["time"] = df_display["time"].apply(
