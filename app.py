@@ -77,7 +77,7 @@ with tab2:
         st.plotly_chart(fig_histo, use_container_width=True)
 
         #2) Affichage
-        fig_Sex = f.Viz_Sexes(df_Race)
+        fig_Sex = f.Viz_Sexes_PieChart(df_Race)
         st.plotly_chart(fig_Sex, use_container_width=True)
         
         # 3) Affichage du classement
@@ -93,6 +93,7 @@ with tab2:
             hide_index=True,
             height=400
         )
+    
 ########################## ########################## ########################## ########################## ########################## 
 with tab3:
     st.header("👤 Fiche Coureur")
