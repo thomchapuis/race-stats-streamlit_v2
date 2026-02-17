@@ -175,7 +175,7 @@ def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
                            nbins=30,
                            template='plotly_dark',
                            color_discrete_map={'H': '#3498db', 'F': '#e84393'},
-                           marginal="rug",
+                           #marginal="rug",
                            opacity=0.75)
     else:
         fig = px.histogram(df,
