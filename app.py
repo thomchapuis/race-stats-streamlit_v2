@@ -71,14 +71,19 @@ with tab2:
     else:
         df_Race = f.Filter_By_Race(df_all_parquet, race_recherche1)
         df_Race = df_Race.sort_values("rank")
-    
-        # 1) Affichage de l'histogramme
-        fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
-        st.plotly_chart(fig_histo, use_container_width=True)
 
-        #2) Affichage
-        fig_Sex = f.Viz_Sexes_PieChart(df_Race)
-        st.plotly_chart(fig_Sex, use_container_width=True)
+        col_Histo, col_Sex = st.columns(2)
+            
+        with col_Histo:
+                with st.container(border=True):
+                    # 1) Affichage de l'histogramme
+                    fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
+                    st.plotly_chart(fig_histo, use_container_width=True)
+        with col_Sex:
+                with st.container(border=True):
+                    #2) Affichage
+                    fig_Sex = f.Viz_Sexes_PieChart(df_Race)
+                    st.plotly_chart(fig_Sex, use_container_width=True)
         
         # 3) Affichage du classement
         st.write("Classement complet")
