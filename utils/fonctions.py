@@ -51,7 +51,7 @@ def Viz_Sexes(df_all_parquet):
         barmode='stack',
         barnorm='percent',
         hovermode="x unified",
-        yaxis_title=""
+        xaxis_title=""
     )
 
     # Ajustements des axes
