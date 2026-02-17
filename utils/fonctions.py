@@ -82,18 +82,19 @@ def Viz_Sexes_PieChart(df_single_race):
         title=f"Répartition Hommes/Femmes - {df_single_race['race_name'].iloc[0]} ({df_single_race['race_date'].dt.year.iloc[0]})",
         color=['Femmes', 'Hommes'],
         color_discrete_map={'Femmes': '#e84393', 'Hommes': '#3498db'},
-        hole=0.3
+        hole=0.6
     )
 
     # Personnalisation de la mise en page
     fig.update_traces(
         textposition='inside',
         textinfo='percent+label',
+        showlegend=False
         marker=dict(line=dict(color='#000000', width=1))
     )
 
     fig.update_layout(
-        legend_title_text='Genre',
+        title=None
         template='plotly_dark'
     )
 
