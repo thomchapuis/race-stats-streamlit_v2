@@ -292,7 +292,7 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     fig.add_annotation(
         text="Valeur importante : 42",   # texte à afficher
         xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
-        x=1, y=1,                       # position (1,1) = coin supérieur droit
+        x=1, y=1.2,                       # position (1,1) = coin supérieur droit
         xanchor='right', yanchor='top', # ancrage du texte
         showarrow=False,
         #font=dict(size=14, color="black")
