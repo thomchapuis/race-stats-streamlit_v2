@@ -189,16 +189,24 @@ with tab3:
             hours = td.components.hours
             minutes = td.components.minutes
             seconds = td.components.seconds
-            #st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
-            st.metric(label="Plus longue course", value=f"{hours:02d}h{minutes:02d}min{seconds:02d}sec") # Afficher au format HH:MM:SS
-            st.caption(f"**Sport :** {sport_icon(longest_race_row['sport'])} {longest_race_row['sport']}")
 
-            df_noTri = f.Filter_By_Sport(df_coureur, ['Trail','Cycling','Running'])
-            df_solo_noTri = df_noTri[(df_noTri["name_key"] == nom_recherche) & (df_noTri["rank"] > 0)]
-            longest_distance_row = df_solo_noTri.loc[df_solo_noTri['Distance'].idxmax()]
-            st.metric(label="Plus longue distance", value=f"{longest_distance_row['Distance']}km")
-            st.caption(f"**Sport :** {sport_icon(longest_distance_row['sport'])} {longest_distance_row['sport']}")
-            
+            col_Duration, col_Dist, col_Empty1,col_Empty2 = st.columns(4)
+            with col_Duration:
+                with st.container(border=True):
+                    #st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
+                    st.metric(label="Plus longue course", value=f"{hours:02d}h{minutes:02d}min{seconds:02d}sec") # Afficher au format HH:MM:SS
+                    st.caption(f"**Sport :** {sport_icon(longest_race_row['sport'])} {longest_race_row['sport']}")
+            with col_Dist:
+                with st.container(border=True):
+                    df_noTri = f.Filter_By_Sport(df_coureur, ['Trail','Cycling','Running'])
+                    df_solo_noTri = df_noTri[(df_noTri["name_key"] == nom_recherche) & (df_noTri["rank"] > 0)]
+                    longest_distance_row = df_solo_noTri.loc[df_solo_noTri['Distance'].idxmax()]
+                    st.metric(label="Plus longue distance", value=f"{longest_distance_row['Distance']}km")
+                    st.caption(f"**Sport :** {sport_icon(longest_distance_row['sport'])} {longest_distance_row['sport']}")
+            with col_Empty1:
+                st.empty()
+            with col_Empty2:
+                st.empty()
 
             
             # --- NOUVELLE SECTION : RECORDS ---
