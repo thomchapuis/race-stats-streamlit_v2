@@ -72,19 +72,23 @@ with tab2:
         df_Race = f.Filter_By_Race(df_all_parquet, race_recherche1)
         df_Race = df_Race.sort_values("rank")
 
-        col_Histo, col_Sex = st.columns(2)
-            
-        with col_Histo:
-                with st.container(border=True):
-                    # 1) Affichage de l'histogramme
-                    #fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
-                    fig_histo = f.Viz_Histogramme_Temps_Sex(df_Race, 'time', True)
-                    st.plotly_chart(fig_histo, use_container_width=True)
+        col_Category, col_Sex = st.columns(2)
+        with col_Category:
+            with st.container(border=True):
+                st.write("📊 Histogramme des catégories à venir")
         with col_Sex:
-                with st.container(border=True):
-                    #2) Affichage
-                    fig_Sex = f.Viz_Sexes_PieChart(df_Race)
-                    st.plotly_chart(fig_Sex, use_container_width=True)
+            col_Sex_Histo, col_Sex_PieChart = st.columns(2)   
+            with col_Sex_Histo:
+                    with st.container(border=True):
+                        # 1) Affichage de l'histogramme
+                        #fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
+                        fig_histo = f.Viz_Histogramme_Temps_Sex(df_Race, 'time', True)
+                        st.plotly_chart(fig_histo, use_container_width=True)
+            with col_Sex_PieChart:
+                    with st.container(border=True):
+                        #2) Affichage
+                        fig_Sex = f.Viz_Sexes_PieChart(df_Race)
+                        st.plotly_chart(fig_Sex, use_container_width=True)
         
         # 3) Affichage du classement
         st.write("Classement complet")
