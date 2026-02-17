@@ -187,7 +187,6 @@ with tab3:
             longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
             st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
 
-
             best_rank_pourcentage= df_solo.loc[df_solo['Pourcentage'].idxmin()]
             st.metric(label="Meilleure perf", value=f"Top {best_rank_pourcentage['Pourcentage']:.2f}%")
             
@@ -202,15 +201,29 @@ with tab3:
             col_best, col_worst = st.columns(2)
             
             with col_best:
-                with st.container(border=True):
-                    st.metric(
-                        label="🥇 Meilleur Classement", 
-                        value=f"{int(row_best['rank'])}e"
-                    )
-                    # Affichage du nom de la course et du sport
-                    st.caption(f"**Course :** {row_best['race_name']}")
-                    st.caption(f"**Finishers :** {int(participants_best)}")
-                    st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
+                col_best_abs, col_best_relatif = st.columns(2)
+                with col_best_abs:   
+                    with st.container(border=True):
+                        st.metric(
+                            label="🥇 Meilleur Classement absolu", 
+                            value=f"{int(row_best['rank'])}e"
+                        )
+                        # Affichage du nom de la course et du sport
+                        st.caption(f"**Course :** {row_best['race_name']}")
+                        st.caption(f"**Finishers :** {int(participants_best)}")
+                        st.caption(f"**Sport :** {sport_icon(row_best['sport'])} {row_best['sport']}")
+
+                with col_best_relatif:   
+                    with st.container(border=True):
+                        st.metric(
+                            label="🥇 Meilleur Classement relatif", 
+                            value=f"Top {best_rank_pourcentage['Pourcentage']:.2f}%"
+                        )
+                                                
+                        # Affichage du nom de la course et du sport
+                        st.caption(f"**Course :** {best_rank_pourcentage['race_name']}")
+                        #st.caption(f"**Finishers :** {int(participants_best)}")
+                        st.caption(f"**Sport :** {sport_icon(best_rank_pourcentage['sport'])} {best_rank_pourcentage['sport']}")
                 
                 with st.container(border=True):
                     df_race_best = f.Filter_By_Race(df_coureur,row_best['race_name'])
