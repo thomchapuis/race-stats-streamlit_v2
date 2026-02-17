@@ -78,7 +78,7 @@ with tab2:
                 with st.container(border=True):
                     # 1) Affichage de l'histogramme
                     #fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
-                    fig_histo = f.Viz_Histogramme_Temps_Sex(df_race, col, Sex=True)
+                    fig_histo = f.Viz_Histogramme_Temps_Sex(df_race, 'time', True)
                     st.plotly_chart(fig_histo, use_container_width=True)
         with col_Sex:
                 with st.container(border=True):
