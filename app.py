@@ -138,7 +138,8 @@ with tab3:
             
             with col_content:
                 # Le nom de l'athlète en haut
-                st.title(df_coureur.loc[df_coureur['name_key'] == 'nom_recherche', 'name'].iloc[0])
+                st.title(df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0])
+                #st.title(nom_recherche)
                 
                 # Calcul des stats par sport pour CET athlète uniquement
                 courses_par_sport = (
