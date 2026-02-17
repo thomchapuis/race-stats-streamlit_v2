@@ -181,18 +181,19 @@ with tab3:
 
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("💪🏼 Meilleures Performances")
+            df_coureur['Pourcentage'] = df_coureur.groupby('race_name')['rank'].transform(lambda x: (x / x.max()) * 100)
             df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
-            #st.metric(label=df_solo.columns[18], value=df_solo.iloc[0, 18])
-            #longest_race = df_solo.loc[df_solo['time'].idxmax()]
+            
             longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
-            st.metric(
-                label="Plus longue course", 
-                value=f"{longest_race_row['time']}"
-            )
+            st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
+
+
+            best_rank_pourcentage= df_solo.loc[df_solo['Pourcentage'].idmin()]
+            st.metric(label="Meilleure perf", value=f"{best_rank_pourcentage['Pourcentage']}")
             
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
-            df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
+            #df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
             row_best = df_solo.loc[df_solo["rank"].idxmin()]
             row_worst = df_solo.loc[df_solo["rank"].idxmax()]
             participants_best = df_coureur[df_coureur["race_id"] == row_best["race_id"]]["rank"].max()
