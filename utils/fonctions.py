@@ -41,6 +41,12 @@ def Viz_Sexes(df_all_parquet):
     
     
     # 5. Application de la normalisation à 100%
+    fig.update_traces(
+        marker_line_width=0,    # Supprime l'épaisseur du trait de contour
+        textposition='inside', 
+        textfont_color="white"
+    )
+    
     fig.update_layout(
         barmode='stack',
         barnorm='percent',
