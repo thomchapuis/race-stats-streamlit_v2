@@ -186,6 +186,14 @@ with tab3:
             
             longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
             st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
+            st.caption(f"**Sport :** {sport_icon(longest_race_row['sport'])} {longest_race_row['sport']}")
+
+            df_noTri = f.Filter_By_Sport(df_coureur, ['Trail','Cycling','Running'])
+            df_solo_noTri = df_noTri[(df_noTri["name_key"] == nom_recherche) & (df_noTri["rank"] > 0)]
+            longest_distance_row = df_solo_noTri.loc[df_solo_noTri['Distance'].idxmax()]
+            st.metric(label="Plus longue course", value=f"{longest_distance_row['time']}")
+            st.caption(f"**Sport :** {sport_icon(longest_distance_row['sport'])} {longest_distance_row['sport']}")
+            
 
             
             # --- NOUVELLE SECTION : RECORDS ---
