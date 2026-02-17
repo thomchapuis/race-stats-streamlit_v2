@@ -147,8 +147,6 @@ def Viz_Histogramme_Temps(df_race, col):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
-import plotly.express as px
-import pandas as pd
 
 def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
     """
