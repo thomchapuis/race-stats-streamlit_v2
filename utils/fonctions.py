@@ -289,14 +289,16 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     )
 
      # 9. Ajout d'un "sous-titre"
-    fig.add_annotation(
-        text="Valeur importante : 42",   # texte à afficher
-        xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
-        x=1, y=1.2,                       # position (1,1) = coin supérieur droit
-        xanchor='right', yanchor='top', # ancrage du texte
-        showarrow=False,
-        #font=dict(size=14, color="black")
-    )
+    if len(temps)=1
+        texte_annotation = "\n".join([f"{k} : {v}" for k, v in temps_dict.items()])
+        fig.add_annotation(
+            text=texte_annotation,   # texte à afficher
+            xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
+            x=1, y=1.2,                       # position (1,1) = coin supérieur droit
+            xanchor='right', yanchor='top', # ancrage du texte
+            showarrow=False,
+            #font=dict(size=14, color="black")
+        )
     
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
