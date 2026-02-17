@@ -89,7 +89,7 @@ def Viz_Sexes_PieChart(df_single_race):
     fig.update_traces(
         textposition='inside',
         textinfo='percent+label',
-        showlegend=False
+        showlegend=False,
         marker=dict(line=dict(color='#000000', width=1))
     )
 
