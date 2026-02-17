@@ -147,6 +147,60 @@ def Viz_Histogramme_Temps(df_race, col):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
+import plotly.express as px
+import pandas as pd
+
+def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
+    """
+    Trace l'histogramme des temps pour une course donnée.
+    Si Sex=True, superpose les histogrammes des hommes et des femmes.
+    """
+    df = df_race.copy()
+
+    # 1. Conversion des temps en minutes
+    if df[col].dtype == 'object' or pd.api.types.is_timedelta64_dtype(df[col]):
+        df['col_td'] = pd.to_timedelta(df[col])
+        df['col_min'] = df['col_td'].dt.total_seconds() / 60
+    else:
+        df['col_min'] = df[col]
+
+    df = df[df['col_min'] > 0]
+
+    # 2. Tracé de l'histogramme
+    if Sex and 'sex' in df.columns:
+        fig = px.histogram(df,
+                           x="col_min",
+                           color='sex',
+                           barmode='overlay',
+                           title=f"Distribution des temps : {df['race_name'].iloc[0] if 'race_name' in df.columns else 'la course'} | {col}",
+                           labels={'col_min': 'Temps (minutes)', 'count': 'Nombre de coureurs'},
+                           nbins=30,
+                           template='plotly_dark',
+                           color_discrete_map={'H': '#3498db', 'F': '#e84393'},
+                           marginal="rug",
+                           opacity=0.75)
+    else:
+        fig = px.histogram(df,
+                           x="col_min",
+                           title=f"Distribution des temps : {df['race_name'].iloc[0] if 'race_name' in df.columns else 'la course'} | {col}",
+                           labels={'col_min': 'Temps (minutes)', 'count': 'Nombre de coureurs'},
+                           nbins=30,
+                           template='plotly_dark',
+                           color_discrete_sequence=['#2ecc71'],
+                           marginal="rug")
+
+    # 3. Améliorations visuelles
+    fig.update_layout(
+        bargap=0.1,
+        xaxis_title="Temps (minutes)",
+        yaxis_title="Nombre de coureurs",
+        showlegend=Sex  # Affiche la légende uniquement si Sex=True
+    )
+
+    return fig
+
+
+
 def Viz_Histogramme_Temps_Names(df_race, col, names):
     """
     Trace l'histogramme des temps pour une course donnée avec des traits verticaux pour les temps de plusieurs personnes.
