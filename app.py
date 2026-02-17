@@ -288,6 +288,10 @@ with tab5:
                     label=label_with_icon,
                     value=f"{nb:,}".replace(",", " ")
                 )
+        with st.container(border=True):
+            fig_sex = f.Viz_Sexes(df_all_parquet)
+            st.plotly_chart(fig_sex, use_container_width=True)
+            
 ########################## ########################## ########################## ########################## ########################## 
 
 with tab7:
