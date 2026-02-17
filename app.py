@@ -191,7 +191,7 @@ with tab3:
             df_noTri = f.Filter_By_Sport(df_coureur, ['Trail','Cycling','Running'])
             df_solo_noTri = df_noTri[(df_noTri["name_key"] == nom_recherche) & (df_noTri["rank"] > 0)]
             longest_distance_row = df_solo_noTri.loc[df_solo_noTri['Distance'].idxmax()]
-            st.metric(label="Plus longue distance (km)", value=f"{longest_distance_row['Distance']}")
+            st.metric(label="Plus longue distance", value=f"{longest_distance_row['Distance']}km")
             st.caption(f"**Sport :** {sport_icon(longest_distance_row['sport'])} {longest_distance_row['sport']}")
             
 
