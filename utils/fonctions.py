@@ -82,8 +82,8 @@ def Viz_Sexes_PieChart(df_single_race):
         names='Genre',
         title=f"Répartition Hommes/Femmes - {df_single_race['race_name'].iloc[0]} ({df_single_race['race_date'].dt.year.iloc[0]})",
         color=['Genre'],
-        color_discrete_map={'Femmes': '#e84393', 'Hommes': '#3498db'},
-        hole=0.3  # Optionnel : pour un donut chart
+        color_discrete_map={'Femmes': '#e84393', 'Hommes': '#3498db'}
+        #hole=0.3  # Optionnel : pour un donut chart
     )
 
     # Personnalisation de la mise en page
