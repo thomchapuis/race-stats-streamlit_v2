@@ -287,6 +287,17 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
         showlegend=False,
         template='plotly_dark'
     )
+
+     # 9. Ajout d'un "sous-titre"
+    fig.add_annotation(
+        text="Valeur importante : 42",   # texte à afficher
+        xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
+        x=1, y=1,                       # position (1,1) = coin supérieur droit
+        xanchor='right', yanchor='top', # ancrage du texte
+        showarrow=False,
+        #font=dict(size=14, color="black")
+    )
+    
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
