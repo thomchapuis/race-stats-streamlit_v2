@@ -262,7 +262,9 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     # 6. Calcul des bornes inférieures des barres pour les ticks
     bin_edges = np.histogram_bin_edges(df['col_min'], bins=30)
     tickvals = bin_edges[:-1]  # On prend la borne inférieure de chaque barre
-    ticktext = [str(pd.Timedelta(minutes=m).round('1m')).split()[2] for m in tickvals]
+    #ticktext = [str(pd.Timedelta(minutes=m).round('1s')).split()[2] for m in tickvals]
+    ticktext = [str(pd.Timedelta(seconds=m)).split()[2][:-3] for m in tickvals]
+
 
     # 7. Mise à jour de l'axe des abscisses
     fig.update_xaxes(
