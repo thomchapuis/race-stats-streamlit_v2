@@ -188,8 +188,8 @@ with tab3:
             st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
 
 
-            best_rank_pourcentage= df_solo.loc[df_solo['Pourcentage'].idmin()]
-            st.metric(label="Meilleure perf", value=f"{best_rank_pourcentage['Pourcentage']}")
+            best_rank_pourcentage= df_solo.loc[df_solo['Pourcentage'].idxmin()]
+            st.metric(label="Meilleure perf", value=f"{best_rank_pourcentage['Pourcentage']:.2f}%")
             
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
