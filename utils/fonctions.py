@@ -192,7 +192,8 @@ def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
         bargap=0.1,
         xaxis_title="Temps (minutes)",
         yaxis_title="Nombre de coureurs",
-        showlegend=Sex  # Affiche la légende uniquement si Sex=True
+        showlegend=False
+        #showlegend=Sex  # Affiche la légende uniquement si Sex=True
     )
 
     return fig
