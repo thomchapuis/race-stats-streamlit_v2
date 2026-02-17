@@ -61,6 +61,48 @@ def Viz_Sexes(df_all_parquet):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
+def Viz_Sexes_PieChart(df_single_race):
+    if len(df_single_race['race_name'].unique()) > 1:
+        raise ValueError("Le DataFrame doit contenir les données d'une seule course.")
+
+    # Calcul du nombre de femmes et d'hommes
+    nb_F = (df_single_race['sex'] == 'F').sum()
+    nb_H = (df_single_race['sex'] == 'H').sum()
+
+    # Création des données pour le camembert
+    data = {
+        'Genre': ['Femmes', 'Hommes'],
+        'Nombre': [nb_F, nb_H]
+    }
+
+    # Création du camembert
+    fig = px.pie(
+        data,
+        values='Nombre',
+        names='Genre',
+        title=f"Répartition Hommes/Femmes - {df_single_race['race_name'].iloc[0]} ({df_single_race['race_date'].dt.year.iloc[0]})",
+        color=['Genre'],
+        color_discrete_map={'Femmes': '#e84393', 'Hommes': '#3498db'},
+        hole=0.3  # Optionnel : pour un donut chart
+    )
+
+    # Personnalisation de la mise en page
+    fig.update_traces(
+        textposition='inside',
+        textinfo='percent+label',
+        marker=dict(line=dict(color='#000000', width=1))
+    )
+
+    fig.update_layout(
+        legend_title_text='Genre',
+        template='plotly_dark'
+    )
+
+    return fig
+
+
+
+
 def Viz_Histogramme_Temps(df_race, col):
     """
     Trace l'histogramme des temps pour une course donnée.
