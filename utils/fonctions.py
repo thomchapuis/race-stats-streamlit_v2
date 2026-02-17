@@ -94,7 +94,7 @@ def Viz_Sexes_PieChart(df_single_race):
     )
 
     fig.update_layout(
-        title=None
+        title=None,
         template='plotly_dark'
     )
 
