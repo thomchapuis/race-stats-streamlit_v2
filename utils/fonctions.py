@@ -289,7 +289,7 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     )
 
      # 9. Ajout d'un "sous-titre"
-    if len(temps)==1:
+    if len(names)==1:
         texte_annotation = "\n".join([f"{k} : {v}" for k, v in temps_dict.items()])
         fig.add_annotation(
             text=texte_annotation,   # texte à afficher
