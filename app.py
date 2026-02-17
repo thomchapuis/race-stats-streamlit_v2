@@ -185,7 +185,19 @@ with tab3:
             df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
             
             longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
-            st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
+
+            td = longest_race_row['time']            
+            hours = td.components.hours
+            minutes = td.components.minutes
+            seconds = td.components.seconds
+            
+            # Afficher au format HH:MM:SS
+            st.metric(
+                label="Plus longue course",
+                value=f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+            )
+            #st.metric(label="Plus longue course", value=f"{longest_race_row['time']}")
+            #st.metric(label="Plus longue course", value=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
             st.caption(f"**Sport :** {sport_icon(longest_race_row['sport'])} {longest_race_row['sport']}")
 
             df_noTri = f.Filter_By_Sport(df_coureur, ['Trail','Cycling','Running'])
