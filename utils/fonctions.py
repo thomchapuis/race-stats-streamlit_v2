@@ -131,7 +131,7 @@ def Viz_Histogramme_Temps(df_race, col):
                        title=f"Distribution des temps : {race_name}| {col}",
                        labels={'col_min': 'Temps (minutes)', 'count': 'Nombre de coureurs'},
                        nbins=30,             # Ajuste la précision des barres
-                       template='plotly_white',
+                       template='plotly_dark',
                        color_discrete_sequence=['#2ecc71'], # Un vert sportif
                        marginal="rug")      # Ajoute des petits traits en bas pour voir chaque coureur
 
@@ -243,7 +243,7 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
         title=f"Distribution des temps : {race_name} | {col}",
         labels={'col_min': 'Temps', 'count': 'Nombre de coureurs'},
         nbins=30,
-        template='plotly_white',
+        template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
     )
 
@@ -262,7 +262,7 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     # 6. Calcul des bornes inférieures des barres pour les ticks
     bin_edges = np.histogram_bin_edges(df['col_min'], bins=30)
     tickvals = bin_edges[:-1]  # On prend la borne inférieure de chaque barre
-    ticktext = [str(pd.Timedelta(minutes=m).round('1s')).split()[2] for m in tickvals]
+    ticktext = [str(pd.Timedelta(minutes=m).round('1m')).split()[2] for m in tickvals]
 
     # 7. Mise à jour de l'axe des abscisses
     fig.update_xaxes(
