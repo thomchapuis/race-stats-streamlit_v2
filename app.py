@@ -311,10 +311,10 @@ with tab7:
     col_sel1, col_sel2 = st.columns(2)
     
     with col_sel1:
-        athlete1 = st.selectbox("Sélectionner le premier coureur", all_athletes, index=0,key="selectbox_Battle_name1")
+        athlete1 = st.selectbox("Sélectionner le premier coureur", all_athletes, index=0,placeholder="Tapez le nom d'un athlète...",key="selectbox_Battle_name1")
     
     with col_sel2:
-        athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=1,key="selectbox_Battle_name2")
+        athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=1,placeholder="Tapez le nom d'un athlète...",key="selectbox_Battle_name2")
     
     st.divider()
     
