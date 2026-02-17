@@ -189,7 +189,7 @@ with tab3:
 
 
             best_rank_pourcentage= df_solo.loc[df_solo['Pourcentage'].idxmin()]
-            st.metric(label="Meilleure perf", value=f"{best_rank_pourcentage['Pourcentage']:.2f}%")
+            st.metric(label="Meilleure perf", value=f"Top {best_rank_pourcentage['Pourcentage']:.2f}%")
             
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("🏆 Records de classement")
