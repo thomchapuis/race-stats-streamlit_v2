@@ -35,15 +35,17 @@ def Viz_Sexes(df_all_parquet):
                 y=['nb F', 'nb H'],
                 title='Répartition Relative Hommes/Femmes par Course',
                 labels={'value': 'Nombre', 'variable': 'Genre', 'race_display': 'Course'},
-                template='plotly_white',
+                template='plotly_dark',
                 text_auto='d', # Affiche les entiers
-                color_discrete_map={'nb F': '#e377c2', 'nb H': '#1f77b4'})
-
+                color_discrete_map={'nb F': '#e84393', 'nb H': '#3498db'})
+    
+    
     # 5. Application de la normalisation à 100%
     fig.update_layout(
         barmode='stack',
         barnorm='percent',
-        hovermode="x unified"
+        hovermode="x unified",
+        yaxis_title=""
     )
 
     # Ajustements des axes
