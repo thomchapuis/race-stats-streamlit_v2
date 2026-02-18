@@ -83,7 +83,7 @@ with tab2:
     if not race_recherche_v1:
         st.warning("Veuillez sélectionner une course pour afficher le classement.")
     else:
-        df_Race = f.Filter_By_Race(df_all_parquet, race_recherche_v1)
+        df_Race = f.Filter_By_Race_v2(df_all_parquet, race_recherche_v1)
         df_Race = df_Race.sort_values("rank")
 
         col_Category, col_Sex = st.columns(2)
