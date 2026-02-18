@@ -143,6 +143,57 @@ def Viz_Barre_Categorie(df_race):
     return fig
 
 
+import plotly.express as px
+import pandas as pd
+
+def Viz_Barre_RankPct(df, name_key):
+    """
+    Affiche un diagramme en barres pour chaque course d'un athlète,
+    avec la hauteur = 100 - pourcentage du classement
+    (meilleur = barre plus haute)
+    
+    df : DataFrame contenant tous les coureurs avec colonnes ['race_key', 'name_key', 'rank']
+    name_key : identifiant de l'athlète à filtrer
+    """
+    # 1. Filtrer l'athlète
+    df_athlete = df[df['name_key'] == name_key].copy()
+    
+    if df_athlete.empty:
+        raise ValueError(f"Aucun résultat trouvé pour l'athlète '{name_key}'")
+    
+    # 2. Nombre total de participants par course (max rank)
+    total_participants = df.groupby('race_key')['rank'].max().reset_index()
+    total_participants.rename(columns={'rank':'total'}, inplace=True)
+    
+    # Merge pour ajouter total participants dans df_athlete
+    df_athlete = df_athlete.merge(total_participants, on='race_key', how='left')
+    
+    # 3. Calcul du pourcentage de classement et score
+    df_athlete['rank_pct'] = df_athlete['rank'] / df_athlete['total'] * 100
+    df_athlete['score'] = 100 - df_athlete['rank_pct']
+    
+    # 4. Diagramme en barres simple
+    fig = px.bar(
+        df_athlete.sort_values('score', ascending=False),
+        x='race_key',
+        y='score',
+        text='rank',  # affiche le rang exact
+        labels={'race_key':'Course', 'score':'Performance (%)'},
+        title=f"Performances de {name_key} par course (hauteur = 100 - % classement)",
+        template='plotly_dark',
+        color_discrete_sequence=['#2ecc71']
+    )
+    
+    fig.update_traces(textposition='outside')
+    fig.update_layout(
+        yaxis=dict(range=[0,100], title="Performance (%)"),
+        xaxis_title="Course",
+        showlegend=False
+    )
+    
+    return fig
+
+
 
 def Viz_Histogramme_Temps(df_race, col):
     """
