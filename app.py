@@ -18,11 +18,17 @@ def load_synthese_data(file_path):
     df = pd.read_excel(file_path)
     return df
 
-parquet_file = "data/races5.parquet"
-synthese_file = "data/Synthese.xlsx"
+parquet_file5 = "data/races5.parquet"
+parquet_file6 = "data/races6.parquet"
 
-df_all = load_data(parquet_file)
+df_parquet5 = load_data(parquet_file5)
+df_parquet6 = load_data(parquet_file6)
+
+
+synthese_file = "data/Synthese.xlsx"                  
 df_synthese = load_synthese_data(synthese_file)
+
+df_all_parquet = pd.concat([df_parquet5, df_parquet6], ignore_index=True, sort=False)
 
 df_all_parquet = pd.merge(
     df_all, 
