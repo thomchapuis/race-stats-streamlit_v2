@@ -101,6 +101,47 @@ def Viz_Sexes_PieChart(df_single_race):
 
     return fig
 
+import plotly.express as px
+import pandas as pd
+
+def Viz_Barre_Categorie(df_race):
+    """
+    Diagramme en barres du nombre de coureurs par catégorie,
+    avec les barres découpées par sexe (H/F).
+    
+    df_race : DataFrame de la course
+    """
+    df = df_race.copy()
+
+    # Vérifie qu'on a bien les colonnes nécessaires
+    if not {'category', 'sex'}.issubset(df.columns):
+        raise ValueError("Le DataFrame doit contenir les colonnes 'category' et 'sex'")
+
+    # 1. Compter le nombre de coureurs par catégorie et sexe
+    df_count = df.groupby(['category', 'sex']).size().reset_index(name='count')
+
+    # 2. Titre dynamique
+    race_name = df['race_key'].iloc[0] if 'race_name' in df.columns else "la course"
+
+    # 3. Diagramme en barres empilées
+    fig = px.bar(
+        df_count,
+        x='category',
+        y='count',
+        color='sex',
+        text='count',  # Affiche le nombre sur chaque barre
+        barmode='stack',
+        labels={'category':'Catégorie', 'count':'Nombre de coureurs', 'sex':'Sexe'},
+        title=f"Répartition des coureurs par catégorie et sexe : {race_name}",
+        color_discrete_map={'H':'#3498db','F':'#e84393'},  # Bleu homme, rouge femme
+        #color_discrete_map={'Femmes': '#e84393', 'Hommes': '#3498db'},
+        template='plotly_dark'
+    )
+
+    fig.update_traces(textposition='inside')
+    fig.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de coureurs")
+
+    return fig
 
 
 
