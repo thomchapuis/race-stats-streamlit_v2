@@ -143,9 +143,6 @@ def Viz_Barre_Categorie(df_race):
     return fig
 
 
-import plotly.express as px
-import pandas as pd
-
 def Viz_Barre_RankPct(df, name_key):
     """
     Affiche un diagramme en barres pour chaque course d'un athlète,
@@ -178,8 +175,8 @@ def Viz_Barre_RankPct(df, name_key):
         x='race_key',
         y='score',
         text='rank',  # affiche le rang exact
-        labels={'race_key':'Course', 'score':'Performance (%)'},
-        title=f"Performances de {name_key} par course (hauteur = 100 - % classement)",
+        labels={'race_key':'Course', 'rank_pct':'Top x%'},
+        title=f"Performances de {name_key} par course (top x%)",
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
     )
