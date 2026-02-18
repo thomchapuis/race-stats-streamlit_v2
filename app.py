@@ -80,7 +80,7 @@ with tab2:
     all_races_v2 = sorted(df_all_parquet["race_key"].unique())
     race_recherche_v2 = st.selectbox("Rechercher une course :", options=all_races_v2, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v2")
 
-    if not race_recherche1:
+    if not race_recherche_v1:
         st.warning("Veuillez sélectionner une course pour afficher le classement.")
     else:
         df_Race = f.Filter_By_Race(df_all_parquet, race_recherche_v1)
