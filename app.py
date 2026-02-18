@@ -103,7 +103,7 @@ with tab2:
         col_Category, col_Sex = st.columns(2)
         with col_Category:
             with st.container(border=True):
-                st.write("📊 Histogramme des catégories à venir")
+                #st.write("📊 Histogramme des catégories à venir")
                 fig_cat = f.Viz_Barre_Categorie(df_Race)
                 st.plotly_chart(fig_cat, use_container_width=True)
         with col_Sex:
