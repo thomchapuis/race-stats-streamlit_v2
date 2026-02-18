@@ -60,7 +60,7 @@ with tab1:
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab6:
-    st.write(df_synthese.head())
+    st.write(df_synthese)
     #st.write(df_all_parquet.head())
 
     dist_par_sport = (
