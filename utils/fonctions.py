@@ -119,7 +119,7 @@ def Viz_Barre_Categorie(df_race):
     df_count = df.groupby(['category', 'sex']).size().reset_index(name='count')
 
     # 2. Titre dynamique
-    race_name = df['race_key'].iloc[0] if 'race_key' in df.columns else "la course"
+    race_key = df['race_key'].iloc[0] if 'race_key' in df.columns else "la course"
 
     # 3. Diagramme en barres empilées
     fig = px.bar(
