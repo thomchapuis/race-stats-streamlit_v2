@@ -175,7 +175,7 @@ def Viz_Barre_RankPct(df, name_key):
         x='race_key',
         y='score',
         text='rank',  # affiche le rang exact
-        labels={'race_key':'Course', 'rank_pct':'Top x%'},
+        #labels={'race_key':'Course', 'rank_pct':'Top x%'},
         title=f"Performances de {name_key} par course (top x%)",
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
