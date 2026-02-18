@@ -196,7 +196,7 @@ with tab3:
 
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("💪🏼 Meilleures Performances")
-            df_coureur['Pourcentage'] = df_coureur.groupby('race_name')['rank'].transform(lambda x: (x / x.max()) * 100)
+            df_coureur['Pourcentage'] = df_coureur.groupby('race_id')['rank'].transform(lambda x: (x / x.max()) * 100)
             df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
             
             longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
