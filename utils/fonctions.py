@@ -101,8 +101,6 @@ def Viz_Sexes_PieChart(df_single_race):
 
     return fig
 
-import plotly.express as px
-import pandas as pd
 
 def Viz_Barre_Categorie(df_race):
     """
@@ -121,7 +119,7 @@ def Viz_Barre_Categorie(df_race):
     df_count = df.groupby(['category', 'sex']).size().reset_index(name='count')
 
     # 2. Titre dynamique
-    race_name = df['race_key'].iloc[0] if 'race_name' in df.columns else "la course"
+    race_name = df['race_key'].iloc[0] if 'race_key' in df.columns else "la course"
 
     # 3. Diagramme en barres empilées
     fig = px.bar(
@@ -132,7 +130,7 @@ def Viz_Barre_Categorie(df_race):
         text='count',  # Affiche le nombre sur chaque barre
         barmode='stack',
         labels={'category':'Catégorie', 'count':'Nombre de coureurs', 'sex':'Sexe'},
-        title=f"Répartition des coureurs par catégorie et sexe : {race_name}",
+        title=f"Répartition des coureurs par catégorie et sexe : {race_key}",
         color_discrete_map={'H':'#3498db','F':'#e84393'},  # Bleu homme, rouge femme
         #color_discrete_map={'Femmes': '#e84393', 'Hommes': '#3498db'},
         template='plotly_dark'
