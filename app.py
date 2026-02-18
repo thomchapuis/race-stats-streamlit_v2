@@ -42,6 +42,8 @@ with tab1:
     st.header("📌 Introduction")
     st.markdown("Bienvenue dans l'application de suivi des Performances !")
 
+    st.markdown(df_all_parquet.columns)
+
     st.markdown("---")
     st.caption("© 2026 - Application de suivi")
 
