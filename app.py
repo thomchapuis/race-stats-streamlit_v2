@@ -82,7 +82,7 @@ with tab2:
 
     
     st.write(int(df_all_parquet.loc[df_all_parquet["race_key"] == race_recherche_v2, "race_date"].astype(str).str[:4].iloc[0]))
-    st.write(int(df_all_parquet.loc[df_all_parquet["race_key"] == race_recherche_v2, "Distance"]))
+    st.write(int(df_all_parquet.loc[df_all_parquet["race_key"] == race_recherche_v2, "Distance"].iloc[0]))
 
     
     if not race_recherche_v1:
