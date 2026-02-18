@@ -322,6 +322,10 @@ with tab3:
                     df_race_worst = f.Filter_By_Race(df_coureur,row_worst['race_name'])
                     fig_histo_coureur_worst = f.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur_worst, width='stretch')
+
+            with st.container(border=True):
+                fig_Barre_RankPct = f.Viz_Barre_RankPct(df_coureur, nom_recherche)
+                st.plotly_chart(fig_Barre_RankPct, width='stretch') 
             
             with st.container(border=True):
                 all_races = sorted(df_coureur["race_name"].unique())
