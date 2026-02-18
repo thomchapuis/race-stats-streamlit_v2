@@ -137,7 +137,7 @@ def Viz_Barre_Categorie(df_race):
         template='plotly_dark'
     )
 
-    fig.update_traces(textposition='inside')
+    fig.update_traces(textposition='inside',showlegend=False,)
     fig.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de coureurs")
 
     return fig
