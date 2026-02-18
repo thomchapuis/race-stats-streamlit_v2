@@ -63,8 +63,8 @@ with tab6:
     st.write(df_synthese)
     #st.write(df_all_parquet.head())
     st.write(
-        sorted(df_all_parquet[["Race", "race_name", "race_key", "Distance"]]
-        .drop_duplicates(subset="race_key"))
+        df_all_parquet[["Race", "race_name", "race_key", "Distance"]]
+        .drop_duplicates(subset="race_key")
     )
 
     dist_par_sport = (
