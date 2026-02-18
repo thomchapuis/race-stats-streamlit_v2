@@ -40,7 +40,7 @@ df_all_parquet = pd.merge(
 )
 
 #df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ df_all_parquet["Distance"].round().astype("Int64").astype(str)+ "km")
-df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ int(df_all_parquet["Distance"].astype(str))+ "km")
+df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ df_all_parquet["Distance"].astype(str)+ "km")
 
 # ---------------------------------------------------------------------------------
 
