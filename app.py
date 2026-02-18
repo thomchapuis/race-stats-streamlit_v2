@@ -62,6 +62,7 @@ with tab1:
 with tab6:
     st.write(df_synthese)
     #st.write(df_all_parquet.head())
+    st.write(df_all_parquet[['Race', 'Distance']])
 
     dist_par_sport = (
         df_all_parquet.drop_duplicates(subset=['race_name']) # On garde 1 ligne par course
