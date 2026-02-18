@@ -330,7 +330,9 @@ with tab4:
 ########################## ########################## ########################## ########################## ########################## 
 with tab5:
     # 1) Affichage de la source de données tout en haut
-    st.metric(label="Source des données", value=parquet_file)
+    st.metric(label="Source des données 1", value=parquet_file5)
+    st.metric(label="Source des données2", value=parquet_file6)
+
     
     # Préparation des données
     nb_courses = df_all_parquet["race_id"].nunique()
