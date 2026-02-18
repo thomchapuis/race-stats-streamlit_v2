@@ -74,13 +74,16 @@ with tab2:
     #st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
 
-    all_races = sorted(df_all_parquet["race_name"].unique())
-    race_recherche1 = st.selectbox("Rechercher une course :", options=all_races, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2")
+    all_races_v1 = sorted(df_all_parquet["race_name"].unique())
+    race_recherche_v1 = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v1")
+
+    all_races_v2 = sorted(df_all_parquet["race_key"].unique())
+    race_recherche_v2 = st.selectbox("Rechercher une course :", options=all_races_v2, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v2")
 
     if not race_recherche1:
         st.warning("Veuillez sélectionner une course pour afficher le classement.")
     else:
-        df_Race = f.Filter_By_Race(df_all_parquet, race_recherche1)
+        df_Race = f.Filter_By_Race(df_all_parquet, race_recherche_v1)
         df_Race = df_Race.sort_values("rank")
 
         col_Category, col_Sex = st.columns(2)
