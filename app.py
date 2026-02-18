@@ -191,6 +191,8 @@ with tab3:
                                 value=f"#{nb} | {int(distance)}km"
                             )
             st.divider()
+            st.markdown(df_coureur["race_id"].unique())
+            st.divider()
 
             # --- NOUVELLE SECTION : RECORDS ---
             st.subheader("💪🏼 Meilleures Performances")
