@@ -28,7 +28,7 @@ df_parquet6 = load_data(parquet_file6)
 synthese_file = "data/Synthese.xlsx"                  
 df_synthese = load_synthese_data(synthese_file)
 
-df_all_parquet = pd.concat([df_parquet5, df_parquet6], ignore_index=True, sort=False)
+df_all = pd.concat([df_parquet5, df_parquet6], ignore_index=True, sort=False)
 
 df_all_parquet = pd.merge(
     df_all, 
