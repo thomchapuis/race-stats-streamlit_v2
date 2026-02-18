@@ -80,6 +80,9 @@ with tab2:
     all_races_v2 = sorted(df_all_parquet["race_key"].unique())
     race_recherche_v2 = st.selectbox("Rechercher une course :", options=all_races_v2, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v2")
 
+    
+    st.write(all_races_v2.loc[all_races_v2["race_key"] == all_races_v2, "race_date"] \.astype(str) \.str[:4] \.unique())
+    
     if not race_recherche_v1:
         st.warning("Veuillez sélectionner une course pour afficher le classement.")
     else:
