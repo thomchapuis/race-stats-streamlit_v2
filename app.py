@@ -431,7 +431,7 @@ with tabGroup:
     st.title("⚔️ Vision de groupe")
     race_selected = "NuitBlanchePilat"
     df_race = f.Filter_By_Race(df_all_parquet, race_selected)
-
+    st.markdown(ATHLETES)
     for name in ATHLETES:
         clean_name = f.get_clean_key(name)
         row = df_race.loc[df_race['name_key'] == clean_name]
