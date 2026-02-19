@@ -433,7 +433,7 @@ with tabGroup:
     df_race = f.Filter_By_Race(df_all_parquet, race_selected)
 
     for name in ATHLETES:
-        clean_name = get_clean_key(name)
+        clean_name = f.get_clean_key(name)
         temps = df_race.loc[df['name_key'] == clean_name, 'time'].values
         rank = df_race.loc[df['name_key'] == clean_name, 'rank'].values
         st.write(temps)
