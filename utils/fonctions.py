@@ -464,17 +464,17 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
 
 
     # 7. Mise à jour de l'axe des abscisses
-    fig.update_xaxes(
+    fig.update_yaxes(
         tickvals=tickvals,
-        ticktext=ticktext,
-        tickangle=45
+        ticktext=ticktext
+        #tickangle=45
     )
 
     # 8. Améliorations visuelles
     fig.update_layout(
         bargap=0.1,
-        xaxis_title="Temps",
-        yaxis_title="Nombre de coureurs",
+        xaxis_title="Nombre de coureurs",
+        yaxis_title="Temps",
         showlegend=False,
         template='plotly_dark'
     )
