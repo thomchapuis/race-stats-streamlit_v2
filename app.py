@@ -434,10 +434,15 @@ with tabGroup:
 
     for name in ATHLETES:
         clean_name = f.get_clean_key(name)
-        temps = df_race.loc[df_race['name_key'] == clean_name, 'time'].values
-        rank = df_race.loc[df_race['name_key'] == clean_name, 'rank'].values
-        st.write(temps)
-        st.write(rank)
+        row = df_race.loc[df_race['name_key'] == clean_name]
+        if not row.empty:
+            st.markdown(
+                f"""
+                **{name}**
+                - ⏱ Temps : `{row.iloc[0]['time']}`
+                - 🏁 Classement : **{int(row.iloc[0]['rank'])}**
+                """
+            )
     
     fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
     st.plotly_chart(fig_Group,use_container_width=True)
