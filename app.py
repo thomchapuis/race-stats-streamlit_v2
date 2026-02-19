@@ -434,8 +434,8 @@ with tabGroup:
 
     for name in ATHLETES:
         clean_name = f.get_clean_key(name)
-        temps = df_race.loc[df['name_key'] == clean_name, 'time'].values
-        rank = df_race.loc[df['name_key'] == clean_name, 'rank'].values
+        temps = df_race.loc[df_race['name_key'] == clean_name, 'time'].values
+        rank = df_race.loc[df_race['name_key'] == clean_name, 'rank'].values
         st.write(temps)
         st.write(rank)
     
