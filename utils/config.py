@@ -18,6 +18,7 @@ ATHLETES = [
     "CHAPUIS Maxime", 
     "CHAPUIS Laurent",
     "CHAPUIS Romane",
+    "FRANCOIS Louis",
     "FEIDT Lucie",
     "GODILLON Matthieu",
     "TRIGO Severino",
