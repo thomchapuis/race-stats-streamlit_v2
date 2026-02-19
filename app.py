@@ -430,5 +430,5 @@ with tab7:
 with tabGroup:
     st.title("⚔️ Vision de groupe")
     df_race = f.Filter_By_Athlete(df_all_parquet, ATHLETES)
-    fig_Group = f.Viz_Histogramme_Temps_Names(df_race, 'time', targets)
+    fig_Group = f.Viz_Histogramme_Temps_Names(df_all_parquet, 'time', targets)
     st.plotly_chart(fig_Group, use_container_width=True)
