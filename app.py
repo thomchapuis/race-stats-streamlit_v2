@@ -47,7 +47,7 @@ df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + d
 
 
 
-tab1,tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle"])
+tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -424,3 +424,11 @@ with tab7:
     
     fig_Battle = f.Viz_Battle_percentage(df_Battle, targets)
     st.plotly_chart(fig_Battle, use_container_width=True)
+
+########################## ########################## ########################## ########################## ########################## 
+
+with tabGroup:
+    st.title("⚔️ Vision de groupe")
+    df_race = f.Filter_By_Race(df_all_parquet, ATHLETES)
+    fig_Group = f.Viz_Histogramme_Temps_Names(df_Battle, targets)
+    st.plotly_chart(fig_Group, use_container_width=True)
