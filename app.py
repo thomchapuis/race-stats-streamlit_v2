@@ -429,6 +429,15 @@ with tab7:
 
 with tabGroup:
     st.title("⚔️ Vision de groupe")
-    df_race = f.Filter_By_Race(df_all_parquet, "NuitBlanchePilat")
+    race_selected = "NuitBlanchePilat"
+    df_race = f.Filter_By_Race(df_all_parquet, race_selected)
+
+    for name in ATHLETES:
+        clean_name = get_clean_key(name)
+        temps = df_race.loc[df['name_key'] == clean_name, 'time'].values
+        rank = df_race.loc[df['name_key'] == clean_name, 'rank'].values
+        st.write(temps)
+        st.write(rank)
+    
     fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
     st.plotly_chart(fig_Group,use_container_width=True)
