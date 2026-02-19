@@ -439,13 +439,6 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         color_discrete_sequence=['#2ecc71']
     )
 
-    # Après px.histogram(...)
-    max_count = max(
-        trace.x.max()
-        for trace in fig.data
-        if trace.x is not None
-    )
-
     # 5. Ajout des traits verticaux pour chaque personne
     colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']  # Liste de couleurs pour les traits
     for i, (name, temps) in enumerate(temps_dict.items()):
@@ -468,7 +461,13 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         for m in tickvals
     ]
 
-
+    if fig.data:
+    max_count = max(
+        trace.x.max()
+        for trace in fig.data
+        if trace.x is not None
+    )
+    fig.update_xaxes(range=[0, max_count * 1.2])
 
     # 7. Mise à jour de l'axe des abscisses
     fig.update_yaxes(
