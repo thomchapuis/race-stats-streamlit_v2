@@ -391,6 +391,112 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
+def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
+    """
+    Trace l'histogramme des temps pour une course donnée avec des traits verticaux pour les temps de plusieurs personnes.
+
+    Parameters:
+    - df_race: DataFrame contenant les données de la course.
+    - col: Nom de la colonne contenant les temps (ex: 'time' ou 't1').
+    - names: Liste des noms des personnes (ou un seul nom) dont les temps seront mis en évidence.
+    """
+    df = df_race.copy()
+
+    # Convertir names en liste si ce n'est pas déjà le cas
+    if isinstance(names, str):
+        names = [names]
+
+    # 1. Conversion des temps en format timedelta puis en minutes
+    if df[col].dtype == 'object' or pd.api.types.is_timedelta64_dtype(df[col]):
+        df['col_td'] = pd.to_timedelta(df[col])
+        df['col_min'] = df['col_td'].dt.total_seconds() / 60
+    else:
+        df['col_min'] = df[col]
+
+    df = df[df['col_min'] > 0]
+
+    # 2. Récupération des temps des personnes cherchées
+    temps_dict = {}
+    for name in names:
+        clean_name = get_clean_key(name)
+        temps = df.loc[df['name_key'] == clean_name, 'col_min'].values
+        if len(temps) > 0:
+            full_name = df.loc[df['name_key'] == clean_name, 'name'].values[0]
+            temps_dict[full_name] = temps[0]
+
+    # 3. Création du titre dynamique
+    race_name = df['race_name'].iloc[0] if 'race_name' in df.columns else "la course"
+
+    # 4. Tracé de l'histogramme
+    fig = px.histogram(
+        df,
+        y="col_min",
+        orientation="h",
+        title=f"Distribution des temps : {race_name} | {col}",
+        labels={'col_min': 'Temps', 'count': 'Nombre de coureurs'},
+        nbins=30,
+        template='plotly_dark',
+        color_discrete_sequence=['#2ecc71']
+    )
+
+    # 5. Ajout des traits verticaux pour chaque personne
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']  # Liste de couleurs pour les traits
+    for i, (name, temps) in enumerate(temps_dict.items()):
+        fig.add_hline(
+            y=temps,
+            line_dash="dash",
+            line_color=colors[i % len(colors)],
+            annotation_text=f"{name}",
+            annotation_position="top right"
+        )
+
+    # 6. Calcul des bornes inférieures des barres pour les ticks
+    bin_edges = np.histogram_bin_edges(df['col_min'], bins=30)
+    tickvals = bin_edges[:-1]  # On prend la borne inférieure de chaque barre
+    #ticktext = [str(pd.Timedelta(minutes=m).round('1s')).split()[2] for m in tickvals]
+    #ticktext = [str(pd.Timedelta(seconds=m)).split()[2][:-3] for m in tickvals] #FAUX
+    #ticktext = [str(pd.Timedelta(minutes=m)).split()[2][:-3] for m in tickvals]
+    ticktext = [
+        f"{int(m // 60):02d}h{int(m % 60):02d}"
+        for m in tickvals
+    ]
+
+
+
+    # 7. Mise à jour de l'axe des abscisses
+    fig.update_xaxes(
+        tickvals=tickvals,
+        ticktext=ticktext,
+        tickangle=45
+    )
+
+    # 8. Améliorations visuelles
+    fig.update_layout(
+        bargap=0.1,
+        xaxis_title="Temps",
+        yaxis_title="Nombre de coureurs",
+        showlegend=False,
+        template='plotly_dark'
+    )
+
+     # 9. Ajout d'un "sous-titre"
+    if len(names)==1:
+        texte_annotation = "\n".join([f"{k} : {v}" for k, v in temps_dict.items()])
+        fig.add_annotation(
+            text=texte_annotation,   # texte à afficher
+            xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
+            x=1, y=1.2,                       # position (1,1) = coin supérieur droit
+            xanchor='right', yanchor='top', # ancrage du texte
+            showarrow=False,
+            #font=dict(size=14, color="black")
+        )
+    
+    #return fig.show() pour notebook .ipynb
+    return fig   #pour streamlit
+
+
+
+
 
 def Viz_Radar_Triathlon(df, names_list):
     # 1. Identifier les courses et filtrer celles qui ont les colonnes nécessaires
