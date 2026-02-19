@@ -484,8 +484,7 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         height=900,
         margin=dict(l=40, r=40, t=80, b=40),
         showlegend=False,
-        template='plotly_dark',
-        xaxis=dict(range=[0, max_count * 1.2]  # +20% de marge)
+        template='plotly_dark')
     )
 
      # 9. Ajout d'un "sous-titre"
