@@ -447,7 +447,7 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
             line_dash="dash",
             line_color=colors[i % len(colors)],
             annotation_text=f"{name}",
-            annotation_position="top right"
+            annotation_position="right"
         )
 
     # 6. Calcul des bornes inférieures des barres pour les ticks
