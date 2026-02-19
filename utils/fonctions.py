@@ -475,6 +475,8 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         bargap=0.1,
         xaxis_title="Nombre de coureurs",
         yaxis_title="Temps",
+        height=900,
+        margin=dict(l=40, r=40, t=80, b=40),
         showlegend=False,
         template='plotly_dark'
     )
