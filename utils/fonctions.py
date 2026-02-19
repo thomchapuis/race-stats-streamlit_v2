@@ -461,14 +461,6 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         for m in tickvals
     ]
 
-    if fig.data:
-    max_count = max(
-        trace.x.max()
-        for trace in fig.data
-        if trace.x is not None
-    )
-    fig.update_xaxes(range=[0, max_count * 1.2])
-
     # 7. Mise à jour de l'axe des abscisses
     fig.update_yaxes(
         tickvals=tickvals,
