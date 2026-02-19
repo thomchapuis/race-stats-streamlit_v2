@@ -13,7 +13,7 @@ ATHLETES = [
     "BERGER Tristan",
     "BOMPAS Théo",
     "BOMPAS Romain",
-    "DELCAMP Brieuc,"
+    "DELCAMP Brieuc",
     "CHAPUIS Thomas", 
     "CHAPUIS Maxime", 
     "CHAPUIS Laurent",
