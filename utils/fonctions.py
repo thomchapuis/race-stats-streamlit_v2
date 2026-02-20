@@ -457,35 +457,43 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     for i, (name, data) in enumerate(temps_dict.items()):
         temps = data["temps"]
         rank = data["rank"]
-        #color = colors[i % len(colors)]
-
-        # Ligne horizontale arrêtée à x=0.85
+    
+        if i % 2 == 0:
+            # 👉 À DROITE
+            x0, x1 = 0.5, 0.85
+            x_text = 0.85
+            xanchor = "left"
+        else:
+            # 👈 À GAUCHE
+            x0, x1 = 0.5, 0.15
+            x_text = 0.15
+            xanchor = "right"
+    
+        # Ligne horizontale
         fig.add_shape(
             type="line",
             xref="paper",
             yref="y",
-            x0=0.5,
-            x1=0.85,
+            x0=x0,
+            x1=x1,
             y0=temps,
             y1=temps,
             line=dict(
                 color="gray",
                 width=1
-                #dash="dash"
             )
         )
-
-        # Annotation pile à 0.85
+    
+        # Annotation
         fig.add_annotation(
             xref="paper",
             yref="y",
-            x=0.85,
+            x=x_text,
             y=temps,
-            text=f"#{rank} – {name}",  # <-- rank + nom,
+            text=f"#{rank} – {name}",
             showarrow=False,
-            xanchor="left",
+            xanchor=xanchor,
             align="left"
-            #font=dict(color=color)
         )
 
     # 6. Calcul des bornes inférieures des barres pour les ticks
