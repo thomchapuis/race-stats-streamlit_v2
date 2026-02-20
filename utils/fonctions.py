@@ -419,43 +419,78 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     temps_dict = {}
     for name in names:
         clean_name = get_clean_key(name)
-        temps = df.loc[df['name_key'] == clean_name, 'col_min'].values
-        if len(temps) > 0:
-            full_name = df.loc[df['name_key'] == clean_name, 'name'].values[0]
-            temps_dict[full_name] = temps[0]
+
+        row = df.loc[df['name_key'] == clean_name, ['name', 'col_min', 'rank']]
+
+        if not row.empty:
+            full_name = row.iloc[0]['name']
+            temps = row.iloc[0]['col_min']
+            rank = row.iloc[0]['rank']
+
+            temps_dict[full_name] = {
+                "temps": temps,
+                "rank": rank
+            }
 
     # 3. Création du titre dynamique
     race_name = df['race_name'].iloc[0] if 'race_name' in df.columns else "la course"
 
+
     # 4. Tracé de l'histogramme
-    fig = px.histogram(
+    fig = px.violin(
         df,
         y="col_min",
-        orientation="h",
+        #box=True,          # ajoute la boxplot au centre
+        points=False,      # True si tu veux afficher les points individuels
         title=f"Distribution des temps : {race_name} | {col}",
-        labels={'col_min': 'Temps', 'count': 'Nombre de coureurs'},
-        nbins=30,
+        labels={'col_min': 'Temps'},
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
     )
 
-    # 5. Ajout des traits verticaux pour chaque personne
+    fig.update_traces(
+        meanline_visible=True  # affiche la moyenne
+    )
+
+      # 5. Ajout des traits verticaux pour chaque personne
     colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']  # Liste de couleurs pour les traits
-    for i, (name, temps) in enumerate(temps_dict.items()):
-        fig.add_hline(
+    for i, (name, data) in enumerate(temps_dict.items()):
+        temps = data["temps"]
+        rank = data["rank"]
+        #color = colors[i % len(colors)]
+
+        # Ligne horizontale arrêtée à x=0.85
+        fig.add_shape(
+            type="line",
+            xref="paper",
+            yref="y",
+            x0=0.5,
+            x1=0.85,
+            y0=temps,
+            y1=temps,
+            line=dict(
+                color="gray",
+                width=1
+                #dash="dash"
+            )
+        )
+
+        # Annotation pile à 0.85
+        fig.add_annotation(
+            xref="paper",
+            yref="y",
+            x=0.85,
             y=temps,
-            line_dash="dash",
-            line_color=colors[i % len(colors)],
-            annotation_text=f"{name}",
-            annotation_position="right"
+            text=f"#{rank} – {name}",  # <-- rank + nom,
+            showarrow=False,
+            xanchor="left",
+            align="left"
+            #font=dict(color=color)
         )
 
     # 6. Calcul des bornes inférieures des barres pour les ticks
-    bin_edges = np.histogram_bin_edges(df['col_min'], bins=30)
+    bin_edges = np.histogram_bin_edges(df['col_min'], bins=10)
     tickvals = bin_edges[:-1]  # On prend la borne inférieure de chaque barre
-    #ticktext = [str(pd.Timedelta(minutes=m).round('1s')).split()[2] for m in tickvals]
-    #ticktext = [str(pd.Timedelta(seconds=m)).split()[2][:-3] for m in tickvals] #FAUX
-    #ticktext = [str(pd.Timedelta(minutes=m)).split()[2][:-3] for m in tickvals]
     ticktext = [
         f"{int(m // 60):02d}h{int(m % 60):02d}"
         for m in tickvals
@@ -473,24 +508,15 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         bargap=0.1,
         xaxis_title="Nombre de coureurs",
         yaxis_title="Temps",
-        height=900,
+        height=1100,
         margin=dict(l=40, r=40, t=80, b=40),
         showlegend=False,
         template='plotly_dark'
     )
 
-     # 9. Ajout d'un "sous-titre"
-    if len(names)==1:
-        texte_annotation = "\n".join([f"{k} : {v}" for k, v in temps_dict.items()])
-        fig.add_annotation(
-            text=texte_annotation,   # texte à afficher
-            xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
-            x=1, y=1.2,                       # position (1,1) = coin supérieur droit
-            xanchor='right', yanchor='top', # ancrage du texte
-            showarrow=False,
-            #font=dict(size=14, color="black")
-        )
-    
+    fig.update_traces(
+        hoverinfo="skip"   # empêche Plotly d’injecter kde / q / mean
+    )
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
