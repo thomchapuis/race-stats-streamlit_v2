@@ -462,7 +462,7 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
             key=lambda item: item[1]["temps"]
         )
     )
-    for i, (name, data) in enumerate(temps_dict.items()):
+    for i, (name, data) in enumerate(temps_dict_sorted.items()):
         temps = data["temps"]
         rank = data["rank"]
     
