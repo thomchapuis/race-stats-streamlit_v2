@@ -454,6 +454,14 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
 
       # 5. Ajout des traits verticaux pour chaque personne
     colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']  # Liste de couleurs pour les traits
+    
+    # 🔽 Tri par temps
+    temps_dict_sorted = dict(
+        sorted(
+            temps_dict.items(),
+            key=lambda item: item[1]["temps"]
+        )
+    )
     for i, (name, data) in enumerate(temps_dict.items()):
         temps = data["temps"]
         rank = data["rank"]
