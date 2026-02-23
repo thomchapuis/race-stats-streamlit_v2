@@ -26,7 +26,8 @@ df_parquet6 = load_data(parquet_file6)
 
 
 #synthese_file = "data/Synthese.xlsx"
-synthese_file = "data/Synthese2.xlsx"     
+#synthese_file = "data/Synthese2.xlsx"
+synthese_file = "data/Synthese_map.xlsx"
 df_synthese = load_synthese_data(synthese_file)
 
 df_all = pd.concat([df_parquet5, df_parquet6], ignore_index=True, sort=False)
