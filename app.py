@@ -212,6 +212,16 @@ with tab3:
                             label=label_with_icon,
                             value=f"#{nb} | {int(distance)}km"
                         )
+                        fig = px.pie(
+                            courses_par_sport,
+                            names="race_name",
+                            values="Distance",
+                            hole=0.4
+                        )
+                        
+                        st.plotly_chart(fig, use_container_width=True)
+
+            
             st.divider()
             st.markdown(df_coureur["race_id"].unique())
             st.divider()
