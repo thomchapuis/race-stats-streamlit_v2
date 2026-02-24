@@ -241,7 +241,9 @@ with tab3:
 
             
             st.divider()
-            st.markdown(df_coureur["race_id"].unique())
+            courses_unique = df_coureur["race_id"].unique()
+            courses_md = "\n".join([f"- {c}" for c in courses_unique])
+            st.markdown(courses_md)
             st.divider()
 
             # --- NOUVELLE SECTION : RECORDS ---
