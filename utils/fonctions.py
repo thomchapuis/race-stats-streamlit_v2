@@ -694,6 +694,63 @@ def Viz_Battle_percentage(df_Battle, targets):
 
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
+
+def Viz_Map(df_Synthese):
+    fig = px.scatter_geo(
+        df_Synthese,
+        lat="lat",
+        lon="lon",
+        hover_name="Race1",
+    )
+
+    # ── Style géographique ───────────────────────────
+    fig.update_geos(
+        scope="europe",
+        projection_type="mercator",
+
+        # Fond
+        bgcolor="black",
+        showland=False,
+        showocean=False,
+        showlakes=False,
+
+        # Frontières
+        showcountries=True,
+        countrycolor="white",
+        countrywidth=1,
+
+        # Cadre / côtes
+        showcoastlines=False,
+        showframe=False,
+
+        # Zoom France
+        lataxis_range=[41, 51],
+        lonaxis_range=[-6, 10],
+    )
+
+    # ── Points (courses) ─────────────────────────────
+    fig.update_traces(
+        marker=dict(
+            size=7,
+            color="#2ecc71",
+            opacity=0.85,
+            line=dict(width=0)
+        )
+    )
+
+    # ── Layout général ───────────────────────────────
+    fig.update_layout(
+        paper_bgcolor="black",
+        plot_bgcolor="black",
+        margin=dict(l=0, r=0, t=50, b=0),
+        font=dict(color="white"),
+    )
+
+    return fig.show()
+
+
+
+
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 🔹 Fonction de Filtre
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
