@@ -234,7 +234,7 @@ with tab3:
                         fig.update_layout(
                             showlegend=False,
                             width=300,   # largeur en pixels
-                            height=200   # hauteur en pixels,
+                            height=200,   # hauteur en pixels,
                             margin=dict(l=0, r=0, t=0, b=0)  # réduire les marges pour mieux centrer
                         )
                         st.markdown(
