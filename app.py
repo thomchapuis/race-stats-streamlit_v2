@@ -54,7 +54,7 @@ df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + d
 
 
 
-tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe"])
+tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup, tabToDo = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe", "ToDo"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -502,3 +502,8 @@ with tabGroup:
     with col_Group2:
         fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
         st.plotly_chart(fig_Group,use_container_width=True)
+
+with tabToDo: 
+    with st.container(border=True):
+        st.write("tab import de course via fichier")
+    
