@@ -231,7 +231,11 @@ with tab3:
                             textinfo="label",
                             #texttemplate="%{value} km",
                             hovertemplate="%{value} km")
-                        fig.update_layout(showlegend=False)
+                        fig.update_layout(
+                            showlegend=False,
+                            width=100,   # largeur en pixels
+                            height=100   # hauteur en pixels
+                        )
                         st.plotly_chart(fig, use_container_width=True)
 
             
