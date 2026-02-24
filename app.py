@@ -345,7 +345,13 @@ with tab3:
                     fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_Race,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur, width='stretch')                    
 
-    
+            with st.container(border=True):
+                nom_recherche_races = f.Filter_By_Athlete(df_all_parquet,nom_recherche)['race_id'].unique()
+                mask = df_Synthese['Race_id'].isin(nom_recherche_races)
+                result = df_Synthese.loc[mask].reset_index(drop=True)
+                map_nom_recherche = f.Viz_Map(result)
+                st.plotly_chart(map_nom_recherche, width='stretch')   
+
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
