@@ -206,19 +206,34 @@ with tab3:
                 # 2. Les métriques par SPORT dans les colonnes suivantes
                 for i, (sport, nb) in enumerate(courses_par_sport.items()):
                     with stats_cols[i + 1]:
-                        distance = dist_par_sport.get(sport, 0)
+                
+                        # Sous-DF pour le sport courant
+                        df_sport = (
+                            df_coureur[df_coureur["sport"] == sport]
+                            .drop_duplicates(subset=["race_name"])
+                        )
+                
+                        distance = df_sport["Distance"].sum()
+                
                         label_with_icon = f"{sport_icon(sport)} {sport}"
                         st.metric(
                             label=label_with_icon,
-                            value=f"#{nb} | {int(distance)}km"
+                            value=f"#{nb} | {int(distance)} km"
                         )
+                
+                        # Pie chart : distances par course
                         fig = px.pie(
-                            courses_par_sport,
+                            df_sport,
                             names="race_name",
                             values="Distance",
                             hole=0.4
                         )
-                        
+                
+                        fig.update_traces(
+                            textinfo="label+percent",
+                            hovertemplate="%{label}<br>%{value} km"
+                        )
+                
                         st.plotly_chart(fig, use_container_width=True)
 
             
