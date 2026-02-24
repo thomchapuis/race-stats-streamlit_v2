@@ -383,7 +383,7 @@ with tab3:
                     df_athlete_races['rank sex'] = df_athlete_races['rank sex'].astype('Int64')
                     col = ['name','sex','time', 'rank','finishers', 'rank %', 'rank sex','finishers sex','rank sex %','race_key']
                     
-                    st.write(df_athlete_races = df_athlete_races[col])
+                    st.write(df_athlete_races[col])
 
             with st.container(border=True):
                 nom_recherche_races = f.Filter_By_Athlete(df_all_parquet,nom_recherche)['race_id'].unique()
