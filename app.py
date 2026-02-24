@@ -202,11 +202,10 @@ with tab3:
                         label="🏁 Total", 
                         value=f"{nb_courses_coureur:,}".replace(",", " ")
                     )                      
-                    st.divider()
-                    courses_unique = df_coureur["race_id"].unique()
+                    courses_unique = df_coureur["race_key"].unique()
                     courses_md = "\n".join([f"- {c}" for c in courses_unique])
                     st.markdown(courses_md)
-                    st.divider()
+
 
                 # 2. Les métriques par SPORT dans les colonnes suivantes
                 for i, (sport, nb) in enumerate(courses_par_sport.items()):
