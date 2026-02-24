@@ -347,8 +347,8 @@ with tab3:
 
             with st.container(border=True):
                 nom_recherche_races = f.Filter_By_Athlete(df_all_parquet,nom_recherche)['race_id'].unique()
-                mask = df_Synthese['Race_id'].isin(nom_recherche_races)
-                result = df_Synthese.loc[mask].reset_index(drop=True)
+                mask = df_synthese['Race_id'].isin(nom_recherche_races)
+                result = df_synthese.loc[mask].reset_index(drop=True)
                 map_nom_recherche = f.Viz_Map(result)
                 st.plotly_chart(map_nom_recherche, width='stretch')   
 
