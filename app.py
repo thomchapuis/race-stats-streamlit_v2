@@ -369,11 +369,11 @@ with tab3:
 
             with st.container(border=True):                    
                     df_coureur['finishers'] = df_coureur.groupby(['race_id'])['rank'].transform('max').astype(int)
-                    df_coureur['rank %'] = df_coureur['rank']/df_athlete['finishers']
+                    df_coureur['rank %'] = df_coureur['rank']/df_coureur['finishers']
                     
                     df_coureur['rank sex'] = df_coureur.groupby(['race_id', 'sex'])['rank'].rank(method='min')
                     df_coureur['finishers sex'] = df_coureur.groupby(['race_id',])['rank sex'].transform('max').astype(int)
-                    df_coureur['rank sex %'] = df_coureur['rank sex']/df_athlete['finishers sex']
+                    df_coureur['rank sex %'] = df_coureur['rank sex']/df_coureur['finishers sex']
                     
                     df_athlete_races = df_coureur[df_athlete['name_key'] == nom_recherche].copy()
                     
