@@ -365,7 +365,25 @@ with tab3:
                 else:
                     df_Race = f.Filter_By_Race(df_all_parquet, race_recherche2)
                     fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_Race,'time',nom_recherche)
-                    st.plotly_chart(fig_histo_coureur, width='stretch')                    
+                    st.plotly_chart(fig_histo_coureur, width='stretch')    
+
+            with st.container(border=True):                    
+                    df_coureur['finishers'] = df_coureur.groupby(['race_id'])['rank'].transform('max').astype(int)
+                    df_coureur['rank %'] = df_coureur['rank']/df_athlete['finishers']
+                    
+                    df_coureur['rank sex'] = df_coureur.groupby(['race_id', 'sex'])['rank'].rank(method='min')
+                    df_coureur['finishers sex'] = df_coureur.groupby(['race_id',])['rank sex'].transform('max').astype(int)
+                    df_coureur['rank sex %'] = df_coureur['rank sex']/df_athlete['finishers sex']
+                    
+                    df_athlete_races = df_coureur[df_athlete['name_key'] == nom_recherche].copy()
+                    
+                    df_athlete_races['time'] = df_athlete_races['time'].apply(lambda x: str(x).split()[-1].split('.')[0])
+                    df_athlete_races['rank %'] = df_athlete_races['rank %'].map(lambda x: f"{x:.2%}")
+                    df_athlete_races['rank sex %'] = df_athlete_races['rank sex %'].map(lambda x: f"{x:.2%}")
+                    df_athlete_races['rank sex'] = df_athlete_races['rank sex'].astype('Int64')
+                    col = ['name','sex','time', 'rank','finishers', 'rank %', 'rank sex','finishers sex','rank sex %','race_key']
+                    
+                    st.write(df_athlete_races = df_athlete_races[col])
 
             with st.container(border=True):
                 nom_recherche_races = f.Filter_By_Athlete(df_all_parquet,nom_recherche)['race_id'].unique()
