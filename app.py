@@ -38,7 +38,7 @@ cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
 # 2. On fusionne (merge) sur les noms de courses
 df_all_parquet = pd.merge(
     df_all,
-    df_Synthese[cols_to_add],
+    df_synthese[cols_to_add],
     left_on='race_id',
     right_on='Race_id',
     how='left'
