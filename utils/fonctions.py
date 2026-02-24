@@ -746,7 +746,7 @@ def Viz_Map(df_Synthese):
         font=dict(color="white"),
     )
 
-    return fig.show()
+    return fig
 
 
 
