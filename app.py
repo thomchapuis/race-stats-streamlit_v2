@@ -484,18 +484,21 @@ with tabGroup:
     st.title("⚔️ Vision de groupe")
     race_selected = "NuitBlanchePilat"
     df_race = f.Filter_By_Race(df_all_parquet, race_selected)
-    st.markdown(ATHLETES)
-    for name in ATHLETES:
-        clean_name = f.get_clean_key(name)
-        row = df_race.loc[df_race['name_key'] == clean_name]
-        if not row.empty:
-            st.markdown(
-                f"""
-                **{name}**
-                - ⏱ Temps : `{row.iloc[0]['time']}`
-                - 🏁 Classement : **{int(row.iloc[0]['rank'])}**
-                """
-            )
-    
-    fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
-    st.plotly_chart(fig_Group,use_container_width=True)
+
+    col_Group1, col_Group2 = st.columns(2)
+    with col_Group1:
+        st.markdown(ATHLETES)
+        for name in ATHLETES:
+            clean_name = f.get_clean_key(name)
+            row = df_race.loc[df_race['name_key'] == clean_name]
+            if not row.empty:
+                st.markdown(
+                    f"""
+                    **{name}**
+                    - ⏱ Temps : `{row.iloc[0]['time']}`
+                    - 🏁 Classement : **{int(row.iloc[0]['rank'])}**
+                    """
+                )
+    with col_Group2:
+        fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
+        st.plotly_chart(fig_Group,use_container_width=True)
