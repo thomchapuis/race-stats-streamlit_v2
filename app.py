@@ -237,10 +237,7 @@ with tab3:
                             height=200,   # hauteur en pixels,
                             margin=dict(l=0, r=0, t=0, b=0)  # réduire les marges pour mieux centrer
                         )
-                        st.markdown(
-                            f"<div style='display: flex; justify-content: center;'>{st.plotly_chart(fig, use_container_width=False)._repr_html_()}</div>",
-                            unsafe_allow_html=True
-                        )
+                        st.plotly_chart(fig)
 
             
             st.divider()
