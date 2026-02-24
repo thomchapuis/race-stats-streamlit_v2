@@ -18,11 +18,11 @@ def load_synthese_data(file_path):
     df = pd.read_excel(file_path)
     return df
 
-parquet_file5 = "data/races5.parquet"
-parquet_file6 = "data/races6.parquet"
+parquet_file7 = "data/races7.parquet"
+parquet_file8 = "data/races8.parquet"
 
-df_parquet5 = load_data(parquet_file5)
-df_parquet6 = load_data(parquet_file6)
+df_parquet7 = load_data(parquet_file7)
+df_parquet8 = load_data(parquet_file8)
 
 
 #synthese_file = "data/Synthese.xlsx"
@@ -31,7 +31,7 @@ df_parquet6 = load_data(parquet_file6)
 synthese_file = "data/Synthese3.xlsx"
 df_synthese = load_synthese_data(synthese_file)
 
-df_all = pd.concat([df_parquet5, df_parquet6], ignore_index=True, sort=False)
+df_all = pd.concat([df_parquet7, df_parquet8], ignore_index=True, sort=False)
 
 cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
 
@@ -365,8 +365,8 @@ with tab4:
 ########################## ########################## ########################## ########################## ########################## 
 with tab5:
     # 1) Affichage de la source de données tout en haut
-    st.metric(label="Source des données 1", value=parquet_file5)
-    st.metric(label="Source des données2", value=parquet_file6)
+    st.metric(label="Source des données 1", value=parquet_file7)
+    st.metric(label="Source des données2", value=parquet_file8)
 
     
     # Préparation des données
