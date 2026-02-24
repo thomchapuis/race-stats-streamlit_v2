@@ -506,4 +506,8 @@ with tabGroup:
 with tabToDo: 
     with st.container(border=True):
         st.write("tab import de course via fichier")
+    with st.container(border=True):
+        st.write("ajouter un warning pour les homonymes")
+    with st.container(border=True):
+        st.write("ajouter un warning pour les homonymes")
     
