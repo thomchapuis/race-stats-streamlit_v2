@@ -208,17 +208,10 @@ with tab3:
                     with stats_cols[i + 1]:
                         distance = dist_par_sport.get(sport, 0)
                         label_with_icon = f"{sport_icon(sport)} {sport}"
-                
-                        if sport == "Triathlon":
-                            st.metric(
-                                label=label_with_icon,
-                                value=f"#{nb}"
-                            )
-                        else:
-                            st.metric(
-                                label=label_with_icon,
-                                value=f"#{nb} | {int(distance)}km"
-                            )
+                        st.metric(
+                            label=label_with_icon,
+                            value=f"#{nb} | {int(distance)}km"
+                        )
             st.divider()
             st.markdown(df_coureur["race_id"].unique())
             st.divider()
