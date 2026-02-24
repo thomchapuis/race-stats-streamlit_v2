@@ -226,14 +226,12 @@ with tab3:
                             df_sport,
                             names="race_name",
                             values="Distance",
-                            hole=0.4
-                        )
-                
+                            hole=0.4)
                         fig.update_traces(
-                            textinfo="label+percent",
-                            hovertemplate="%{label}<br>%{value} km"
-                        )
-                
+                            textinfo="label",
+                            #texttemplate="%{value} km",
+                            hovertemplate="%{value} km")
+                        fig.update_layout(showlegend=False)
                         st.plotly_chart(fig, use_container_width=True)
 
             
