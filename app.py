@@ -375,7 +375,7 @@ with tab3:
                     df_coureur['finishers sex'] = df_coureur.groupby(['race_id',])['rank sex'].transform('max').astype(int)
                     df_coureur['rank sex %'] = df_coureur['rank sex']/df_coureur['finishers sex']
                     
-                    df_athlete_races = df_coureur[df_athlete['name_key'] == nom_recherche].copy()
+                    df_athlete_races = df_coureur[df_coureur['name_key'] == nom_recherche].copy()
                     
                     df_athlete_races['time'] = df_athlete_races['time'].apply(lambda x: str(x).split()[-1].split('.')[0])
                     df_athlete_races['rank %'] = df_athlete_races['rank %'].map(lambda x: f"{x:.2%}")
