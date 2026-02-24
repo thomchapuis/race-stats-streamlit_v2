@@ -33,13 +33,18 @@ df_synthese = load_synthese_data(synthese_file)
 
 df_all = pd.concat([df_parquet5, df_parquet6], ignore_index=True, sort=False)
 
+cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
+
+# 2. On fusionne (merge) sur les noms de courses
 df_all_parquet = pd.merge(
-    df_all, 
-    df_synthese[['Race', 'Distance']], 
-    left_on='race_name', 
-    right_on='Race', 
+    df_all_parquet,
+    df_Synthese[cols_to_add],
+    left_on='race_id',
+    right_on='Race_id',
     how='left'
 )
+
+
 
 #df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ df_all_parquet["Distance"].round().astype("Int64").astype(str)+ "km")
 df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ df_all_parquet["Distance"].round().astype("Int64").astype(str)+ "km")
