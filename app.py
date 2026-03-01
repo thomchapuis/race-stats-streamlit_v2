@@ -227,7 +227,7 @@ with tab3:
                     fig.update_traces(
                         textinfo="none",
                         #texttemplate="%{value} km",
-                        hovertemplate="%{value} km")
+                        hovertemplate="<b>%{label}</b><br>%{value} km<extra></extra>")
                     fig.update_layout(
                         showlegend=False,
                         width=200,   # largeur en pixels
