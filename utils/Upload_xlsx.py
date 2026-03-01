@@ -89,7 +89,7 @@ def load_race(file):
     return df
 
 
-def load_all_races(race_files: dict):
+def load_all_races(file):
     dfs = []
 
     for race_key, sheet_id in race_files.items():
@@ -104,7 +104,14 @@ def load_all_races(race_files: dict):
         df["race_distance"] = race_date
         dfs.append(df)
 
-    return pd.concat(dfs, ignore_index=True)
+    dfs = pd.concat(dfs, ignore_index=True)
+    filename_base = os.path.splitext(file.name)[0]
+    save_path = os.path.join('data', f"{filename_base}.parquet")
+
+    # Conversion et sauvegarde
+    df.to_parquet(save_path, index=False)
+    
+    return save_path, df
 
 
 def get_clean_key(text):
