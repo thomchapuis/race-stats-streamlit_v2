@@ -6,7 +6,8 @@ from utils.config import sport_icon
 from utils.config import ATHLETES
 #from utils.fonctions import *
 from utils import fonctions as f
-from utils.Upload_xlsx import *
+#from utils.Upload_xlsx import *
+from utils.Upload_xlsx_to_supabase import *
 
 
 st.set_page_config(layout="wide")
@@ -527,15 +528,18 @@ with tabImport:
     """)
     
     # Composant de chargement de fichier
-    uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
+    #uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
+    uploaded_file = st.file_uploader("Fichier classement", type=["xlsx"])
+
     
-    if uploaded_file is not None:
+    if uploaded_file:
         # Bouton pour lancer la conversion
         if st.button("Convertir et Enregistrer"):
             with st.spinner('Traitement en cours...'):
                 #path, data = save_as_parquet(uploaded_file)
-                st.write(load_race(uploaded_file).head(3))
-                path, data = load_all_races(uploaded_file)
+                #st.write(load_race(uploaded_file).head(3))
+                #path, data = load_all_races(uploaded_file)
+                success, data = save_to_database(uploaded_file)
                 
                 if path:
                     st.success(f"✅ Fichier enregistré avec succès !")
