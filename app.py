@@ -34,8 +34,9 @@ df_database = load_supabase_data()
 #synthese_file = "data/Synthese.xlsx"
 #synthese_file = "data/Synthese2.xlsx"
 #synthese_file = "data/Synthese_map.xlsx"
-synthese_file = "data/Synthese3.xlsx"
-df_synthese = load_synthese_data(synthese_file)
+#synthese_file = "data/Synthese3.xlsx"
+#df_synthese = load_synthese_data(synthese_file)
+df_synthese = load_synthese_supabase()
 
 df_all = pd.concat([df_parquet7, df_parquet8,df_database], ignore_index=True, sort=False)
 
