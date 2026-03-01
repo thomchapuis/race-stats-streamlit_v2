@@ -544,6 +544,9 @@ with tabImport:
             
             with col2:    
                 sport = st.selectbox("Sport", ["Running", "Trail", "Cycling", "Triathlon"])
+                # On initialise les deux variables à None par défaut
+                distance = 0
+                format = None
                 if sport == "Triathlon":
                     format = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL")
                 else: 
