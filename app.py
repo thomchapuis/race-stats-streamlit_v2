@@ -6,7 +6,7 @@ from utils.config import sport_icon
 from utils.config import ATHLETES
 #from utils.fonctions import *
 from utils import fonctions as f
-from utils.upload_xls import *
+from utils.Upload_xlsx import *
 
 
 st.set_page_config(layout="wide")
