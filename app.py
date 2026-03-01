@@ -73,7 +73,6 @@ with tab1:
 ########################## ########################## ########################## ########################## ########################## 
 with tab6:
     st.write(df_synthese)
-    st.write(
     #st.write(df_all_parquet.head())
     st.write(
         df_all_parquet[["Race1", "race_name", "race_key", "Distance"]]
