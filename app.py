@@ -549,10 +549,10 @@ with tabImport:
                     st.write(f"Nombre de coureurs importés : {len(data)}")
     
     # Affichage des fichiers déjà présents dans le dossier data
-    if os.path.exists('data'):
+    if os.path.exists('data/Upload_xlsx'):
         st.divider()
         st.sidebar.title("📁 Fichiers stockés")
-        files = [f for f in os.listdir('data') if f.endswith('.parquet')]
+        files = [f for f in os.listdir('data/Upload_xlsx') if f.endswith('.parquet')]
         if files:
             for f in files:
                 st.sidebar.text(f"📄 {f}")
