@@ -562,11 +562,8 @@ with tabImport:
                     "sport": sport,
                     "Ville": ville,
                     "Distance": str(distance),
-                    "D+": denivele,
-                    "nb_participants": nb_participants
-                }
+                    "D+": denivele                }
 
-                #date	Année	sport	Race1	Race2	Distance	D+	Format	Distance_naming	Race_id	parquet	Ville	lat	lon
     
                 try:
                     # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
