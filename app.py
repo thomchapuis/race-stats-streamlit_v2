@@ -389,6 +389,8 @@ with tab3:
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
         nom_fiche = ""
+        st.header(f"👤 Fiche Coureur {nom_fiche}")
+
         
 ########################## ########################## ########################## ########################## ########################## 
 with tab4:
