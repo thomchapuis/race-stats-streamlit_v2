@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 def parse_race_key(race_key: str):
     date_str, sport, *name_parts, race_distance = race_key.split("_")
@@ -92,7 +93,7 @@ def load_race(file):
 def load_all_races(file):
     dfs = []
 
-    for race_key, sheet_id in race_files.items():
+    for race_key, sheet_id in file.items():
         race_id, race_name, sport, race_date, race_distance = parse_race_key(race_key)
 
         df = load_race(sheet_id)
