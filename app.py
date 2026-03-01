@@ -171,7 +171,7 @@ with tab3:
         with st.container(border=True):
             # On crée deux colonnes principales : une pour l'icône, une pour tout le texte/stats
             # Le nom de l'athlète en haut
-            st.title(df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0])
+            #st.title(df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0])
             #st.title(nom_recherche)
             
             # Calcul des stats par sport pour CET athlète uniquement
