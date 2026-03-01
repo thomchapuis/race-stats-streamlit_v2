@@ -517,7 +517,7 @@ with tabRiegel:
 
 with tabImport:
     # Interface Utilisateur
-    st.title("Importation de nouveaux classements"
+    st.title("Importation de nouveaux classements")
     
     st.markdown("""
     Faites glisser votre fichier **Excel (.xlsx)** ci-dessous pour l'intégrer à la base de données. 
