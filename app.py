@@ -142,9 +142,11 @@ with tab2:
         )
     
 ########################## ########################## ########################## ########################## ########################## 
-with tab3:
-    st.header("👤 Fiche Coureur")
-    all_athletes = sorted(df_all_parquet["name_key"].unique())
+with tab3
+    all_athletes_raw = df_all_parquet["name_key"].unique()
+    all_athletes = [name for name in all_athletes_raw if isinstance(name, str)]
+    all_athletes = sorted(all_athletes)
+
     #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...",key="selectbox_tab3_name")
     nom_recherche = st.selectbox(
         label="Recherche athlète",
@@ -154,6 +156,16 @@ with tab3:
         key="selectbox_tab3_name",
         label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
     )
+
+    # 2. Gestion de l'affichage dynamique
+    if nom_recherche:
+        nom_affiche = f" : {nom_input.upper()}"
+    else:
+        nom_affiche = ""
+
+    # 3. Header avec icône et trait de séparation
+    st.header(f"👤 Fiche Coureur - {nom_affiche}")
+    st.markdown("---")
 
     if nom_recherche:
         df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
