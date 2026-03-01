@@ -213,9 +213,9 @@ def load_supabase_synthese():
     
     if not df.empty:
         # Conversion de la date pour permettre les tris et filtres temporels
-        df["race_date"] = pd.to_datetime(df["race_date"])
+        #df["race_date"] = pd.to_datetime(df["race_date"])
         # Tri par date décroissante (la plus récente en haut)
-        df = df.sort_values("race_date", ascending=False)
+        #df = df.sort_values("race_date", ascending=False)
         
     return df
 
