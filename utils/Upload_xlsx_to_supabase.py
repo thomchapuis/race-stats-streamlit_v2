@@ -82,8 +82,4 @@ def save_to_database(file):
         st.error(f"Erreur Supabase : {e}")
         return False, None
 
-# --- DANS TON APP STREAMLIT ---
-uploaded_file = st.file_uploader("Fichier classement", type=["xlsx"])
-if uploaded_file:
-    if st.button("🚀 Importer dans la base permanente"):
-        success, data = save_to_database(uploaded_file)
+
