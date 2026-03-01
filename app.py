@@ -563,7 +563,7 @@ with tabImport:
                     "Race_id": race_id,
                     "Race1": race_name,
                     "date": str(race_date), # Format YYYY-MM-DD pour SQL
-                    "Année" = race_date.year
+                    "Année": race_date.year
                     "sport": sport,
                     "Ville": ville,
                     "Distance": str(distance),
