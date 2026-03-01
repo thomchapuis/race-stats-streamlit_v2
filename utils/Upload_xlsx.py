@@ -92,23 +92,21 @@ def load_race(file):
 
 def load_all_races(file):
     dfs = []
-
-    for race_key, sheet_id in file.items():
-        race_id, race_name, sport, race_date, race_distance = parse_race_key(race_key)
-
-        df = load_race(sheet_id)
-
-        df["race_id"] = race_id
-        df["race_name"] = race_name
-        df["sport"] = sport
-        df["race_date"] = race_date
-        df["race_distance"] = race_date
-        dfs.append(df)
-
-    dfs = pd.concat(dfs, ignore_index=True)
+    df = load_race(file)
     filename_base = os.path.splitext(file.name)[0]
-    save_path = os.path.join('data', f"{filename_base}.parquet")
+    
+    race_id, race_name, sport, race_date, race_distance = parse_race_key(filename_base)
 
+    df["race_id"] = race_id
+    df["race_name"] = race_name
+    df["sport"] = sport
+    df["race_date"] = race_date
+    df["race_distance"] = race_date
+    
+    #dfs.append(df)
+    #dfs = pd.concat(dfs, ignore_index=True)
+    
+    save_path = os.path.join('data', f"{filename_base}.parquet")
     # Conversion et sauvegarde
     df.to_parquet(save_path, index=False)
     
