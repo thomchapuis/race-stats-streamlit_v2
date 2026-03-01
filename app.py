@@ -167,81 +167,74 @@ with tab3:
         # Affichage de la "Fiche"
         with st.container(border=True):
             # On crée deux colonnes principales : une pour l'icône, une pour tout le texte/stats
-            col_icon, col_content = st.columns([1, 5])
+            # Le nom de l'athlète en haut
+            st.title(df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0])
+            #st.title(nom_recherche)
             
-            with col_icon:
-                # On peut agrandir l'icône avec du HTML si besoin, ou simplement :
-                st.write("# 🏃‍♂️") 
-            
-            with col_content:
-                # Le nom de l'athlète en haut
-                st.title(df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0])
-                #st.title(nom_recherche)
-                
-                # Calcul des stats par sport pour CET athlète uniquement
-                courses_par_sport = (
-                    df_coureur.groupby("sport")["race_id"]
-                    .nunique()
-                    .sort_values(ascending=False)
-                )
+            # Calcul des stats par sport pour CET athlète uniquement
+            courses_par_sport = (
+                df_coureur.groupby("sport")["race_id"]
+                .nunique()
+                .sort_values(ascending=False)
+            )
 
-                # Calcul de la distance totale par sport
-                dist_par_sport = (
-                    df_coureur.drop_duplicates(subset=['race_name'])
-                    .groupby('sport')['Distance']
-                    .sum()
-                )
-                
-                # Sous-conteneur pour les métriques alignées horizontalement
-                # On crée (Nombre de sports + 1 pour le total) colonnes
-                stats_cols = st.columns(len(courses_par_sport) + 1)
-                
-                # 1. La métrique TOTAL dans la première sous-colonne
-                with stats_cols[0]:
+            # Calcul de la distance totale par sport
+            dist_par_sport = (
+                df_coureur.drop_duplicates(subset=['race_name'])
+                .groupby('sport')['Distance']
+                .sum()
+            )
+            
+            # Sous-conteneur pour les métriques alignées horizontalement
+            # On crée (Nombre de sports + 1 pour le total) colonnes
+            stats_cols = st.columns(len(courses_par_sport) + 1)
+            
+            # 1. La métrique TOTAL dans la première sous-colonne
+            with stats_cols[0]:
+                st.metric(
+                    label="🏁 Total", 
+                    value=f"{nb_courses_coureur:,}".replace(",", " ")
+                )                      
+                courses_unique = df_coureur["race_key"].unique()
+                courses_md = "\n".join([f"- {c}" for c in courses_unique])
+                st.markdown(courses_md)
+
+
+            # 2. Les métriques par SPORT dans les colonnes suivantes
+            for i, (sport, nb) in enumerate(courses_par_sport.items()):
+                with stats_cols[i + 1]:
+            
+                    # Sous-DF pour le sport courant
+                    df_sport = (
+                        df_coureur[df_coureur["sport"] == sport]
+                        .drop_duplicates(subset=["race_name"])
+                    )
+            
+                    distance = df_sport["Distance"].sum()
+            
+                    label_with_icon = f"{sport_icon(sport)} {sport}"
                     st.metric(
-                        label="🏁 Total", 
-                        value=f"{nb_courses_coureur:,}".replace(",", " ")
-                    )                      
-                    courses_unique = df_coureur["race_key"].unique()
-                    courses_md = "\n".join([f"- {c}" for c in courses_unique])
-                    st.markdown(courses_md)
-
-
-                # 2. Les métriques par SPORT dans les colonnes suivantes
-                for i, (sport, nb) in enumerate(courses_par_sport.items()):
-                    with stats_cols[i + 1]:
-                
-                        # Sous-DF pour le sport courant
-                        df_sport = (
-                            df_coureur[df_coureur["sport"] == sport]
-                            .drop_duplicates(subset=["race_name"])
-                        )
-                
-                        distance = df_sport["Distance"].sum()
-                
-                        label_with_icon = f"{sport_icon(sport)} {sport}"
-                        st.metric(
-                            label=label_with_icon,
-                            value=f"#{nb} | {int(distance)} km"
-                        )
-                
-                        # Pie chart : distances par course
-                        fig = px.pie(
-                            df_sport,
-                            names="race_name",
-                            values="Distance",
-                            hole=0.4)
-                        fig.update_traces(
-                            textinfo="label",
-                            #texttemplate="%{value} km",
-                            hovertemplate="%{value} km")
-                        fig.update_layout(
-                            showlegend=False,
-                            width=200,   # largeur en pixels
-                            height=130,   # hauteur en pixels,
-                            margin=dict(l=0, r=0, t=0, b=0)  # réduire les marges pour mieux centrer
-                        )
-                        st.plotly_chart(fig)
+                        label=label_with_icon,
+                        value=f"#{nb} | {int(distance)} km"
+                    )
+            
+                    # Pie chart : distances par course
+                    fig = px.pie(
+                        df_sport,
+                        names="race_name",
+                        values="Distance",
+                        hole=0.4)
+                    fig.update_traces(
+                        textinfo="label",
+                        #texttemplate="%{value} km",
+                        hovertemplate="%{value} km")
+                    fig.update_layout(
+                        showlegend=False,
+                        width=200,   # largeur en pixels
+                        height=130,   # hauteur en pixels,
+                        margin=dict(l=0, r=0, t=0, b=0)  # réduire les marges pour mieux centrer
+                    )
+                    st.plotly_chart(fig)
 
 
 
