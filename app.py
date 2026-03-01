@@ -538,9 +538,9 @@ with tabImport:
             
             with col1:
                 race_id = st.text_input("ID de la course (ex: 20240512_trail_lyon_21)", help="Identifiant unique")
-                race_name = st.text_input("Nom de la course", placeholder="Ex: Trail de la SaintéLyon")
+                race_name = st.text_input("Nom de la course", placeholder="Ex: SaintéLyon")
                 race_date = st.date_input("Date de la course", datetime.now())
-                sport = st.selectbox("Sport", ["Running", "Trail", "Cyclisme", "Triathlon", "VTT"])
+                sport = st.selectbox("Sport", ["Running", "Trail", "Cycling", "Triathlon"])
     
             with col2:
                 ville = st.text_input("Ville")
@@ -556,15 +556,17 @@ with tabImport:
             else:
                 # Préparation des données
                 nouvelle_ligne = {
-                    "race_id": race_id,
-                    "race_name": race_name,
-                    "race_date": str(race_date), # Format YYYY-MM-DD pour SQL
+                    "Race_id": race_id,
+                    "Race1": race_name,
+                    "date": str(race_date), # Format YYYY-MM-DD pour SQL
                     "sport": sport,
-                    "ville": ville,
-                    "race_distance": str(distance),
-                    "denivele_positif": denivele,
+                    "Ville": ville,
+                    "Distance": str(distance),
+                    "D+": denivele,
                     "nb_participants": nb_participants
                 }
+
+                #date	Année	sport	Race1	Race2	Distance	D+	Format	Distance_naming	Race_id	parquet	Ville	lat	lon
     
                 try:
                     # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
