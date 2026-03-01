@@ -540,11 +540,15 @@ with tabImport:
                 race_id = st.text_input("ID de la course (ex: 20240512_trail_lyon_21)", help="Identifiant unique")
                 race_name = st.text_input("Nom de la course", placeholder="Ex: SaintéLyon")
                 race_date = st.date_input("Date de la course", datetime.now())
+                ville = st.text_input("Ville")    
+            
+            with col2:    
                 sport = st.selectbox("Sport", ["Running", "Trail", "Cycling", "Triathlon"])
-    
-            with col2:
-                ville = st.text_input("Ville")
-                distance = st.number_input("Distance (km)", min_value=0, step=1, format=None)
+                if sport == Triathlon:
+                    format = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL")
+                else: 
+                    distance = st.number_input("Distance (km)", min_value=0, step=1, format=None)
+                    
                 denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
                 nb_participants = st.number_input("Nombre de participants (optionnel)", min_value=0, step=1)
     
@@ -563,6 +567,7 @@ with tabImport:
                     "sport": sport,
                     "Ville": ville,
                     "Distance": str(distance),
+                    "Format": format,
                     "D+": denivele                }
 
     
