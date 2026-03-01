@@ -512,7 +512,7 @@ with tabToDo:
     with st.container(border=True):
         st.write("ajouter un warning pour les homonymes")
     with st.container(border=True):
-        st.write("ajouter un warning pour les homonymes")
+        st.write("ajouter de quoi remplir le fichier synthese")
     
 ########################## ########################## ########################## ########################## ########################## 
 
@@ -560,7 +560,9 @@ with tabImport:
                     st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
                 else:
                     st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
-    
+
+    st.divider()
+
     # Test de lecture brute
     try:
         st.write("Vérification des secrets...")
