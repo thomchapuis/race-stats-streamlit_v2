@@ -200,8 +200,7 @@ def load_supabase_data():
             # On s'assure que les colonnes de temps sont bien des Timedelta
             df[col] = pd.to_timedelta(df[col])
     
-    if df.empty:
-        return df
+    return df
 
 
 
