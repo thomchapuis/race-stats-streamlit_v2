@@ -225,7 +225,7 @@ with tab3:
                         values="Distance",
                         hole=0.4)
                     fig.update_traces(
-                        textinfo="label",
+                        textinfo="none",
                         #texttemplate="%{value} km",
                         hovertemplate="%{value} km")
                     fig.update_layout(
