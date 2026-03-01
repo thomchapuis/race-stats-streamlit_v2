@@ -6,6 +6,7 @@ from utils.config import sport_icon
 from utils.config import ATHLETES
 #from utils.fonctions import *
 from utils import fonctions as f
+from utils.upload_xls import *
 
 
 st.set_page_config(layout="wide")
@@ -533,6 +534,7 @@ with tabImport:
         if st.button("Convertir et Enregistrer"):
             with st.spinner('Traitement en cours...'):
                 #path, data = save_as_parquet(uploaded_file)
+                st.write(load_race(uploaded_file))
                 
                 if path:
                     st.success(f"✅ Fichier enregistré avec succès !")
