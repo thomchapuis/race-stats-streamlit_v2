@@ -553,15 +553,23 @@ with tabImport:
                     
                     # Statistiques rapides
                     st.write(f"Nombre de coureurs importés : {len(data)}")
+
     
-    # Affichage des fichiers déjà présents dans le dossier data
-    if os.path.exists('data/Upload_xlsx'):
-        st.divider()
-        st.sidebar.title("📁 Fichiers stockés")
-        files = [f for f in os.listdir('data/Upload_xlsx') if f.endswith('.parquet')]
-        if files:
-            for f in files:
-                st.sidebar.text(f"📄 {f}")
-        else:
-            st.sidebar.write("Aucun fichier Parquet pour le moment.")
+    # Test de lecture brute
+    try:
+        st.write("Vérification des secrets...")
+        st.write(f"URL configurée : {st.secrets['connections']['supabase']['url']}")
+        # On affiche juste les 5 premiers caractères de la clé pour vérifier
+        key_start = st.secrets['connections']['supabase']['key'][:5]
+        st.write(f"Début de la clé : {key_start}...")
+    except Exception as e:
+        st.error(f"Erreur de lecture des secrets : {e}")
+    
+    # Tentative de connexion
+    from st_supabase_connection import SupabaseConnection
+    try:
+        conn = st.connection("supabase", type=SupabaseConnection)
+        st.success("✅ Connexion établie avec succès !")
+    except Exception as e:
+        st.error(f"La connexion a échoué : {e}")
         
