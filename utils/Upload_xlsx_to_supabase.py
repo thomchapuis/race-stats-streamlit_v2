@@ -178,6 +178,31 @@ def load_supabase_data():
     # On transforme le résultat en DataFrame Pandas
     return pd.DataFrame(response.data)
 
-# Utilisation :
-df_sport = load_supabase_data()
+from st_supabase_connection import SupabaseConnection
+
+def load_supabase_data():
+    conn = st.connection("supabase", type=SupabaseConnection)
+    
+    # Récupération des données
+    response = conn.table("resultats_courses").select("*").execute()
+    df = pd.DataFrame(response.data)
+
+    # --- RECONVERSION DES TYPES (Crucial pour éviter ton erreur) ---
+    
+    # 1. Reconvertir la date (pour pouvoir utiliser .dt.year etc.)
+    if "race_date" in df.columns:
+        df["race_date"] = pd.to_datetime(df["race_date"])
+    
+    # 2. Reconvertir les temps (Interval Postgres -> Timedelta Pandas)
+    time_cols = ["time", "swim", "bike", "t1", "t2", "run"]
+    for col in time_cols:
+        if col in df.columns:
+            # On s'assure que les colonnes de temps sont bien des Timedelta
+            df[col] = pd.to_timedelta(df[col])
+    
+    if df.empty:
+        return df
+
+
+
 
