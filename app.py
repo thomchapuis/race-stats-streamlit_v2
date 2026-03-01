@@ -540,20 +540,23 @@ with tabImport:
                 #st.write(load_race(uploaded_file).head(3))
                 #path, data = load_all_races(uploaded_file)
                 success, data = save_to_database(uploaded_file)
-                
-                if path:
-                    st.success(f"✅ Fichier enregistré avec succès !")
-                    st.info(f"Emplacement : `{path}`")
+                if success:
+                    st.success("✅ Données enregistrées avec succès dans Supabase !")
                     
                     # Petit aperçu des données importées
-                    st.write("Aperçu des données :")
+                    st.write("### Aperçu des données envoyées :")
                     st.dataframe(data.head())
-                    st.write(data.columns)
                     
+                    # Informations sur les colonnes et le volume
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Lignes importées", len(data))
+                    with col2:
+                        st.metric("Colonnes traitées", len(data.columns))
                     
-                    # Statistiques rapides
-                    st.write(f"Nombre de coureurs importés : {len(data)}")
-
+                    st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
+                else:
+                    st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
     
     # Test de lecture brute
     try:
