@@ -544,6 +544,8 @@ with tabImport:
                     # Petit aperçu des données importées
                     st.write("Aperçu des données :")
                     st.dataframe(data.head())
+                    st.write(data.columns)
+                    
                     
                     # Statistiques rapides
                     st.write(f"Nombre de coureurs importés : {len(data)}")
