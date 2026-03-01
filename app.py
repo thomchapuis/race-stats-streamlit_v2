@@ -544,7 +544,7 @@ with tabImport:
     
             with col2:
                 ville = st.text_input("Ville")
-                distance = st.number_input("Distance (km)", min_value=0, step=1, format="%.0f")
+                distance = st.number_input("Distance (km)", min_value=0, step=1, format=None)
                 denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
                 nb_participants = st.number_input("Nombre de participants (optionnel)", min_value=0, step=1)
     
