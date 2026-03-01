@@ -546,11 +546,11 @@ with tabImport:
                 sport = st.selectbox("Sport", ["Running", "Trail", "Cycling", "Triathlon"])
                 # On initialise les deux variables à None par défaut
                 distance = 0
-                format = None
+                format_tri = None
                 if sport == "Triathlon":
-                    format = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL")
+                    format_tri = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL",key="input_tri")
                 else: 
-                    distance = st.number_input("Distance (km)", min_value=0, step=1, format=None)
+                    distance = st.number_input("Distance (km)", min_value=0, step=1, format=None,key="input_distance")
                     
                 denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
                 nb_participants = st.number_input("Nombre de participants (optionnel)", min_value=0, step=1)
@@ -570,7 +570,7 @@ with tabImport:
                     "sport": sport,
                     "Ville": ville,
                     "Distance": str(distance),
-                    "Format": format,
+                    "Format": format_tri,
                     "D+": denivele                }
 
     
