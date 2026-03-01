@@ -526,8 +526,8 @@ with tabImport:
     st.title("Importation de nouveaux classements")
     
     st.markdown("""
-    Faites glisser votre fichier **Excel (.xlsx)** ci-dessous pour l'intégrer à la base de données. 
-    Le fichier sera automatiquement converti au format **Parquet** pour des performances optimales.
+    Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
+    colonnes : name, bib, rank, time, category, sex.
     """)
     
     # Composant de chargement de fichier
