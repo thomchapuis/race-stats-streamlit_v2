@@ -170,6 +170,7 @@ def save_to_database(file):
 
 # Remplacement de ta commande :
 def load_supabase_data():
+    conn = st.connection("supabase", type=SupabaseConnection)
     # .select("*") récupère toutes les colonnes
     # .execute() lance la requête
     response = conn.table("resultats_courses").select("*").execute()
