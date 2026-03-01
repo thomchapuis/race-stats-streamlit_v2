@@ -568,7 +568,7 @@ with tabImport:
                 try:
                     # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
                     conn.table("synthese").upsert(nouvelle_ligne, on_conflict="Race_id").execute()
-                    st.success(f"✅ La course '{Race1}' a été ajoutée avec succès !")
+                    st.success(f"✅ La course '{race_name}' a été ajoutée avec succès !")
                     st.balloons()
                 except Exception as e:
                     st.error(f"Erreur lors de l'enregistrement : {e}")
