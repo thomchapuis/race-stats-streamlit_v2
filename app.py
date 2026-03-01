@@ -54,7 +54,7 @@ df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + d
 
 
 
-tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup, tabToDo = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe", "ToDo"])
+tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup, tabRiegel,tabToDo = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe","Riegel", "ToDo"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -510,4 +510,8 @@ with tabToDo:
         st.write("ajouter un warning pour les homonymes")
     with st.container(border=True):
         st.write("ajouter un warning pour les homonymes")
+    
+
+with tabRiegel:
+    st.write("tab import de course via fichier")
     
