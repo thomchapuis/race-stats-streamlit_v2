@@ -544,7 +544,7 @@ with tabImport:
             
             with col2:    
                 sport = st.selectbox("Sport", ["Running", "Trail", "Cycling", "Triathlon"])
-                if sport == Triathlon:
+                if sport == "Triathlon":
                     format = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL")
                 else: 
                     distance = st.number_input("Distance (km)", min_value=0, step=1, format=None)
