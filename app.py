@@ -571,9 +571,9 @@ with tabImport:
                     st.balloons()
                 except Exception as e:
                     st.error(f"Erreur lors de l'enregistrement : {e}")
-    
-    # Appel de la fonction dans ton app
-    interface_ajout_course()
+        
+        # Appel de la fonction dans ton app
+        interface_ajout_course()
         st.divider()
         st.markdown("""
         Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
@@ -610,7 +610,6 @@ with tabImport:
                         st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
                     else:
                         st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
-
     st.divider()
 
     # Test de lecture brute
