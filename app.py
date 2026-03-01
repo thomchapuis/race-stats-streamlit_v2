@@ -521,42 +521,95 @@ with tabRiegel:
 with tabImport:
     # Interface Utilisateur
     st.title("Importation de nouveaux classements")
-    
-    st.markdown("""
-    Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
-    colonnes : name, bib, rank, time, category, sex.
-    """)
-    
-    # Composant de chargement de fichier
-    #uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
-    uploaded_file = st.file_uploader("Fichier classement", type=["xlsx"])
 
+    st.divider()
+
+    def interface_ajout_course():
+        st.header("🏁 Ajouter une nouvelle course à la synthèse")
+        
+        # Connexion à Supabase
+        conn = st.connection("supabase", type=SupabaseConnection)
     
-    if uploaded_file:
-        # Bouton pour lancer la conversion
-        if st.button("Convertir et Enregistrer"):
-            with st.spinner('Traitement en cours...'):
-                #path, data = save_as_parquet(uploaded_file)
-                #st.write(load_race(uploaded_file).head(3))
-                #path, data = load_all_races(uploaded_file)
-                success, data = save_to_database(uploaded_file)
-                if success:
-                    st.success("✅ Données enregistrées avec succès dans Supabase !")
-                    
-                    # Petit aperçu des données importées
-                    st.write("### Aperçu des données envoyées :")
-                    st.dataframe(data.head())
-                    
-                    # Informations sur les colonnes et le volume
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.metric("Lignes importées", len(data))
-                    with col2:
-                        st.metric("Colonnes traitées", len(data.columns))
-                    
-                    st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
-                else:
-                    st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
+        # Création du formulaire
+        with st.form("form_nouvelle_course", clear_on_submit=True):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                race_id = st.text_input("ID de la course (ex: 20240512_trail_lyon_21)", help="Identifiant unique")
+                race_name = st.text_input("Nom de la course", placeholder="Ex: Trail de la SaintéLyon")
+                race_date = st.date_input("Date de la course", datetime.now())
+                sport = st.selectbox("Sport", ["Running", "Trail", "Cyclisme", "Triathlon", "VTT"])
+    
+            with col2:
+                ville = st.text_input("Ville")
+                distance = st.number_input("Distance (km)", min_value=0.0, step=0.1, format="%.1f")
+                denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
+                nb_participants = st.number_input("Nombre de participants (optionnel)", min_value=0, step=1)
+    
+            submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
+    
+        if submit_button:
+            if not race_id or not race_name:
+                st.error("L'ID et le Nom de la course sont obligatoires.")
+            else:
+                # Préparation des données
+                nouvelle_ligne = {
+                    "race_id": race_id,
+                    "race_name": race_name,
+                    "race_date": str(race_date), # Format YYYY-MM-DD pour SQL
+                    "sport": sport,
+                    "ville": ville,
+                    "race_distance": str(distance),
+                    "denivele_positif": denivele,
+                    "nb_participants": nb_participants
+                }
+    
+                try:
+                    # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
+                    conn.table("synthese").upsert(nouvelle_ligne, on_conflict="race_id").execute()
+                    st.success(f"✅ La course '{race_name}' a été ajoutée avec succès !")
+                    st.balloons()
+                except Exception as e:
+                    st.error(f"Erreur lors de l'enregistrement : {e}")
+    
+    # Appel de la fonction dans ton app
+    interface_ajout_course()
+        st.divider()
+        st.markdown("""
+        Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
+        colonnes : name, bib, rank, time, category, sex.
+        """)
+        
+        # Composant de chargement de fichier
+        #uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
+        uploaded_file = st.file_uploader("Fichier classement", type=["xlsx"])
+    
+        
+        if uploaded_file:
+            # Bouton pour lancer la conversion
+            if st.button("Convertir et Enregistrer"):
+                with st.spinner('Traitement en cours...'):
+                    #path, data = save_as_parquet(uploaded_file)
+                    #st.write(load_race(uploaded_file).head(3))
+                    #path, data = load_all_races(uploaded_file)
+                    success, data = save_to_database(uploaded_file)
+                    if success:
+                        st.success("✅ Données enregistrées avec succès dans Supabase !")
+                        
+                        # Petit aperçu des données importées
+                        st.write("### Aperçu des données envoyées :")
+                        st.dataframe(data.head())
+                        
+                        # Informations sur les colonnes et le volume
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.metric("Lignes importées", len(data))
+                        with col2:
+                            st.metric("Colonnes traitées", len(data.columns))
+                        
+                        st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
+                    else:
+                        st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
 
     st.divider()
 
