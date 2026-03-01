@@ -190,22 +190,19 @@ with tab3:
             
             # Sous-conteneur pour les métriques alignées horizontalement
             # On crée (Nombre de sports + 1 pour le total) colonnes
-            stats_cols = st.columns(len(courses_par_sport) + 1)
+            stats_cols = st.columns(len(courses_par_sport))
             
             # 1. La métrique TOTAL dans la première sous-colonne
-            with stats_cols[0]:
-                st.metric(
-                    label="🏁 Total", 
-                    value=f"{nb_courses_coureur:,}".replace(",", " ")
-                )                      
-                courses_unique = df_coureur["race_key"].unique()
-                courses_md = "\n".join([f"- {c}" for c in courses_unique])
-                st.markdown(courses_md)
+            #with stats_cols[0]:
+                #st.metric(label="🏁 Total", value=f"{nb_courses_coureur:,}".replace(",", " "))                      
+                #courses_unique = df_coureur["race_key"].unique()
+                #courses_md = "\n".join([f"- {c}" for c in courses_unique])
+                #st.markdown(courses_md)
 
 
             # 2. Les métriques par SPORT dans les colonnes suivantes
             for i, (sport, nb) in enumerate(courses_par_sport.items()):
-                with stats_cols[i + 1]:
+                with stats_cols[i]:
             
                     # Sous-DF pour le sport courant
                     df_sport = (
