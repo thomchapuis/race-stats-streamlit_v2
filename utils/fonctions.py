@@ -6,6 +6,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import math
 import numpy as np
+from geopy.geocoders import Nominatim
+
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 🔹 Fonction de Viz
@@ -899,3 +901,13 @@ def get_Rank_Percentage(df, col):
 
     return temp_df['rank_percentage']
 
+
+
+
+def get_coords(ville):
+    geolocator = Nominatim(user_agent="my_app")
+    location = geolocator.geocode(ville)
+    
+    if location:
+        return location.latitude, location.longitude
+    return None, None
