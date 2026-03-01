@@ -106,7 +106,7 @@ def load_all_races(file):
     #dfs.append(df)
     #dfs = pd.concat(dfs, ignore_index=True)
     
-    save_path = os.path.join('data', f"{filename_base}.parquet")
+    save_path = os.path.join('data/Upload_xlsx', f"{filename_base}.parquet")
     # Conversion et sauvegarde
     df.to_parquet(save_path, index=False)
     
