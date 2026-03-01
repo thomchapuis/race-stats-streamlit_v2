@@ -73,6 +73,7 @@ with tab1:
 ########################## ########################## ########################## ########################## ########################## 
 with tab6:
     st.write(df_synthese)
+    st.write(
     #st.write(df_all_parquet.head())
     st.write(
         df_all_parquet[["Race1", "race_name", "race_key", "Distance"]]
@@ -86,6 +87,10 @@ with tab6:
     )
 
     st.write(dist_par_sport)
+
+    # Test
+    lat, lon = f.get_coords("Lyon, France")
+    st.write(f"Lat: {lat}, Lon: {lon}")
     
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
