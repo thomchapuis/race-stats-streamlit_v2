@@ -27,16 +27,14 @@ parquet_file8 = "data/races8.parquet"
 df_parquet7 = load_data(parquet_file7)
 df_parquet8 = load_data(parquet_file8)
 
-# Initialisation de la connexion
-# conn = st.connection("supabase", type=SupabaseConnection)
-df_database = load_supabase_synthese()
+df_database = load_supabase_data()
 
 #synthese_file = "data/Synthese.xlsx"
 #synthese_file = "data/Synthese2.xlsx"
 #synthese_file = "data/Synthese_map.xlsx"
 #synthese_file = "data/Synthese3.xlsx"
 #df_synthese = load_synthese_data(synthese_file)
-df_synthese = load_synthese_supabase()
+df_synthese = load_supabase_synthese()
 
 df_all = pd.concat([df_parquet7, df_parquet8,df_database], ignore_index=True, sort=False)
 
