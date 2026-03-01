@@ -565,7 +565,7 @@ with tabImport:
 
     # Test de lecture brute
     try:
-        st.write("Vérification des secrets...")
+        st.write("Vérification de la connexion subpabase (secrets) ...")
         st.write(f"URL configurée : {st.secrets['connections']['supabase']['SUPABASE_URL']}")
         # On affiche juste les 5 premiers caractères de la clé pour vérifier
         key_start = st.secrets['connections']['supabase']['SUPABASE_KEY'][:5]
