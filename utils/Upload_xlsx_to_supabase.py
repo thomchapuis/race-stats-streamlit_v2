@@ -205,18 +205,10 @@ def load_supabase_data():
 def load_supabase_synthese():
     """Remplace load_synthese_data(synthese_file)
     Lis la tab synthese de supabase."""
-    conn = st.connection("supabase", type=SupabaseConnection)
-    
+    conn = st.connection("supabase", type=SupabaseConnection)   
     # Lecture de la table 'synthese'
     response = conn.table("synthese").select("*").execute()
     df = pd.DataFrame(response.data)
-    
-    #if not df.empty:
-        # Conversion de la date pour permettre les tris et filtres temporels
-        #df["race_date"] = pd.to_datetime(df["race_date"])
-        # Tri par date décroissante (la plus récente en haut)
-        #df = df.sort_values("race_date", ascending=False)
-        
     return df
 
 
