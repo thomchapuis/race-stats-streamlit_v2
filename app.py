@@ -558,9 +558,9 @@ with tabImport:
     # Test de lecture brute
     try:
         st.write("Vérification des secrets...")
-        st.write(f"URL configurée : {st.secrets['connections']['supabase']['url']}")
+        st.write(f"URL configurée : {st.secrets['connections']['supabase']['SUPABASE_URL']}")
         # On affiche juste les 5 premiers caractères de la clé pour vérifier
-        key_start = st.secrets['connections']['supabase']['key'][:5]
+        key_start = st.secrets['connections']['supabase']['SUPABASE_KEY'][:5]
         st.write(f"Début de la clé : {key_start}...")
     except Exception as e:
         st.error(f"Erreur de lecture des secrets : {e}")
