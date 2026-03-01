@@ -156,19 +156,10 @@ with tab3:
         key="selectbox_tab3_name",
         label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
     )
-
-    # 2. Gestion de l'affichage dynamique
-    if nom_recherche:
-        nom_affiche = f" : {nom_input.upper()}"
-    else:
-        nom_affiche = ""
-
-    # 3. Header avec icône et trait de séparation
-    st.header(f"👤 Fiche Coureur - {nom_affiche}")
-    st.markdown("---")
-
     if nom_recherche:
         df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
+        nom_fiche = f" : {df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0]}"
+        st.header(f"👤 Fiche Coureur {nom_fiche}")
         nb_courses_coureur = df_coureur["race_id"].nunique()
         courses_par_sport = (
             df_all_parquet
@@ -400,6 +391,7 @@ with tab3:
 
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
+        nom_fiche = ""
         
 ########################## ########################## ########################## ########################## ########################## 
 with tab4:
