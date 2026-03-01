@@ -167,3 +167,16 @@ def save_to_database(file):
         return False, None
 
 
+
+# Remplacement de ta commande :
+def load_supabase_data():
+    # .select("*") récupère toutes les colonnes
+    # .execute() lance la requête
+    response = conn.table("resultats_courses").select("*").execute()
+    
+    # On transforme le résultat en DataFrame Pandas
+    return pd.DataFrame(response.data)
+
+# Utilisation :
+df_sport = load_supabase_data()
+
