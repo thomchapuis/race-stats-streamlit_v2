@@ -28,7 +28,7 @@ df_parquet7 = load_data(parquet_file7)
 df_parquet8 = load_data(parquet_file8)
 
 # Initialisation de la connexion
-conn = st.connection("supabase", type=SupabaseConnection)
+# conn = st.connection("supabase", type=SupabaseConnection)
 df_database = load_supabase_data()
 
 #synthese_file = "data/Synthese.xlsx"
