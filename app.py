@@ -54,7 +54,7 @@ df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + d
 
 
 
-tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup, tabRiegel,tabToDo = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe","Riegel", "ToDo"])
+tab1,tab2, tab3, tab4, tab5, tab6, tab7, tabGroup, tabRiegel,tabToDo, tabImport = st.tabs(["Intro","📊 Classement", "👤 Coureur","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe","Riegel", "ToDo", "Upload"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -498,6 +498,7 @@ with tabGroup:
     with col_Group2:
         fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
         st.plotly_chart(fig_Group,use_container_width=True)
+########################## ########################## ########################## ########################## ########################## 
 
 with tabToDo: 
     with st.container(border=True):
@@ -507,7 +508,50 @@ with tabToDo:
     with st.container(border=True):
         st.write("ajouter un warning pour les homonymes")
     
+########################## ########################## ########################## ########################## ########################## 
 
 with tabRiegel:
     st.write("tab import de course via fichier")
+########################## ########################## ########################## ########################## ########################## 
+
+
+with tabImport:
+    # Interface Utilisateur
+    st.title("Importation de nouveaux classements"
     
+    st.markdown("""
+    Faites glisser votre fichier **Excel (.xlsx)** ci-dessous pour l'intégrer à la base de données. 
+    Le fichier sera automatiquement converti au format **Parquet** pour des performances optimales.
+    """)
+    
+    # Composant de chargement de fichier
+    uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
+    
+    if uploaded_file is not None:
+        # Bouton pour lancer la conversion
+        if st.button("Convertir et Enregistrer"):
+            with st.spinner('Traitement en cours...'):
+                #path, data = save_as_parquet(uploaded_file)
+                
+                if path:
+                    st.success(f"✅ Fichier enregistré avec succès !")
+                    st.info(f"Emplacement : `{path}`")
+                    
+                    # Petit aperçu des données importées
+                    st.write("Aperçu des données :")
+                    st.dataframe(data.head())
+                    
+                    # Statistiques rapides
+                    st.write(f"Nombre de coureurs importés : {len(data)}")
+    
+    # Affichage des fichiers déjà présents dans le dossier data
+    if os.path.exists('data'):
+        st.divider()
+        st.sidebar.title("📁 Fichiers stockés")
+        files = [f for f in os.listdir('data') if f.endswith('.parquet')]
+        if files:
+            for f in files:
+                st.sidebar.text(f"📄 {f}")
+        else:
+            st.sidebar.write("Aucun fichier Parquet pour le moment.")
+        
