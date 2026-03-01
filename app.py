@@ -534,7 +534,8 @@ with tabImport:
         if st.button("Convertir et Enregistrer"):
             with st.spinner('Traitement en cours...'):
                 #path, data = save_as_parquet(uploaded_file)
-                st.write(load_race(uploaded_file))
+                st.write(load_race(uploaded_file).head(3))
+                path, data = load_all_races(uploaded_file)
                 
                 if path:
                     st.success(f"✅ Fichier enregistré avec succès !")
