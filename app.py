@@ -142,7 +142,7 @@ with tab2:
         )
     
 ########################## ########################## ########################## ########################## ########################## 
-with tab3
+with tab3:
     all_athletes_raw = df_all_parquet["name_key"].unique()
     all_athletes = [name for name in all_athletes_raw if isinstance(name, str)]
     all_athletes = sorted(all_athletes)
