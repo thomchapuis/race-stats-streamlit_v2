@@ -523,7 +523,7 @@ with tabImport:
     st.title("Importation de nouveaux classements")
 
     st.divider()
-
+    
     def interface_ajout_course():
         st.header("🏁 Ajouter une nouvelle course à la synthèse")
         
@@ -572,44 +572,44 @@ with tabImport:
                 except Exception as e:
                     st.error(f"Erreur lors de l'enregistrement : {e}")
         
-        # Appel de la fonction dans ton app
-        interface_ajout_course()
-        st.divider()
-        st.markdown("""
-        Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
-        colonnes : name, bib, rank, time, category, sex.
-        """)
-        
-        # Composant de chargement de fichier
-        #uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
-        uploaded_file = st.file_uploader("Fichier classement", type=["xlsx"])
+    # Appel de la fonction dans ton app
+    interface_ajout_course()
+    st.divider()
+    st.markdown("""
+    Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
+    colonnes : name, bib, rank, time, category, sex.
+    """)
     
-        
-        if uploaded_file:
-            # Bouton pour lancer la conversion
-            if st.button("Convertir et Enregistrer"):
-                with st.spinner('Traitement en cours...'):
-                    #path, data = save_as_parquet(uploaded_file)
-                    #st.write(load_race(uploaded_file).head(3))
-                    #path, data = load_all_races(uploaded_file)
-                    success, data = save_to_database(uploaded_file)
-                    if success:
-                        st.success("✅ Données enregistrées avec succès dans Supabase !")
-                        
-                        # Petit aperçu des données importées
-                        st.write("### Aperçu des données envoyées :")
-                        st.dataframe(data.head())
-                        
-                        # Informations sur les colonnes et le volume
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.metric("Lignes importées", len(data))
-                        with col2:
-                            st.metric("Colonnes traitées", len(data.columns))
-                        
-                        st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
-                    else:
-                        st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
+    # Composant de chargement de fichier
+    #uploaded_file = st.file_uploader("Choisir un fichier Excel", type=["xlsx"])
+    uploaded_file = st.file_uploader("Fichier classement", type=["xlsx"])
+
+    
+    if uploaded_file:
+        # Bouton pour lancer la conversion
+        if st.button("Convertir et Enregistrer"):
+            with st.spinner('Traitement en cours...'):
+                #path, data = save_as_parquet(uploaded_file)
+                #st.write(load_race(uploaded_file).head(3))
+                #path, data = load_all_races(uploaded_file)
+                success, data = save_to_database(uploaded_file)
+                if success:
+                    st.success("✅ Données enregistrées avec succès dans Supabase !")
+                    
+                    # Petit aperçu des données importées
+                    st.write("### Aperçu des données envoyées :")
+                    st.dataframe(data.head())
+                    
+                    # Informations sur les colonnes et le volume
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Lignes importées", len(data))
+                    with col2:
+                        st.metric("Colonnes traitées", len(data.columns))
+                    
+                    st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
+                else:
+                    st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
     st.divider()
 
     # Test de lecture brute
