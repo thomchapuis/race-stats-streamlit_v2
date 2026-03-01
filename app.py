@@ -569,6 +569,7 @@ with tabImport:
         st.error(f"Erreur de lecture des secrets : {e}")
     
     # Tentative de connexion
+    st.divider()
     from st_supabase_connection import SupabaseConnection
     try:
         conn = st.connection("supabase", type=SupabaseConnection)
