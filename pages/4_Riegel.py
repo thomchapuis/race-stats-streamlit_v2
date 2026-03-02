@@ -67,4 +67,41 @@ df_synthese_filtered = pd.merge(
 if 'race_name' in df_synthese_filtered.columns:
     df_synthese_filtered = df_synthese_filtered.drop(columns=['race_name'])
 
-st.dataframe(df_synthese_filtered)
+
+
+# 1. Conversion du temps en minutes (ou heures) pour l'axe Y
+# On suppose que 'time' est au format HH:MM:SS
+df_synthese_filtered['time_min'] = pd.to_timedelta(df_synthese_filtered['time']).dt.total_seconds() / 60
+
+# 2. Création du graphique
+fig = px.scatter(
+    df_synthese_filtered,
+    x="Distance",
+    y="time_min",
+    text="Race1", # Affiche le nom de la course au survol
+    title="Performance : Temps vs Distance",
+    labels={"time_min": "Temps (minutes)", "Distance": "Distance (km)"},
+    template="plotly_dark" # Fond noir natif
+)
+
+# 3. Personnalisation des couleurs et du style
+fig.update_traces(
+    marker=dict(
+        size=12, 
+        color='#ADFF2F', # Le "Vert Sportif" (GreenYellow)
+        line=dict(width=2, color='white')
+    ),
+    textposition='top center'
+)
+
+# Ajustement du fond et de la grille
+fig.update_layout(
+    plot_bgcolor='black',
+    paper_bgcolor='black',
+    font_color='#ADFF2F',
+    xaxis=dict(showgrid=True, gridcolor='#333333'),
+    yaxis=dict(showgrid=True, gridcolor='#333333')
+)
+
+# 4. Affichage dans Streamlit
+st.plotly_chart(fig, use_container_width=True)
