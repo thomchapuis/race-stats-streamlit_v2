@@ -70,7 +70,7 @@ if 'race_id' in df_synthese_filtered.columns:
 # 1. Conversion du temps en minutes (ou heures) pour l'axe Y
 # On suppose que 'time' est au format HH:MM:SS
 df_synthese_filtered['time_min'] = pd.to_timedelta(df_synthese_filtered['time']).dt.total_seconds() / 60
-df_plot['allure'] = df_synthese_filtered['time_min'] / df_synthese_filtered['Distance']
+df_synthese_filtered['allure'] = df_synthese_filtered['time_min'] / df_synthese_filtered['Distance_Effort']
 
 # 2. Création du graphique
 fig = px.scatter(
