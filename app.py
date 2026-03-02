@@ -60,6 +60,8 @@ df_all_parquet = st.session_state['df_complet']
 
 if 'df_synthese' not in st.session_state:
     st.session_state['df_synthese'] = df_synthese
+df_synthese = st.session_state['df_synthese']
+
 
 # ---------------------------------------------------------------------------------
 
