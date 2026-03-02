@@ -574,7 +574,9 @@ with tabImport:
                     "Distance": str(distance),
                     "Format": format_tri,
                     "D+": denivele                }
-
+                
+                fig_Map_Ville = v.Viz_Map_Ville(ville)
+                st.plotly_chart(fig_Map_Ville, use_container_width=True)
     
                 try:
                     # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
@@ -589,8 +591,6 @@ with tabImport:
     # Appel de la fonction dans ton app
     interface_ajout_course()
 
-    fig_Map_Ville = v.Viz_Map_Ville(ville)
-    st.plotly_chart(fig_Map_Ville, use_container_width=True)
 
     
     st.divider()
