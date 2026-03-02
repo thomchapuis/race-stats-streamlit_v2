@@ -47,4 +47,4 @@ st.dataframe(
 
 
 df_athlete = f.Filter_By_Athlete(df_all_parquet,'Thomas CHAPUIS')
-st.dataframe(df_athlete[race_name].unique())
+st.dataframe(df_athlete['race_name'].unique())
