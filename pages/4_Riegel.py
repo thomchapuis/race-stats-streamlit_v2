@@ -74,11 +74,11 @@ df_synthese_filtered['time_min'] = pd.to_timedelta(df_synthese_filtered['time'])
 # 2. Création du graphique
 fig = px.scatter(
     df_synthese_filtered,
-    x="Distance",
+    x="Distance_Effort",
     y="time_min",
     text="Race1", # Affiche le nom de la course au survol
     title="Performance : Temps vs Distance",
-    labels={"time_min": "Temps (minutes)", "Distance": "Distance (km)"},
+    labels={"time_min": "Temps (minutes)", "Distance_Effort": "Distance (km)"},
     template="plotly_dark" # Fond noir natif
 )
 
