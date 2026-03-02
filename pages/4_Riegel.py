@@ -45,7 +45,7 @@ st.dataframe(
     hide_index=True
 )
 
-races = df_running['Race_id].unique()
+races = df_running['Race_id'].unique()
 df_athlete = f.Filter_by_Races(df_all_parquet, races)
 df_athlete = f.Filter_by_Athlete(df_athlete,'Thomas CHAPUIS')
 st.dataframe(df_athlete)
