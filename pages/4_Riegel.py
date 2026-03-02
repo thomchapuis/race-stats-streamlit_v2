@@ -35,4 +35,4 @@ df_running["D+"] = pd.to_numeric(df_running["D+"], errors='coerce').fillna(0)
 
 df_running["Distance_Effort"] = df_running["Distance"] + (df_running["D+"] / 100)
 
-st.dataframe(df_synthese)
+st.dataframe(df_running["Année", "Race1","Distance","D+","Distance_Effort"])
