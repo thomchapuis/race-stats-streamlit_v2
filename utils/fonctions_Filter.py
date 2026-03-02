@@ -48,18 +48,19 @@ def Filter_By_Sport(df, sport):
 
     return result
 
-def Filter_By_Race(df, race):
+def Filter_By_Race(df, race, col='race_name'):
     """
     Filtre le DataFrame pour une ou plusieurs courses.
     'race' peut être un string "EDT23" ou une liste ["EDT23", "EDT25"].
+    col 'race_name' par défaut, mais possible de filter sur race_id
     """
     #Extraction de l'année et filtrage
     if isinstance(race, list):
         # Si on passe une liste d'années
-        mask = df['race_name'].isin(race)
+        mask = df[col].isin(race)
     else:
         # Si on passe une seule année
-        mask = df['race_name'] == race
+        mask = df[col] == race
 
     result = df[mask].reset_index(drop=True)
 
