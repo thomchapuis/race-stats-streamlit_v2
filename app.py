@@ -11,57 +11,48 @@ from utils import fonctions_Filter as f
 from utils import fonctions_Viz as v
 #from utils.Upload_xlsx import *
 from utils.Upload_xlsx_to_supabase import *
+# ---------------------------------------------------------------------------------
 
 
 st.set_page_config(layout="wide")
 
+# 1. Définition des fonctions de cache (si pas déjà dans utils)
 @st.cache_data
-def load_data(file_path):
-    return pd.read_parquet(file_path)
+def load_all_initial_data():
+    df7 = pd.read_parquet("data/races7.parquet")
+    df8 = pd.read_parquet("data/races8.parquet")
+    df_db = load_supabase_data()
+    df_syn = load_supabase_synthese()
+    return df7, df8, df_db, df_syn
 
-@st.cache_data
-def load_synthese_data(file_path):
-    df = pd.read_excel(file_path)
-    return df
-
-parquet_file7 = "data/races7.parquet"
-parquet_file8 = "data/races8.parquet"
-
-df_parquet7 = load_data(parquet_file7)
-df_parquet8 = load_data(parquet_file8)
-
-df_database = load_supabase_data()
-
-#synthese_file = "data/Synthese.xlsx"
-#synthese_file = "data/Synthese2.xlsx"
-#synthese_file = "data/Synthese_map.xlsx"
-#synthese_file = "data/Synthese3.xlsx"
-#df_synthese = load_synthese_data(synthese_file)
-df_synthese = load_supabase_synthese()
-
-df_all = pd.concat([df_parquet7, df_parquet8,df_database], ignore_index=True, sort=False)
-
-cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
-
-# 2. On fusionne (merge) sur les noms de courses
+# 2. Logique de Session State
 if 'df_complet' not in st.session_state:
-    df_all_parquet = pd.merge(
-        df_all,
-        df_synthese[cols_to_add],
-        left_on='race_id',
-        right_on='Race_id',
-        how='left'
+    # Chargement
+    df_p7, df_p8, df_db, df_syn = load_all_initial_data()
+    
+    # Concaténation
+    df_all = pd.concat([df_p7, df_p8, df_db], ignore_index=True, sort=False)
+    
+    # Merge et Traitement
+    cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
+    df_merged = pd.merge(
+        df_all, df_syn[cols_to_add],
+        left_on='race_id', right_on='Race_id', how='left'
     )
-    df_all_parquet["Distance"] = pd.to_numeric(df_all_parquet["Distance"], errors='coerce')
-    df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ df_all_parquet["Distance"].round().fillna(0).astype("Int64").astype(str)+ "km")
+    
+    # Nettoyage
+    df_merged["Distance"] = pd.to_numeric(df_merged["Distance"], errors='coerce')
+    df_merged["race_key"] = (df_merged["race_name"].astype(str) + " - " + 
+                             df_merged["race_date"].astype(str).str[:4] + " - " + 
+                             df_merged["Distance"].round().fillna(0).astype("Int64").astype(str) + "km")
+    
+    # Stockage
+    st.session_state['df_complet'] = df_merged
+    st.session_state['df_synthese'] = df_syn
 
-    st.session_state['df_complet'] = df_all_parquet
+# 3. Récupération pour l'usage local dans app.py
 df_all_parquet = st.session_state['df_complet']
-
-if 'df_synthese' not in st.session_state:
-    st.session_state['df_synthese'] = df_synthese
 df_synthese = st.session_state['df_synthese']
-
 
 # ---------------------------------------------------------------------------------
 
