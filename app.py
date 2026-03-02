@@ -56,6 +56,7 @@ if 'df_complet' not in st.session_state:
     df_all_parquet["race_key"] = (df_all_parquet["race_name"].astype(str)+ " - " + df_all_parquet["race_date"].astype(str).str[:4]+ " - "+ df_all_parquet["Distance"].round().fillna(0).astype("Int64").astype(str)+ "km")
 
     st.session_state['df_complet'] = df_all_parquet
+df_all_parquet = st.session_state['df_complet']
 
 if 'df_synthese' not in st.session_state:
     st.session_state['df_synthese'] = df_synthese
