@@ -35,4 +35,12 @@ df_running["D+"] = pd.to_numeric(df_running["D+"], errors='coerce').fillna(0)
 
 df_running["Distance_Effort"] = df_running["Distance"] + (df_running["D+"] / 100)
 
-st.dataframe(df_running["Année", "Race1","Distance","D+","Distance_Effort"])
+st.dataframe(
+    df_running[["Année", "Race1", "Distance", "D+", "Distance_Effort"]],
+    column_config={
+        "Distance": st.column_config.NumberColumn("Dist. (km)", format="%.1f"),
+        "D+": st.column_config.NumberColumn("D+ (m)", format="%d"),
+        "Distance_Effort": st.column_config.NumberColumn("Km-Effort", format="%.2f")
+    },
+    hide_index=True
+)
