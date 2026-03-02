@@ -750,6 +750,13 @@ def Viz_Map(df_Synthese):
 
     return fig
 
+def get_coords(ville):
+    geolocator = Nominatim(user_agent="my_app")
+    location = geolocator.geocode(ville)
+    
+    if location:
+        return location.latitude, location.longitude
+    return None, None
 
 def Viz_Map_Ville(nom_ville):
     latitude, longitude = get_coords(nom_ville)
