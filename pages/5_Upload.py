@@ -44,9 +44,6 @@ def interface_ajout_course():
                 denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
             with col_Tri:
                 format_tri = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL",key="input_tri")
-
-            denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
-        
         
         submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
 
