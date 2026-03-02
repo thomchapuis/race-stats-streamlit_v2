@@ -76,7 +76,7 @@ df_synthese_filtered = df_synthese_filtered.sort_values('allure')
 min_val = df_synthese_filtered['allure'].min()
 max_val = df_synthese_filtered['allure'].max()
 # On crée des paliers de 0.5 (30 secondes) pour l'échelle
-tick_vals = np.arange(np.floor(min_allure), np.ceil(max_allure) + 0.5, 0.5)
+tick_vals = np.arange(np.floor(min_val), np.ceil(max_val) + 0.5, 0.5)
 tick_text = [format_allure(v) for v in tick_vals]
 
 # --- 3. Création du graphique ---
