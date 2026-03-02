@@ -25,14 +25,6 @@ def interface_ajout_course():
         
         with col1:
             race_name = st.text_input("Nom de la course", placeholder="Ex: SaintéLyon")
-            col1_1, col1_2 = st.columns(2)
-            with col1_1:
-                race_date = st.date_input("Date de la course", datetime.now())
-            with col1_2:
-                ville = st.text_input("Ville")    
-        
-        with col2:   
-            race_id = st.text_input("ID de la course (ex: 20240512_trail_lyon_21)", help="Identifiant unique")
             sport = st.selectbox("Sport", ["Running", "Trail", "Cycling", "Triathlon"])
             distance = 0
             format_tri = None
@@ -43,9 +35,17 @@ def interface_ajout_course():
             with col_Deniv:
                 denivele = st.number_input("Dénivelé (D+ en m)", min_value=0, step=10)
             with col_Tri:
-                format_tri = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL",key="input_tri")
+                format_tri = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL",key="input_tri") 
         
-        submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
+        with col2:   
+            race_id = st.text_input("ID de la course (ex: 20240512_trail_lyon_21)", help="Identifiant unique")
+            col1_1, col1_2 = st.columns(2)
+            with col1_1:
+                race_date = st.date_input("Date de la course", datetime.now())
+            with col1_2:
+                ville = st.text_input("Ville")   
+            submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
+
 
     if submit_button:
         if not race_id or not race_name:
