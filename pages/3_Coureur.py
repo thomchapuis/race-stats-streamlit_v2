@@ -14,19 +14,18 @@ from utils.Upload_xlsx_to_supabase import *
 
 # ------------------------------------------------------------------------------------------------------------------
 
+# Vérifier si les données existent (sécurité si l'utilisateur arrive direct sur cette page)
 if 'df_complet' in st.session_state:
     df_all_parquet = st.session_state['df_complet']
-    #st.write(f"Données prêtes : {len(df_all_parquet)} lignes chargées.")
+    df_synthese = st.session_state['df_synthese']
+    
+    st.success("Données chargées depuis la session !")
+    # Ton code Riegel ici...
+    
 else:
-    st.warning("Veuillez repasser par la page d'accueil pour charger les données.")
-
-if 'df_synthese' in st.session_state:
-    df_all_parquet = st.session_state['df_synthese']
-    #st.write(f"Données prêtes : {len(df_all_parquet)} lignes chargées.")
-else:
-    st.warning("Veuillez repasser par la page d'accueil pour charger les données.")
-
-
+    st.warning("⚠️ Veuillez passer par la page d'accueil pour initialiser les données.")
+    if st.button("Aller à l'accueil"):
+        st.switch_page("app.py") # Redirige l'utilisateur
 
 # ------------------------------------------------------------------------------------------------------------------
 
