@@ -128,3 +128,5 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+st.dataframe(df_synthese_filtered[['Année','Race1','Distance','D+','Distance_Effort','time']])
