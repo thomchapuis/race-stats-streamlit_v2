@@ -15,12 +15,14 @@ from utils.Upload_xlsx_to_supabase import *
 
 
 st.set_page_config(layout="wide")
+parquet_file7 = "data/races7.parquet"
+parquet_file8 = "data/races8.parquet"
 
 # 1. Définition des fonctions de cache (si pas déjà dans utils)
 @st.cache_data
 def load_all_initial_data():
-    df7 = pd.read_parquet("data/races7.parquet")
-    df8 = pd.read_parquet("data/races8.parquet")
+    df7 = pd.read_parquet(parquet_file7)
+    df8 = pd.read_parquet(parquet_file8)
     df_db = load_supabase_data()
     df_syn = load_supabase_synthese()
     return df7, df8, df_db, df_syn
