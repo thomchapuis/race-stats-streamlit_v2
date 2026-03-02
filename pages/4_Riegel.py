@@ -56,7 +56,7 @@ nom_cherche = "chapuisthomas"
 df_perf_thomas = df_athlete[df_athlete['name'] == nom_cherche][['race_name', 'time']]
 df_perf_thomas = df_perf_thomas.drop_duplicates(subset=['race_name'])
 
-df_synthese_filtree = pd.merge(
+df_synthese_filtered = pd.merge(
     df_synthese_filtered,
     df_perf_thomas,
     left_on='Race1', 
