@@ -49,10 +49,10 @@ st.dataframe(
 nom_cherche = "chapuisthomas" 
 df_athlete = f.Filter_By_Athlete(df_all_parquet,'Thomas CHAPUIS')
 
-races = df_athlete['race_name'].unique()
-df_synthese_filtered = df_running[df_running['Race1'].isin(races)].copy()
-df_perf_thomas = df_athlete[df_athlete['name_key'] == nom_cherche][['race_name', 'time']]
-df_perf_thomas = df_perf_thomas.drop_duplicates(subset=['race_name'])
+races = df_athlete['race_id'].unique()
+df_synthese_filtered = df_running[df_running['Race_id'].isin(races)].copy()
+df_perf_thomas = df_athlete[df_athlete['name_key'] == nom_cherche][['race_id', 'time']]
+df_perf_thomas = df_perf_thomas.drop_duplicates(subset=['race_id'])
 
 df_synthese_filtered = pd.merge(
     df_synthese_filtered,
@@ -62,8 +62,8 @@ df_synthese_filtered = pd.merge(
     how='left'
 )
 
-if 'race_name' in df_synthese_filtered.columns:
-    df_synthese_filtered = df_synthese_filtered.drop(columns=['race_name'])
+if 'race_id' in df_synthese_filtered.columns:
+    df_synthese_filtered = df_synthese_filtered.drop(columns=['race_id'])
 
 
 
