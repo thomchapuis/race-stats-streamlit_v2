@@ -40,7 +40,7 @@ def interface_ajout_course():
             col_Run, col_Deniv, col_Tri = st.columns(3)
             with col_Run:
                 distance = st.number_input("Distance (km)", min_value=0, step=1, format=None,key="input_distance")
-            with col_Deniv = 
+            with col_Deniv:
                 denivele = st.number_input("Dénivelé Positif (D+ en m)", min_value=0, step=10)
             with col_Tri:
                 format_tri = st.text_input("Format", placeholder="Ex: XS, S, M, L, XL",key="input_tri")
