@@ -16,7 +16,7 @@ from utils.Upload_xlsx_to_supabase import *
 
 # On récupère les données déjà fusionnées
 if 'df_complet' in st.session_state:
-    df = st.session_state['df_complet']
+    df_all_parquet = st.session_state['df_complet']
     st.write(f"Données prêtes : {len(df)} lignes chargées.")
 else:
     st.warning("Veuillez repasser par la page d'accueil pour charger les données.")
