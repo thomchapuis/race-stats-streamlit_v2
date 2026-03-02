@@ -35,16 +35,6 @@ df_running["D+"] = pd.to_numeric(df_running["D+"], errors='coerce').fillna(0)
 
 df_running["Distance_Effort"] = df_running["Distance"] + (df_running["D+"] / 100)
 
-st.dataframe(
-    df_running[["Année", "Race1", "Distance", "D+", "Distance_Effort"]],
-    column_config={
-        "Distance": st.column_config.NumberColumn("Dist. (km)", format="%.1f"),
-        "D+": st.column_config.NumberColumn("D+ (m)", format="%d"),
-        "Distance_Effort": st.column_config.NumberColumn("Km-Effort", format="%.2f")
-    },
-    hide_index=True
-)
-
 
 nom_cherche = "chapuisthomas" 
 df_athlete = f.Filter_By_Athlete(df_all_parquet,'Thomas CHAPUIS')
@@ -72,15 +62,24 @@ if 'race_id' in df_synthese_filtered.columns:
 df_synthese_filtered['time_min'] = pd.to_timedelta(df_synthese_filtered['time']).dt.total_seconds() / 60
 df_synthese_filtered['allure'] = df_synthese_filtered['time_min'] / df_synthese_filtered['Distance_Effort']
 
+def format_allure(min_decimal):
+    if pd.isna(min_decimal):
+        return ""
+    minutes = int(min_decimal)
+    secondes = int((min_decimal - minutes) * 60)
+    return f"{minutes}:{secondes:02d}"
+
+df_synthese_filtered['allure_str'] = df_synthese_filtered['allure'].apply(format_allure)
+
 # 2. Création du graphique
 fig = px.scatter(
     df_synthese_filtered,
     x="Distance_Effort",
-    y="allure",
+    y="allure_str",
     #log_x=True,  # Activation de l'échelle logarithmique sur l'axe X
-    text="Race1", # Affiche le nom de la course au survol
+    #text="Race1", # Affiche le nom de la course au survol
     title="Performance : Temps vs Distance",
-    labels={"allure": "Allure (min/km)", "Distance_Effort": "Distance-Effort (km)"},
+    labels={"allure_str": "Allure (min/km)", "Distance_Effort": "Distance-Effort (km)"},
     template="plotly_dark" # Fond noir natif
 )
 
