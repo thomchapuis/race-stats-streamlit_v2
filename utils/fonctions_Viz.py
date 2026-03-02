@@ -751,163 +751,55 @@ def Viz_Map(df_Synthese):
     return fig
 
 
+def Viz_Map_Ville(nom_ville):
+    latitude, longitude = get_coords(nom_ville)
+      
+    # 1. Utiliser scatter_geo au lieu de scatter_mapbox
+    fig = px.scatter_geo(
+        {"lat": [latitude], "lon": [longitude], "ville": [nom_ville]},
+        lat="lat",
+        lon="lon",
+        hover_name="ville",    # Titre en gras dans le hover
+        hover_data={           # On définit ce qu'on affiche ou cache
+            "lat": False,      # Cache la latitude
+            "lon": False,      # Cache la longitude
+            "ville": False     # Cache la répétition de la ville sous le titre
+        }
+    )
 
+    # 2. Configuration géographique (Fonctionne avec scatter_geo)
+    fig.update_geos(
+        scope="europe",
+        projection_type="mercator",
+        resolution=50,
 
-# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 🔹 Fonction de Filtre
-# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # Fond de carte
+        showland=True,
+        landcolor="black",      # Terre en noir
+        showocean=True,
+        oceancolor="black",     # Mer en noir
+        showlakes=False,
 
-def Filter_By_Year(df, year):
-    """
-    Filtre le DataFrame pour une ou plusieurs années données.
-    'year' peut être un entier (2024) ou une liste [2022, 2023].
-    """
-    #Extraction de l'année et filtrage
-    if isinstance(year, list):
-        # Si on passe une liste d'années
-        mask = df['race_date'].dt.year.isin(year)
-    else:
-        # Si on passe une seule année
-        mask = df['race_date'].dt.year == year
+        # Frontières
+        showcountries=True,
+        countrycolor="white",   # Frontières en blanc
+        countrywidth=1,
 
-    return df[mask].reset_index(drop=True)
+        # Zoom sur la France
+        lataxis_range=[41, 51],
+        lonaxis_range=[-6, 10],
+        
+        showframe=False,
+    )
 
-def Filter_By_Sport(df, sport):
-    """
-    Filtre le DataFrame pour un ou plusieurs sports.
-    'sport' peut être un string "Trail" ou une liste ["Trail", "Running"].
-    """
-    #Extraction de l'année et filtrage
-    if isinstance(sport, list):
-        # Si on passe une liste d'années
-        mask = df['sport'].isin(sport)
-    else:
-        # Si on passe une seule année
-        mask = df['sport'] == sport
+    # 3. Style visuel du point et du layout
+    fig.update_traces(marker=dict(size=15, color="#2ecc71")) # Pour bien voir le point
 
-    result = df[mask].reset_index(drop=True)
+    fig.update_layout(
+        paper_bgcolor="black",
+        plot_bgcolor="black",
+        margin=dict(l=0, r=0, t=0, b=0),
+        height=600
+    )
 
-    if len(result) == 0:
-        print(f"⚠️ Aucun résultat pour : {sport}. Valeurs disponibles : {df['sport'].unique()[:5]}")
-
-    return result
-
-def Filter_By_Race(df, race):
-    """
-    Filtre le DataFrame pour une ou plusieurs courses.
-    'race' peut être un string "EDT23" ou une liste ["EDT23", "EDT25"].
-    """
-    #Extraction de l'année et filtrage
-    if isinstance(race, list):
-        # Si on passe une liste d'années
-        mask = df['race_name'].isin(race)
-    else:
-        # Si on passe une seule année
-        mask = df['race_name'] == race
-
-    result = df[mask].reset_index(drop=True)
-
-    if len(result) == 0:
-        print(f"⚠️ Aucun résultat pour : {race}. Valeurs disponibles : {df['race_name'].unique()[:5]}")
-
-    return result
-
-def Filter_By_Race_v2(df, race, year=None, distance=None):
-    """
-    Filtre le DataFrame par :
-    - race_name (string ou liste)
-    - année (optionnel, ex: 2025 → race_date commence par 2025)
-    - distance (optionnel, ex: 100)
-    """
-
-    # ---- Filtre race_name ----
-    if isinstance(race, list):
-        mask = df["race_name"].isin(race)
-    else:
-        mask = df["race_name"] == race
-
-    # ---- Filtre année ----
-    if year is not None:
-        mask &= df["race_date"].astype(str).str.startswith(str(year))
-
-    # ---- Filtre distance ----
-    if distance is not None:
-        mask &= df["Distance"] == distance
-
-    result = df[mask].reset_index(drop=True)
-
-    if len(result) == 0:
-        print(
-            f"⚠️ Aucun résultat pour race={race}, year={year}, distance={distance}. "
-            f"Valeurs dispo (race_name) : {df['race_name'].unique()[:5]}"
-        )
-
-    return result
-
-
-def Filter_By_Athlete(df, name_list):
-    """
-    Renvoie le DataFrame complet (tous les participants) pour les courses
-    où TOUS les athlètes de 'name_list' étaient présents.
-    """
-    if 'name_key' not in df.columns:
-        df['name_key'] = df['name'].apply(get_clean_key)
-
-    if isinstance(name_list, str):
-        name_list = [name_list]
-
-    keys_to_filter = [get_clean_key(n) for n in name_list]
-    num_required = len(keys_to_filter)
-    mask_athletes = df['name_key'].isin(keys_to_filter)
-    race_stats = df[mask_athletes].groupby('race_id')['name_key'].nunique()
-    valid_races = race_stats[race_stats == num_required].index
-    result = df[df['race_id'].isin(valid_races)].reset_index(drop=True)
-
-    return result
-
-# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 🔹 Fonction de Calcul
-# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def get_clean_key(text):
-    if not isinstance(text, str): return ""
-    # 1. Suppression des accents
-    text = "".join(c for c in unicodedata.normalize('NFD', text)
-                   if unicodedata.category(c) != 'Mn')
-    # 2. Minuscules et suppression de la ponctuation de base (tirets, virgules)
-    text = text.lower().replace('-', ' ').replace(',', ' ')
-    # 3. Tri des mots (pour l'ordre Nom Prénom)
-    parts = text.split()
-    parts.sort()
-    return "".join(parts) # On colle tout pour une comparaison stricte
-
-
-def get_Rank_Percentage(df, col):
-    """
-    Calcule le centile (top %) pour chaque ligne basé sur une colonne de classement.
-    Ex: Un coureur 10ème sur 100 sera dans le 'Top 10%'.
-    """
-    # 1. On s'assure que la colonne est numérique et sans valeurs nulles
-    temp_df = df.copy()
-    temp_df[col] = pd.to_numeric(temp_df[col], errors='coerce')
-
-    # 2. On calcule le total de participants pour cette course (basé sur les non-nuls)
-    total_participants = temp_df[col].max()
-    # Note : On peut aussi utiliser len(temp_df) si le classement est continu
-
-    # 3. Calcul du pourcentage (Rang / Total) * 100
-    # On arrondit à 2 décimales pour la lisibilité
-    temp_df['rank_percentage'] = (temp_df[col] / total_participants) * 100
-
-    return temp_df['rank_percentage']
-
-
-
-
-def get_coords(ville):
-    geolocator = Nominatim(user_agent="my_app")
-    location = geolocator.geocode(ville)
-    
-    if location:
-        return location.latitude, location.longitude
-    return None, None
+    return fig
