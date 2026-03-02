@@ -26,8 +26,6 @@ else:
 
 # ------------------------------------------------------------------------------------------------------------------
 
-
-st.write("tab import de course via fichier")
 df_running = df_synthese[df_synthese['sport'].isin(['Running', 'Trail'])].copy()
 
 df_running["Distance"] = pd.to_numeric(df_running["Distance"], errors='coerce')
@@ -70,37 +68,62 @@ def format_allure(min_decimal):
     return f"{minutes}:{secondes:02d}"
 
 df_synthese_filtered['allure_str'] = df_synthese_filtered['allure'].apply(format_allure)
+df_synthese_filtered = df_synthese_filtered.sort_values('allure')
 
-# 2. Création du graphique
+# --- 2. Configuration des paliers de l'axe Y (toutes les 30s ou 1min) ---
+# On crée des graduations mathématiques pour l'axe Y
+min_val = df_synthese_filtered['allure'].min()
+max_val = df_synthese_filtered['allure'].max()
+# On crée des paliers de 0.5 (30 secondes) pour l'échelle
+tick_vals = np.arange(np.floor(min_allure), np.ceil(max_allure) + 0.5, 0.5)
+tick_text = [format_allure(v) for v in tick_vals]
+
+# --- 3. Création du graphique ---
 fig = px.scatter(
     df_synthese_filtered,
     x="Distance_Effort",
-    y="allure_str",
-    #log_x=True,  # Activation de l'échelle logarithmique sur l'axe X
-    #text="Race1", # Affiche le nom de la course au survol
-    title="Performance : Temps vs Distance",
-    labels={"allure_str": "Allure (min/km)", "Distance_Effort": "Distance-Effort (km)"},
-    template="plotly_dark" # Fond noir natif
+    y="allure", # On utilise la valeur numérique pour le placement
+    log_x=True, # Recommandé pour la cohérence des distances trail/ultra
+    title="Performance : Allure Effort vs Distance Effort",
+    # On ajoute Race1 et allure_str dans les données personnalisées pour le hover
+    custom_data=["Race1", "allure_str"], 
+    template="plotly_dark"
 )
 
-# 3. Personnalisation des couleurs et du style
+# --- 4. Personnalisation du Hover et des Points ---
 fig.update_traces(
     marker=dict(
-        size=12, 
-        color='#ADFF2F', # Le "Vert Sportif" (GreenYellow)
-        line=dict(width=2, color='white')
+        size=14, 
+        color='#ADFF2F', # Vert Sportif
+        line=dict(width=1, color='white'),
+        opacity=0.8
     ),
-    textposition='top center'
+    # Configuration du Hover : on affiche Race1 et l'allure formatée
+    hovertemplate="<b>%{customdata[0]}</b><br>" +
+                  "Distance Effort: %{x:.1f} km<br>" +
+                  "Allure Effort: %{customdata[1]} min/km<extra></extra>"
 )
 
-# Ajustement du fond et de la grille
+# --- 5. Ajustement des axes et du design ---
 fig.update_layout(
     plot_bgcolor='black',
     paper_bgcolor='black',
     font_color='#ADFF2F',
-    xaxis=dict(showgrid=True, gridcolor='#333333'),
-    yaxis=dict(showgrid=True, gridcolor='#333333')
+    xaxis=dict(
+        title="Distance-Effort (km) - Échelle Log",
+        showgrid=True, 
+        gridcolor='#333333',
+        tickvals=[5, 10, 20, 42, 80, 160] # Repères familiers
+    ),
+    yaxis=dict(
+        title="Allure (min/km)",
+        showgrid=True, 
+        gridcolor='#333333',
+        tickmode='array',
+        tickvals=tick_vals,
+        ticktext=tick_text,
+        autorange="reversed" # Plus rapide (ex: 4:00) en haut
+    )
 )
 
-# 4. Affichage dans Streamlit
 st.plotly_chart(fig, use_container_width=True)
