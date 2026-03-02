@@ -573,16 +573,15 @@ with tabImport:
                     "Ville": ville,
                     "Distance": str(distance),
                     "Format": format_tri,
-                    "D+": denivele                }
-                
-                fig_Map_Ville = v.Viz_Map_Ville(ville)
-                st.plotly_chart(fig_Map_Ville, use_container_width=True)
+                    "D+": denivele}
     
                 try:
                     # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
                     conn.table("synthese").upsert(nouvelle_ligne, on_conflict="Race_id").execute()
                     st.success(f"✅ La course '{race_name}' a été ajoutée avec succès !")
                     st.balloons()
+                    fig_Map_Ville = v.Viz_Map_Ville(ville)
+                    st.plotly_chart(fig_Map_Ville, use_container_width=True)
                 except Exception as e:
                     st.error(f"Erreur lors de l'enregistrement : {e}")
 
@@ -590,6 +589,7 @@ with tabImport:
         
     # Appel de la fonction dans ton app
     interface_ajout_course()
+
 
 
     
