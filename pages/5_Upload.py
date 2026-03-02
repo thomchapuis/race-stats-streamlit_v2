@@ -14,7 +14,7 @@ from utils.Upload_xlsx_to_supabase import *
 
 
 
-st.header("🏁 Ajouter une nouvelle course à la synthèse")
+st.header("Importer une nouvelle course")
 def interface_ajout_course():
     # Connexion à Supabase
     conn = st.connection("supabase", type=SupabaseConnection)
