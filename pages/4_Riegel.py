@@ -70,16 +70,17 @@ if 'race_id' in df_synthese_filtered.columns:
 # 1. Conversion du temps en minutes (ou heures) pour l'axe Y
 # On suppose que 'time' est au format HH:MM:SS
 df_synthese_filtered['time_min'] = pd.to_timedelta(df_synthese_filtered['time']).dt.total_seconds() / 60
+df_plot['allure'] = df_synthese_filtered['time_min'] / df_synthese_filtered['Distance']
 
 # 2. Création du graphique
 fig = px.scatter(
     df_synthese_filtered,
     x="Distance_Effort",
-    y="time_min",
-    log_x=True,  # Activation de l'échelle logarithmique sur l'axe X
+    y="allure",
+    #log_x=True,  # Activation de l'échelle logarithmique sur l'axe X
     text="Race1", # Affiche le nom de la course au survol
     title="Performance : Temps vs Distance",
-    labels={"time_min": "Temps (minutes)", "Distance_Effort": "Distance-Effort (km)"},
+    labels={"allure": "Allure (min/km)", "Distance_Effort": "Distance-Effort (km)"},
     template="plotly_dark" # Fond noir natif
 )
 
