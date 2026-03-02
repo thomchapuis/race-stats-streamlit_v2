@@ -57,8 +57,8 @@ df_perf_thomas = df_perf_thomas.drop_duplicates(subset=['race_name'])
 df_synthese_filtered = pd.merge(
     df_synthese_filtered,
     df_perf_thomas,
-    left_on='Race1', 
-    right_on='race_name',
+    left_on='Race_id', 
+    right_on='race_id',
     how='left'
 )
 
