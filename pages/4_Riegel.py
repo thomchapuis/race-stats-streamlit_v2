@@ -76,9 +76,10 @@ fig = px.scatter(
     df_synthese_filtered,
     x="Distance_Effort",
     y="time_min",
+    log_x=True,  # Activation de l'échelle logarithmique sur l'axe X
     text="Race1", # Affiche le nom de la course au survol
     title="Performance : Temps vs Distance",
-    labels={"time_min": "Temps (minutes)", "Distance_Effort": "Distance (km)"},
+    labels={"time_min": "Temps (minutes)", "Distance_Effort": "Distance-Effort (km)"},
     template="plotly_dark" # Fond noir natif
 )
 
