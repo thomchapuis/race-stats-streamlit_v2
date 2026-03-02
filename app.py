@@ -583,9 +583,16 @@ with tabImport:
                     st.balloons()
                 except Exception as e:
                     st.error(f"Erreur lors de l'enregistrement : {e}")
+
+    
         
     # Appel de la fonction dans ton app
     interface_ajout_course()
+
+    fig_Map_Ville = v.Viz_Map_Ville(ville)
+    st.plotly_chart(fig_Map_Ville, use_container_width=True)
+
+    
     st.divider()
     st.markdown("""
     Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
