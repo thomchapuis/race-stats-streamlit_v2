@@ -14,13 +14,8 @@ from utils.Upload_xlsx_to_supabase import *
 
 
 
-st.title("Importation de nouveaux classements")
-
-st.divider()
-
+st.header("🏁 Ajouter une nouvelle course à la synthèse")
 def interface_ajout_course():
-    st.header("🏁 Ajouter une nouvelle course à la synthèse")
-    
     # Connexion à Supabase
     conn = st.connection("supabase", type=SupabaseConnection)
 
