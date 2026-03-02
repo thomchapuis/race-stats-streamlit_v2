@@ -3,6 +3,7 @@ import os
 import streamlit as st
 import plotly.express as px
 from datetime import datetime
+import numpy as np
 
 from utils.config import sport_icon
 from utils.config import ATHLETES
