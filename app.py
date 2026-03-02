@@ -7,7 +7,8 @@ from datetime import datetime
 from utils.config import sport_icon
 from utils.config import ATHLETES
 #from utils.fonctions import *
-from utils import fonctions as f
+from utils import fonctions_Filter as f
+from utils import fonctions_Viz as v
 #from utils.Upload_xlsx import *
 from utils.Upload_xlsx_to_supabase import *
 
@@ -120,20 +121,20 @@ with tab2:
         with col_Category:
             with st.container(border=True):
                 #st.write("📊 Histogramme des catégories à venir")
-                fig_cat = f.Viz_Barre_Categorie(df_Race)
+                fig_cat = v.Viz_Barre_Categorie(df_Race)
                 st.plotly_chart(fig_cat, use_container_width=True)
         with col_Sex:
             col_Sex_Histo, col_Sex_PieChart = st.columns(2)   
             with col_Sex_Histo:
                     with st.container(border=True):
                         # 1) Affichage de l'histogramme
-                        #fig_histo = f.Viz_Histogramme_Temps(df_Race, 'time')
-                        fig_histo = f.Viz_Histogramme_Temps_Sex(df_Race, 'time', True)
+                        #fig_histo = v.Viz_Histogramme_Temps(df_Race, 'time')
+                        fig_histo = v.Viz_Histogramme_Temps_Sex(df_Race, 'time', True)
                         st.plotly_chart(fig_histo, use_container_width=True)
             with col_Sex_PieChart:
                     with st.container(border=True):
                         #2) Affichage
-                        fig_Sex = f.Viz_Sexes_PieChart(df_Race)
+                        fig_Sex = v.Viz_Sexes_PieChart(df_Race)
                         st.plotly_chart(fig_Sex, use_container_width=True)
         
         # 3) Affichage du classement
@@ -320,7 +321,7 @@ with tab3:
                 
                 with st.container(border=True):
                     df_race_best = f.Filter_By_Race(df_coureur,row_best['race_name'])
-                    fig_histo_coureur_best = f.Viz_Histogramme_Temps_Names(df_race_best,'time',nom_recherche)
+                    fig_histo_coureur_best = v.Viz_Histogramme_Temps_Names(df_race_best,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur_best, width='stretch')
 
                 
@@ -351,11 +352,11 @@ with tab3:
                 
                 with st.container(border=True):
                     df_race_worst = f.Filter_By_Race(df_coureur,row_worst['race_name'])
-                    fig_histo_coureur_worst = f.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
+                    fig_histo_coureur_worst = v.Viz_Histogramme_Temps_Names(df_race_worst,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur_worst, width='stretch')
 
             with st.container(border=True):
-                fig_Barre_RankPct = f.Viz_Barre_RankPct(df_coureur, nom_recherche)
+                fig_Barre_RankPct = v.Viz_Barre_RankPct(df_coureur, nom_recherche)
                 st.plotly_chart(fig_Barre_RankPct, width='stretch') 
             
             with st.container(border=True):
@@ -366,7 +367,7 @@ with tab3:
                     st.warning("Veuillez sélectionner une course pour afficher le classement.")
                 else:
                     df_Race = f.Filter_By_Race(df_all_parquet, race_recherche2)
-                    fig_histo_coureur = f.Viz_Histogramme_Temps_Names(df_Race,'time',nom_recherche)
+                    fig_histo_coureur = v.Viz_Histogramme_Temps_Names(df_Race,'time',nom_recherche)
                     st.plotly_chart(fig_histo_coureur, width='stretch')    
 
             with st.container(border=True):                    
@@ -391,7 +392,7 @@ with tab3:
                 nom_recherche_races = f.Filter_By_Athlete(df_all_parquet,nom_recherche)['race_id'].unique()
                 mask = df_synthese['Race_id'].isin(nom_recherche_races)
                 result = df_synthese.loc[mask].reset_index(drop=True)
-                map_nom_recherche = f.Viz_Map(result)
+                map_nom_recherche = v.Viz_Map(result)
                 st.plotly_chart(map_nom_recherche, width='stretch')   
 
 
@@ -410,7 +411,7 @@ with tab4:
     with st.container(border=True):
         st.write("📊 **Comparaison des performances (Radar)**")
         
-        fig_radar = f.Viz_Radar_Triathlon(df_Tri, liste_athletes)          
+        fig_radar = v.Viz_Radar_Triathlon(df_Tri, liste_athletes)          
         st.plotly_chart(fig_radar, width='stretch')
 
 ########################## ########################## ########################## ########################## ########################## 
@@ -450,7 +451,7 @@ with tab5:
                     value=f"{nb:,}".replace(",", " ")
                 )
         with st.container(border=True):
-            fig_sex = f.Viz_Sexes(df_all_parquet)
+            fig_sex = v.Viz_Sexes(df_all_parquet)
             st.plotly_chart(fig_sex, use_container_width=True)
             
 ########################## ########################## ########################## ########################## ########################## 
@@ -480,7 +481,7 @@ with tab7:
     targets =  [athlete1,athlete2]
     df_Battle = f.Filter_By_Athlete(df_all_parquet,targets)
     
-    fig_Battle = f.Viz_Battle_percentage(df_Battle, targets)
+    fig_Battle = v.Viz_Battle_percentage(df_Battle, targets)
     st.plotly_chart(fig_Battle, use_container_width=True)
 
 ########################## ########################## ########################## ########################## ########################## 
@@ -505,7 +506,7 @@ with tabGroup:
                     """
                 )
     with col_Group2:
-        fig_Group = f.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
+        fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
         st.plotly_chart(fig_Group,use_container_width=True)
 ########################## ########################## ########################## ########################## ########################## 
 
