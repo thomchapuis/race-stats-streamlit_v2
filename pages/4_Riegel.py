@@ -239,7 +239,7 @@ if not df_plot.empty:
     fig2.update_layout(
         title="Évolution de l'Allure (min/km) — Modèle de Riegel",
         template="plotly_dark",
-        xaxis=dict(title="Distance (km)", showgrid=False),
+        xaxis=dict(title="Distance (km)", showgrid=False,range=[0, 40]),
         yaxis=dict(
             title="Allure (min/km)",
             tickvals=pace_ticks,
