@@ -46,7 +46,7 @@ df_running["Distance"] = pd.to_numeric(df_running["Distance"], errors='coerce')
 df_running["D+"] = pd.to_numeric(df_running["D+"], errors='coerce').fillna(0)
 df_running["Distance_Effort"] = df_running["Distance"] + (df_running["D+"] / 100)
 
-df_athlete = f.Filter_By_Athlete(df_all_parquet,nom_cherche)
+df_athlete = f.Filter_By_Athlete(df_all_parquet,[nom_cherche])
 
 races = df_athlete['race_id'].unique()
 df_synthese_filtered = df_running[df_running['Race_id'].isin(races)].copy()
