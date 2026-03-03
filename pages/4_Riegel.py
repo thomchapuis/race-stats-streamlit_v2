@@ -139,6 +139,24 @@ st.dataframe(
 
 ############## 2e graphe — Modèle de Riegel
 
+############## 2e graphe — Modèle de Riegel
+
+if not df_plot.empty:
+
+    df_riegel = df_plot.copy()
+
+    # Nettoyage critique
+    df_riegel = df_riegel.dropna(subset=["Distance_Effort", "time_min"])
+    df_riegel = df_riegel[df_riegel["Distance_Effort"] > 0]
+    df_riegel = df_riegel[df_riegel["time_min"] > 0]
+
+    if df_riegel.empty:
+        st.warning("Pas assez de données valides pour le modèle Riegel.")
+    else:
+
+        distances_reelles = df_riegel["Distance_Effort"].astype(float)
+        temps_reels_min = df_riegel["time_min"].astype(float)
+
 if not df_plot.empty:
 
     # 1. Données propres (on repart de df_plot, plus sûr)
@@ -147,12 +165,16 @@ if not df_plot.empty:
 
     # --- Fonctions format ---
     def format_time(min_val):
+        if pd.isna(min_val):
+            return ""
         total_seconds = int(min_val * 60)
         hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-
+    
     def format_pace(pace_min):
+        if pd.isna(pace_min):
+            return ""
         m = int(pace_min)
         s = int(round((pace_min - m) * 60))
         if s == 60:
