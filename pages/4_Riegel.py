@@ -116,7 +116,7 @@ fig = px.scatter(
 )
 
 fig.update_layout(
-    plot_bgcolor='black', paper_bgcolor='black', font_color='#ADFF2F',
+    #plot_bgcolor='black', paper_bgcolor='black', font_color='#ADFF2F',
     xaxis=dict(title="Distance-Effort (km)", gridcolor='#333333', tickvals=[5, 10, 20, 42, 80, 160]),
     yaxis=dict(
         title="Allure (min/km)", gridcolor='#333333', autorange="reversed",
