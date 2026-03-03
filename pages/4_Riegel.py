@@ -26,17 +26,27 @@ else:
         st.switch_page("app.py") # Redirige l'utilisateur
 
 # ------------------------------------------------------------------------------------------------------------------
+all_athletes_raw = df_all_parquet["name_key"].unique()
+all_athletes = [name for name in all_athletes_raw if isinstance(name, str)]
+all_athletes = sorted(all_athletes)
+
+#nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...",key="selectbox_tab3_name")
+#nom_cherche = "chapuisthomas" 
+nom_cherche = st.selectbox(
+    label="Recherche athlète",
+    options=all_athletes, 
+    index=None, 
+    placeholder="Tapez le nom d'un athlète...",
+    key="selectbox_tab3_name",
+    label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
+)
 
 df_running = df_synthese[df_synthese['sport'].isin(['Running', 'Trail'])].copy()
-
 df_running["Distance"] = pd.to_numeric(df_running["Distance"], errors='coerce')
 df_running["D+"] = pd.to_numeric(df_running["D+"], errors='coerce').fillna(0)
-
 df_running["Distance_Effort"] = df_running["Distance"] + (df_running["D+"] / 100)
 
-
-nom_cherche = "chapuisthomas" 
-df_athlete = f.Filter_By_Athlete(df_all_parquet,'Thomas CHAPUIS')
+df_athlete = f.Filter_By_Athlete(df_all_parquet,nom_cherche)
 
 races = df_athlete['race_id'].unique()
 df_synthese_filtered = df_running[df_running['Race_id'].isin(races)].copy()
