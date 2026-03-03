@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
 import numpy as np
 
@@ -13,7 +14,8 @@ from utils import fonctions_Viz as v
 #from utils.Upload_xlsx import *
 from utils.Upload_xlsx_to_supabase import *
 
-# ------------------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Vérifier si les données existent (sécurité si l'utilisateur arrive direct sur cette page)
 if 'df_complet' in st.session_state:
@@ -25,7 +27,7 @@ else:
     if st.button("Aller à l'accueil"):
         st.switch_page("app.py") # Redirige l'utilisateur
 
-# ------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 all_athletes_raw = df_all_parquet["name_key"].unique()
 all_athletes = [name for name in all_athletes_raw if isinstance(name, str)]
 all_athletes = sorted(all_athletes)
@@ -46,12 +48,6 @@ df_running["Distance"] = pd.to_numeric(df_running["Distance"], errors='coerce')
 df_running["D+"] = pd.to_numeric(df_running["D+"], errors='coerce').fillna(0)
 df_running["Distance_Effort"] = df_running["Distance"] + (df_running["D+"] / 100)
 
-
-import numpy as np
-import plotly.express as px
-import pandas as pd
-import streamlit as st
-
 # --- 0. Préparation (hors du if) ---
 def format_allure(min_decimal):
     if pd.isna(min_decimal) or min_decimal == 0:
@@ -60,7 +56,6 @@ def format_allure(min_decimal):
     secondes = int((min_decimal - minutes) * 60)
     return f"{minutes}:{secondes:02d}"
 
-# Colonnes attendues pour le tableau
 cols_display = ['Année', 'Race1', 'Distance', 'D+', 'Distance_Effort', 'time', 'allure_str']
 
 # --- 1. Initialisation des variables par défaut ---
@@ -140,6 +135,104 @@ st.dataframe(
     hide_index=True,
     column_config={"allure_str": "Allure (min/km)", "Distance_Effort": "Dist. Effort"}
 )
+
+
+############## 2e graphe — Modèle de Riegel
+
+if not df_plot.empty:
+
+    # 1. Données propres (on repart de df_plot, plus sûr)
+    distances_reelles = df_plot["Distance_Effort"].astype(float)
+    temps_reels_min = df_plot["time_min"].astype(float)
+
+    # --- Fonctions format ---
+    def format_time(min_val):
+        total_seconds = int(min_val * 60)
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+    def format_pace(pace_min):
+        m = int(pace_min)
+        s = int(round((pace_min - m) * 60))
+        if s == 60:
+            m += 1
+            s = 0
+        return f"{m}:{s:02d}"
+
+    # 2. Figure
+    fig2 = go.Figure()
+    colors = px.colors.qualitative.Plotly
+    dist_range = np.linspace(2, 50, 200)
+
+    # 3. Courbes Riegel
+    for i, (dist_ref, t_ref_min) in enumerate(zip(distances_reelles, temps_reels_min)):
+
+        temps_estimes_min = t_ref_min * ((dist_range / dist_ref) ** 1.06)
+        allure_estimee = temps_estimes_min / dist_range
+
+        hover_text = [
+            f"Temps: {format_time(t)}<br>Allure: {format_pace(p)} min/km"
+            for t, p in zip(temps_estimes_min, allure_estimee)
+        ]
+
+        fig2.add_trace(go.Scatter(
+            x=dist_range,
+            y=allure_estimee,
+            mode='lines',
+            name=f"Réf {dist_ref:.1f} km",
+            line=dict(dash='dash', width=1.5, color=colors[i % len(colors)]),
+            opacity=0.5,
+            text=hover_text,
+            hovertemplate='<b>Projection</b><br>Dist: %{x:.1f} km<br>%{text}<extra></extra>'
+        ))
+
+    # 4. Points réels
+    allures_reelles = temps_reels_min / distances_reelles
+
+    hover_reels = [
+        f"Temps: {format_time(t)}<br>Allure: {format_pace(p)} min/km"
+        for t, p in zip(temps_reels_min, allures_reelles)
+    ]
+
+    fig2.add_trace(go.Scatter(
+        x=distances_reelles,
+        y=allures_reelles,
+        mode='markers+text',
+        name='Réel',
+        text=[format_pace(p) for p in allures_reelles],
+        textposition="top center",
+        marker=dict(size=12, line=dict(width=2, color='white')),
+        customdata=hover_reels,
+        hovertemplate='<b>Réel</b><br>Dist: %{x:.1f} km<br>%{customdata}<extra></extra>'
+    ))
+
+    # 5. Axes
+    min_pace = allures_reelles.min()
+    max_pace = allures_reelles.max()
+
+    pace_ticks = np.arange(np.floor(min_pace), np.ceil(max_pace) + 0.5, 0.5)
+    pace_labels = [format_pace(p) for p in pace_ticks]
+
+    fig2.update_layout(
+        title="Évolution de l'Allure (min/km) — Modèle de Riegel",
+        template="plotly_dark",
+        xaxis=dict(title="Distance (km)", showgrid=False),
+        yaxis=dict(
+            title="Allure (min/km)",
+            tickvals=pace_ticks,
+            ticktext=pace_labels,
+            autorange="reversed",
+            gridcolor="rgba(255,255,255,0.1)"
+        ),
+        hovermode="closest"
+    )
+
+    st.plotly_chart(fig2, use_container_width=True)
+
+else:
+    st.info("💡 Sélectionnez un athlète pour afficher les projections Riegel.")
+
 
 if not nom_cherche:
     st.info("💡 Utilisez la barre de recherche pour peupler le graphique et le tableau.")
