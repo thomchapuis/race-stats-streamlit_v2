@@ -139,8 +139,18 @@ if nom_cherche:
     )
     
     st.plotly_chart(fig, use_container_width=True)
-    
-    st.dataframe(df_synthese_filtered[['Année','Race1','Distance','D+','Distance_Effort','time','allure_str']])
+    st.write("Détails des courses")
+    df_display = df_synthese_filtered[['Année','Race1','Distance','D+','Distance_Effort','time','allure_str']].copy()
+    df_display["time"] = df_display["time"].apply(
+        lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
+        if pd.notnull(x) else "-"
+    )
+    st.dataframe(
+        df_display,
+        use_container_width=True,
+        hide_index=True
+    )
+    #st.dataframe(df_synthese_filtered[['Année','Race1','Distance','D+','Distance_Effort','time','allure_str']])
 
 else:
     st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
