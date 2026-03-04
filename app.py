@@ -249,7 +249,7 @@ with tabGroup:
     
         col_Group1, col_Group2 = st.columns(2)
         with col_Group1:
-            st.dataframe(df_race)
+            #st.dataframe(df_race)
             st.dataframe(df_race[df_race['name_key'].isin(ATHLETES_CLEAN)])
             
         with col_Group2:
