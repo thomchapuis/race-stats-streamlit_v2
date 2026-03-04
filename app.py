@@ -238,6 +238,7 @@ with tab7:
 with tabGroup:
     st.title("⚔️ Vision de groupe")
     #race_selected = "NuitBlanchePilat"
+    ATHLETES_CLEAN = [get_clean_key(a) for a in ATHLETES]
     
     all_races_v1 = sorted(df_all_parquet["race_name"].unique())
     race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup")
@@ -248,7 +249,8 @@ with tabGroup:
     
         col_Group1, col_Group2 = st.columns(2)
         with col_Group1:
-            st.dataframe(f.Filter_By_Athlete(df_race,ATHLETES))
+            st.dataframe(df_race)
+            st.dataframe(df_race[df_race['name_key'].isin(ATHLETES_CLEAN)])
             
         with col_Group2:
             fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
