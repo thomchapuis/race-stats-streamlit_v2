@@ -245,7 +245,7 @@ with tabGroup:
 
     if race_selected:
         df_race = f.Filter_By_Race(df_all_parquet, race_selected)
-        
+        st.dataframe(df_race)
     
         col_Group1, col_Group2 = st.columns(2)
         with col_Group1:
