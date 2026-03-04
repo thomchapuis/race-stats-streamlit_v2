@@ -470,13 +470,13 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     
         if i % 2 == 0:
             # 👉 À DROITE
-            x0, x1 = 0.5, 0.85
+            x0, x1 = 0.5, 0.8
             x_text = 0.85
             xanchor = "left"
         else:
             # 👈 À GAUCHE
-            x0, x1 = 0.5, 0.15
-            x_text = 0.15
+            x0, x1 = 0.5, 0.2
+            x_text = 0.8
             xanchor = "right"
     
         # Ligne horizontale
@@ -500,10 +500,12 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
             yref="y",
             x=x_text,
             y=temps,
-            text=f"#{rank} – {name}",
+            #text=f"#{rank} – {name}",
+            text=f"{name} - {rank}e ",
             showarrow=False,
             xanchor=xanchor,
-            align="left"
+            align="left",
+            font=dict(size=8)
         )
 
     # 6. Calcul des bornes inférieures des barres pour les ticks
@@ -524,10 +526,12 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     # 8. Améliorations visuelles
     fig.update_layout(
         bargap=0.1,
-        xaxis_title="Nombre de coureurs",
+        title = None,
+        #xaxis_title="Nombre de coureurs",
+        xaxis_title=None,
         yaxis_title="Temps",
         height=600,
-        margin=dict(l=40, r=40, t=80, b=40),
+        margin=dict(l=40, r=40, t=10, b=100),
         showlegend=False,
         template='plotly_dark'
     )
