@@ -262,7 +262,8 @@ with tabGroup:
             )
             
         with col_Group2:
-            fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
+            #fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
+            fig_Group = v.Viz_Violin_Group(df_race, 'time', ATHLETES)
             st.plotly_chart(fig_Group,use_container_width=True)
     else:
         st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
