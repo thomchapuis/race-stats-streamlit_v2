@@ -158,7 +158,23 @@ def get_Rank_Percentage(df, col):
 
     return temp_df['rank_percentage']
 
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 
+def get_coords(ville):
+    geolocator = Nominatim(
+        user_agent="my_app_thomas",  # important: user_agent explicite
+        timeout=10                   # augmente le timeout
+    )
+    
+    try:
+        location = geolocator.geocode(ville)
+        if location:
+            return location.latitude, location.longitude
+        return None, None
+    
+    except (GeocoderTimedOut, GeocoderUnavailable):
+        return None, None
 
 
 def get_coords(ville):
