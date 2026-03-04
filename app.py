@@ -246,7 +246,7 @@ with tabGroup:
 
     col_Group1, col_Group2 = st.columns(2)
     with col_Group1:
-        st.dataframe(f.get_clean_key(ATHLETES))
+        st.write(f.get_clean_key(ATHLETES))
         st.dataframe(f.Filter_By_Athlete(df_race, ATHLETES))
         
     with col_Group2:
