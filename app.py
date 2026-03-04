@@ -253,7 +253,7 @@ with tabGroup:
             # 3) Affichage du classement
             #st.write("Classement complet")
             df_display = df_race[df_race['name_key'].isin(ATHLETES_CLEAN)]
-            df_display = df_race[["rank", "name", "time", ]].copy()
+            df_display = df_display[["rank", "name", "time", ]].copy()
             df_display["time"] = df_display["time"].apply(
                 lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
                 if pd.notnull(x) else "-"
