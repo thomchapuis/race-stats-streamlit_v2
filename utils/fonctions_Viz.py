@@ -444,7 +444,7 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         y="col_min",
         #box=True,          # ajoute la boxplot au centre
         points=False,      # True si tu veux afficher les points individuels
-        title=f"Distribution des temps : {race_name} | {col}",
+        #title=f"Distribution des temps : {race_name} | {col}",
         labels={'col_min': 'Temps'},
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
@@ -453,9 +453,6 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     fig.update_traces(
         meanline_visible=True  # affiche la moyenne
     )
-
-      # 5. Ajout des traits verticaux pour chaque personne
-    colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']  # Liste de couleurs pour les traits
     
     # 🔽 Tri par temps
     temps_dict_sorted = dict(
