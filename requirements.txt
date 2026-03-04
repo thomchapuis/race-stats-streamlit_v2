@@ -6,3 +6,4 @@ numpy
 st_supabase_connection
 geopy
 
+
