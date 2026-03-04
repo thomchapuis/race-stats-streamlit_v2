@@ -261,8 +261,7 @@ with tabGroup:
             st.dataframe(
                 df_display,
                 use_container_width=True,
-                hide_index=True,
-                height=400
+                hide_index=True
             )
             
         with col_Group2:
