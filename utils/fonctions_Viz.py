@@ -526,12 +526,12 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     # 8. Améliorations visuelles
     fig.update_layout(
         bargap=0.1,
-        title = None,
+        #title = None,
         #xaxis_title="Nombre de coureurs",
         xaxis_title=None,
         yaxis_title="Temps",
         height=600,
-        margin=dict(l=40, r=40, t=10, b=100),
+        margin=dict(l=40, r=40, t=10, b=10),
         showlegend=False,
         template='plotly_dark'
     )
