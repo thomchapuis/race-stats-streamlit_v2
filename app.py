@@ -241,16 +241,21 @@ with tabGroup:
     
     all_races_v1 = sorted(df_all_parquet["race_name"].unique())
     race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup")
-    df_race = f.Filter_By_Race(df_all_parquet, race_selected)
-    
 
-    col_Group1, col_Group2 = st.columns(2)
-    with col_Group1:
-        st.dataframe(f.Filter_By_Athlete(df_race,ATHLETES))
+    if race_selected:
+        df_race = f.Filter_By_Race(df_all_parquet, race_selected)
         
-    with col_Group2:
-        fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
-        st.plotly_chart(fig_Group,use_container_width=True)
+    
+        col_Group1, col_Group2 = st.columns(2)
+        with col_Group1:
+            st.dataframe(f.Filter_By_Athlete(df_race,ATHLETES))
+            
+        with col_Group2:
+            fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
+            st.plotly_chart(fig_Group,use_container_width=True)
+    else:
+        st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
+        nom_fiche = ""
 ########################## ########################## ########################## ########################## ########################## 
 
 with tabToDo: 
