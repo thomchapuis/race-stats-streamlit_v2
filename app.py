@@ -247,7 +247,7 @@ with tabGroup:
     col_Group1, col_Group2 = st.columns(2)
     with col_Group1:
         st.dataframe(f.get_clean_key(ATHLETES))
-        st.dataframe(f.Filter_By_Athlete(df_race, ATHLETES)
+        st.dataframe(f.Filter_By_Athlete(df_race, ATHLETES))
         
     with col_Group2:
         fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
