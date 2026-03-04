@@ -598,7 +598,7 @@ def Viz_Violin_Group(df_race, col, names):
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
     )
-    fig.update_traces(meanline_visible=True)
+    fig.update_traces(meanline_visible=True,hovertemplate="%{y:.2f} min<extra></extra>")
 
     # 4. Ajouter les lignes et annotations pour chaque race_id
     for race_id, athletes in temps_dict.items():
