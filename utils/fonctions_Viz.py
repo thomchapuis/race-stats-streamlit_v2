@@ -471,12 +471,12 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         if i % 2 == 0:
             # 👉 À DROITE
             x0, x1 = 0.5, 0.8
-            x_text = 0.85
+            x_text = 0.8
             xanchor = "left"
         else:
             # 👈 À GAUCHE
             x0, x1 = 0.5, 0.2
-            x_text = 0.8
+            x_text = 0.2
             xanchor = "right"
     
         # Ligne horizontale
