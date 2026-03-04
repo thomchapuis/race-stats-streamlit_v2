@@ -88,8 +88,8 @@ with tab6:
     st.write(dist_par_sport)
 
     # Test
-    lat, lon = f.get_coords("Lyon, France")
-    st.write(f"Lat: {lat}, Lon: {lon}")
+    #lat, lon = f.get_coords("Lyon, France")
+    #st.write(f"Lat: {lat}, Lon: {lon}")
     
 ########################## ########################## ########################## ########################## ########################## 
 with tab2:
