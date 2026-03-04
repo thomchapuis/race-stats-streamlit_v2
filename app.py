@@ -250,7 +250,20 @@ with tabGroup:
         col_Group1, col_Group2 = st.columns(2)
         with col_Group1:
             #st.dataframe(df_race)
-            st.dataframe(df_race[df_race['name_key'].isin(ATHLETES_CLEAN)])
+            # 3) Affichage du classement
+            #st.write("Classement complet")
+            df_display = df_race[df_race['name_key'].isin(ATHLETES_CLEAN)]
+            df_display = df_race[["rank", "name", "time", ]].copy()
+            df_display["time"] = df_display["time"].apply(
+                lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
+                if pd.notnull(x) else "-"
+            )
+            st.dataframe(
+                df_display,
+                use_container_width=True,
+                hide_index=True,
+                height=400
+            )
             
         with col_Group2:
             fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
