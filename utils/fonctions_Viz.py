@@ -542,6 +542,126 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
 
 
 
+def Viz_Violin_Group(df_race, col, names):
+    """
+    Trace un violin plot horizontal des temps pour chaque 'race_id' présent dans df_race,
+    avec des lignes et annotations pour des athlètes spécifiques.
+
+    Parameters:
+    - df_race: DataFrame contenant les données de la course.
+    - col: Nom de la colonne contenant les temps (ex: 'time').
+    - names: Liste des noms des personnes (ou un seul nom) dont les temps seront mis en évidence.
+    """
+
+    df = df_race.copy()
+
+    # Convertir names en liste si ce n'est pas déjà le cas
+    if isinstance(names, str):
+        names = [names]
+
+    # 1. Conversion des temps en minutes
+    if df[col].dtype == 'object' or pd.api.types.is_timedelta64_dtype(df[col]):
+        df['col_td'] = pd.to_timedelta(df[col])
+        df['col_min'] = df['col_td'].dt.total_seconds() / 60
+    else:
+        df['col_min'] = df[col]
+
+    df = df[df['col_min'] > 0]
+
+    # 2. Préparer le dictionnaire des athlètes
+    temps_dict = {}
+    for name in names:
+        clean_name = get_clean_key(name)
+        row = df.loc[df['name_key'] == clean_name, ['name', 'col_min', 'rank', 'race_id']]
+
+        if not row.empty:
+            for _, r in row.iterrows():
+                full_name = r['name']
+                race_id = r['race_id']
+                temps = r['col_min']
+                rank = r['rank']
+
+                if race_id not in temps_dict:
+                    temps_dict[race_id] = {}
+                temps_dict[race_id][full_name] = {
+                    "temps": temps,
+                    "rank": rank
+                }
+
+    # 3. Créer le violin plot pour chaque race_id
+    fig = px.violin(
+        df,
+        x='race_id',
+        y='col_min',
+        points=False,
+        labels={'col_min': 'Temps', 'race_id': 'Course'},
+        template='plotly_dark',
+        color_discrete_sequence=['#2ecc71']
+    )
+    fig.update_traces(meanline_visible=True)
+
+    # 4. Ajouter les lignes et annotations pour chaque race_id
+    for race_id, athletes in temps_dict.items():
+        athletes_sorted = dict(sorted(athletes.items(), key=lambda item: item[1]['temps']))
+
+        for i, (name, data) in enumerate(athletes_sorted.items()):
+            temps = data["temps"]
+            rank = data["rank"]
+
+            # Position horizontale du trait et du texte
+            if i % 2 == 0:
+                x0, x1 = 0.5, 0.8
+                x_text = 0.8
+                xanchor = "left"
+            else:
+                x0, x1 = 0.5, 0.2
+                x_text = 0.2
+                xanchor = "right"
+
+            # Ligne horizontale
+            fig.add_shape(
+                type="line",
+                xref="x",
+                yref="y",
+                x0=race_id,  # position sur la course
+                x1=race_id,
+                y0=temps,
+                y1=temps,
+                line=dict(color="gray", width=1)
+            )
+
+            # Annotation
+            fig.add_annotation(
+                x=race_id,
+                y=temps,
+                text=f"{name} - {rank}e",
+                showarrow=False,
+                xanchor=xanchor,
+                align="left",
+                font=dict(size=8)
+            )
+
+    # 5. Mise à jour des axes
+    bin_edges = np.histogram_bin_edges(df['col_min'], bins=10)
+    tickvals = bin_edges[:-1]
+    ticktext = [f"{int(m // 60):02d}h{int(m % 60):02d}" for m in tickvals]
+
+    fig.update_yaxes(
+        tickvals=tickvals,
+        ticktext=ticktext,
+        title="Temps"
+    )
+
+    fig.update_layout(
+        xaxis_title="Course (race_id)",
+        height=600,
+        margin=dict(l=40, r=40, t=10, b=40),
+        showlegend=False,
+        template='plotly_dark'
+    )
+
+    return fig
+
 
 def Viz_Radar_Triathlon(df, names_list):
     # 1. Identifier les courses et filtrer celles qui ont les colonnes nécessaires
