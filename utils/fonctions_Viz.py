@@ -526,14 +526,14 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
         bargap=0.1,
         xaxis_title="Nombre de coureurs",
         yaxis_title="Temps",
-        height=1100,
+        height=600,
         margin=dict(l=40, r=40, t=80, b=40),
         showlegend=False,
         template='plotly_dark'
     )
 
     fig.update_traces(
-        hoverinfo="skip"   # empêche Plotly d’injecter kde / q / mean
+        hoveron="points"
     )
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
