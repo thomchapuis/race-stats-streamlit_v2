@@ -24,3 +24,25 @@ ATHLETES = [
     "TRIGO Severino",
     "Tessier Myriam"
     ]
+
+
+FAMILLE_CHAPUIS = [
+    "CHAPUIS Thomas", 
+    "CHAPUIS Maxime", 
+    "CHAPUIS Laurent",
+    "CHAPUIS Romane",
+    "TRIGO Severino",
+    "Tessier Myriam"
+    ]
+
+COPAINS = [
+    "BERGER Tristan",
+    "BOMPAS Théo",
+    "BOMPAS Romain",
+    "DELCAMP Brieuc",
+    "CHAPUIS Thomas", 
+    "FRANCOIS Louis",
+    "FEIDT Lucie",
+    "GODILLON Matthieu",
+    "TEIL Thomas"
+    ]
