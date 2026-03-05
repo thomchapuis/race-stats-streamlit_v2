@@ -237,78 +237,78 @@ with tab7:
 
 with tabGroup:
     st.title("⚔️ Vision de groupe")
-
-    groupe_choice = st.selectbox("Choisissez un groupe :", options=list(options_map.keys()), index=None, placeholder="Tapez le nom d'un groupe...",key="selectbox_tabGroup_group")
     
-    if groupe_choice:
-        col_tabGroup1, col_tabGroup2 = st.columns(2)
-        with col_tabGroup1:
-            groupe_selectionne = options_map[groupe_choice]
-            groupe_selectionne_clean = [get_clean_key(a) for a in groupe_selectionne]
-            # On crée une chaîne de caractères séparée par des virgules
-            affichage_membres = ", ".join(groupe_selectionne)
-        
-            # Affichage avec un petit style gras pour le titre
-            st.write(f"**Membres :** {affichage_membres}")
-        with col_tabGroup2:
-            all_races_v1 = sorted(f.Filter_By_Athlete(df_all_parquet,groupe_selectionne)["race_name"].unique())
-            race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup_race")
+    col_sel1, col_sel2 = st.columns(2)
+    
+    # 1. Sélection du Groupe
+    with col_sel1:
+        groupe_choice = st.selectbox(
+            "Choisissez un groupe :", 
+            options=list(options_map.keys()), 
+            index=None, 
+            placeholder="Tapez le nom d'un groupe...",
+            key="selectbox_tabGroup_group"
+        )
 
-        if race_selected:
-            df_race = f.Filter_By_Race(df_all_parquet, race_selected)
-            #st.dataframe(df_race)
-        
-            #col_Group1, col_Group2 = st.columns([1, 2])
-            #with col_Group1:
-            df_display = df_race[df_race['name_key'].isin(groupe_selectionne_clean)]
-            df_display = df_display[["rank", "name", "time", ]].copy()
-            df_display["time"] = df_display["time"].apply(
-                lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
-                if pd.notnull(x) else "-"
-            )
-            st.markdown("###### Aperçu des performances du groupe")
-            st.dataframe(
-                df_display,
-                use_container_width=True,
-                hide_index=True
-            )
-                
-            #with col_Group2:
-                #fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', ATHLETES)
-                #fig_Group = v.Viz_Violin_Group(df_race, 'time', groupe_selectionne)
-                #st.plotly_chart(fig_Group,use_container_width=True)
-            
-            #fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_race, 'time', groupe_selectionne)
-            #st.plotly_chart(fig_Group,use_container_width=True)
+    if not groupe_choice:
+        st.info("Veuillez sélectionner un groupe pour afficher les statistiques.")
+        st.stop() # On arrête l'exécution ici si pas de groupe
 
-            test = 0
-            if test ==1: 
-                for id_race, df in df_race.groupby('race_id'):
-                    globals()[f"df_race_{id_race}"] = df
-                    fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df, 'time', groupe_selectionne)
-                    st.plotly_chart(fig_Group,use_container_width=True)
-            
+    # --- Préparation des données du groupe ---
+    groupe_selectionne = options_map[groupe_choice]
+    groupe_selectionne_clean = [get_clean_key(a) for a in groupe_selectionne]
+    
+    with col_sel1:
+        st.write(f"**Membres :** {', '.join(groupe_selectionne)}")
 
-            grouped = df_race.groupby('race_key')
-            n_cols = len(grouped)
+    # 2. Sélection de la Course
+    # On filtre les courses dispo pour ce groupe spécifique
+    df_filtered_athletes = f.Filter_By_Athlete(df_all_parquet, groupe_selectionne)
+    all_races_v1 = sorted(df_filtered_athletes["race_name"].unique())
 
-            if n_cols > 0:
-                cols = st.columns(n_cols)
-                for i, (race_key, df_id) in enumerate(grouped):
-                    with cols[i]:
-                        st.write(race_key)
-                        #st.dataframe(df_id)
-                        fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_id, 'time', groupe_selectionne)
-                        st.plotly_chart(fig_Group,use_container_width=True)
-            else:
-                st.write("Aucune donnée disponible.")
+    with col_sel2:
+        race_selected = st.selectbox(
+            "Rechercher une course :", 
+            options=all_races_v1, 
+            index=None, 
+            placeholder="Tapez le nom d'une course...",
+            key="selectbox_tabGroup_race"
+        )
 
+    if not race_selected:
+        st.info("Veuillez sélectionner une course.")
+        st.stop()
 
+    # --- Logique d'affichage une fois tout sélectionné ---
+    df_race = f.Filter_By_Race(df_all_parquet, race_selected)
+    
+    # Aperçu tableau (Optionnel : tu peux le mettre dans une st.expander)
+    st.markdown("###### Aperçu des performances du groupe")
+    df_display = df_race[df_race['name_key'].isin(groupe_selectionne_clean)].copy()
+    
+    if not df_display.empty:
+        # Formatage du temps
+        df_display["time"] = df_display["time"].apply(
+            lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
+            if pd.notnull(x) else "-"
+        )
+        st.dataframe(df_display[["rank", "name", "time"]], use_container_width=True, hide_index=True)
 
-        else:
-            st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
-    else: 
-        st.info("Veuillez sélectionner ou taper un nom de groupe pour afficher les statistiques.")
+    # --- Affichage des graphiques par race_key ---
+    st.divider()
+    grouped = df_race.groupby('race_key')
+    n_cols = len(grouped)
+
+    if n_cols > 0:
+        # On limite à 3 colonnes max pour la lisibilité, sinon on crée des lignes
+        cols = st.columns(n_cols)
+        for i, (race_key, df_id) in enumerate(grouped):
+            with cols[i]:
+                st.markdown(f"**{race_key}**")
+                fig_Group = v.Viz_Histogramme_Temps_Names_Horizontal(df_id, 'time', groupe_selectionne)
+                st.plotly_chart(fig_Group, use_container_width=True)
+    else:
+        st.warning("Aucune donnée détaillée disponible pour les segments de cette course.")
 
 ########################## ########################## ########################## ########################## ########################## 
 
