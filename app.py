@@ -11,9 +11,8 @@ from utils import fonctions_Viz as v
 #from utils.Upload_xlsx import *
 from utils.Upload_xlsx_to_supabase import *
 # ---------------------------------------------------------------------------------
-from utils.config import get_supabase
-
-supabase = get_supabase()
+#from utils.config import get_supabase #codespace
+#supabase = get_supabase() #codespace
 
 st.set_page_config(layout="wide")
 parquet_file7 = "data/races7.parquet"
