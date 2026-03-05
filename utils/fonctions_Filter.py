@@ -1,4 +1,5 @@
 import pandas as pd
+import streamlit as st
 import unicodedata
 import os
 import plotly.express as px
@@ -112,15 +113,18 @@ def Filter_By_Athlete(df, name_list):
 
     if isinstance(name_list, str):
         name_list = [name_list]
+        #name_list = [name for sublist in name_list for name in sublist]
+
 
     keys_to_filter = [get_clean_key(n) for n in name_list]
     num_required = len(keys_to_filter)
     mask_athletes = df['name_key'].isin(keys_to_filter)
-    race_stats = df[mask_athletes].groupby('race_id')['name_key'].nunique()
+    race_stats = df[mask_athletes].groupby('race_name')['name_key'].nunique()
     valid_races = race_stats[race_stats == num_required].index
-    result = df[df['race_id'].isin(valid_races)].reset_index(drop=True)
+    result = df[df['race_name'].isin(valid_races)].reset_index(drop=True)
 
     return result
+
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 🔹 Fonction de Calcul
