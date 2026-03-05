@@ -243,7 +243,7 @@ with tabGroup:
     group = ['FAMILLE_CHAPUIS','COPAINS', 'ATHLETES']
     race_selected = st.selectbox("Choisissez un group :", options=group, index=None, placeholder="Tapez le nom d'un groupe...",key="selectbox_tabGroup_group")
     
-    all_races_v1 = sorted(f.Filter_by_Athlete(df_all_parquet,group)["race_name"].unique())
+    all_races_v1 = sorted(f.Filter_By_Athlete(df_all_parquet,group)["race_name"].unique())
     race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup_race")
 
     if race_selected:
