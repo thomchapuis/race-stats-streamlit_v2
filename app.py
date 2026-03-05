@@ -237,23 +237,21 @@ with tab7:
 
 with tabGroup:
     st.title("⚔️ Vision de groupe")
-    #race_selected = "NuitBlanchePilat"
-    ATHLETES_CLEAN = [get_clean_key(a) for a in ATHLETES]
 
-    groupes = options_map.keys()
-    
     groupe_choice = st.selectbox("Choisissez un groupe :", options=list(options_map.keys()), index=None, placeholder="Tapez le nom d'un groupe...",key="selectbox_tabGroup_group")
     
     if groupe_choice:
-        groupe_selectionne = options_map[groupe_choice]
-        groupe_selectionne_clean = [get_clean_key(a) for a in groupe_selectionne]
-        # On crée une chaîne de caractères séparée par des virgules
-        affichage_membres = ", ".join(groupe_selectionne)
-        
-        # Affichage avec un petit style gras pour le titre
-        st.write(f"**Membres :** {affichage_membres}")
-        all_races_v1 = sorted(f.Filter_By_Athlete(df_all_parquet,groupe_selectionne)["race_name"].unique())
-        race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup_race")
+        col_tabGroup1, col_tabGroup2 = st.columns(2)
+        with col_tabGroup1:
+            groupe_selectionne = options_map[groupe_choice]
+            groupe_selectionne_clean = [get_clean_key(a) for a in groupe_selectionne]
+            # On crée une chaîne de caractères séparée par des virgules
+            affichage_membres = ", ".join(groupe_selectionne)
+        with col_tabGroup2:
+            # Affichage avec un petit style gras pour le titre
+            st.write(f"**Membres :** {affichage_membres}")
+            all_races_v1 = sorted(f.Filter_By_Athlete(df_all_parquet,groupe_selectionne)["race_name"].unique())
+            race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup_race")
 
         if race_selected:
             df_race = f.Filter_By_Race(df_all_parquet, race_selected)
