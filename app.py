@@ -247,9 +247,10 @@ with tabGroup:
             groupe_selectionne_clean = [get_clean_key(a) for a in groupe_selectionne]
             # On crée une chaîne de caractères séparée par des virgules
             affichage_membres = ", ".join(groupe_selectionne)
-        with col_tabGroup2:
+        
             # Affichage avec un petit style gras pour le titre
             st.write(f"**Membres :** {affichage_membres}")
+        with col_tabGroup2:
             all_races_v1 = sorted(f.Filter_By_Athlete(df_all_parquet,groupe_selectionne)["race_name"].unique())
             race_selected = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tabGroup_race")
 
