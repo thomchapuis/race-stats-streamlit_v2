@@ -125,13 +125,14 @@ def Filter_By_Athlete(df, name_list):
 
     return result
 
-def Filter_By_Athlete2(df, name_list, tolerance=True):
+def Filter_By_Athlete2(df, name_list, col='race_name',tolerance=True):
     """
     Filtre les courses selon la présence des athlètes de name_list.
     
     Args:
         df (DataFrame): Les données de courses.
         name_list (list|str): Liste des athlètes cibles.
+        col: pour choisir la méthode de filtre : sur 'race_name' ou sur 'race_id'
         tolerance (bool): Si True, autorise 1 absent (si <4 noms) ou 2 absents (si >=4).
                          Si False, exige 100% de présence.
     """
@@ -160,13 +161,13 @@ def Filter_By_Athlete2(df, name_list, tolerance=True):
     mask_athletes = df['name_key'].isin(keys_to_filter)
     
     # Comptage par course
-    race_counts = df[mask_athletes].groupby('race_name')['name_key'].nunique()
+    race_counts = df[mask_athletes].groupby(col)['name_key'].nunique()
     
     # Identification des courses valides selon le seuil
     valid_races = race_counts[race_counts >= min_required].index
     
     # Retourne le DF complet pour ces courses
-    result = df[df['race_name'].isin(valid_races)].reset_index(drop=True)
+    result = df[df[col].isin(valid_races)].reset_index(drop=True)
 
     return result
 

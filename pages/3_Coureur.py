@@ -77,8 +77,8 @@ nom_recherche = nom_recherche1 if st.session_state.active_athlete == "Athlète 1
 #nom_recherche = nom_recherche1
 if nom_recherche:
     st.write(f"**Athlète actif :** {df_all_parquet.loc[df_all_parquet['name_key'] == nom_recherche, 'name'].iloc[0]}")
-    df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
-    nom_fiche = f" : {df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0]}"
+    df_coureur = f.Filter_By_Athlete2(df_all_parquet, [nom_recherche], 'race_id')
+    #nom_fiche = f" : {df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0]}"
     #st.header(f"👤 Fiche Coureur {nom_fiche}")
     nb_courses_coureur = df_coureur["race_id"].nunique()
     courses_par_sport = (

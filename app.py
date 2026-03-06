@@ -2,7 +2,9 @@ import pandas as pd
 import os
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
+
 
 from utils.config import *
 #from utils.fonctions import *
@@ -228,10 +230,100 @@ with tab7:
     st.divider()
 
     targets =  [athlete1,athlete2]
-    df_Battle = f.Filter_By_Athlete(df_all_parquet,targets)
+    df_Battle = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
     
     fig_Battle = v.Viz_Battle_percentage(df_Battle, targets)
     st.plotly_chart(fig_Battle, use_container_width=True)
+
+
+    st.divider()
+    st.divider()
+
+    #athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
+    #df_TT = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
+    
+    fig1 = v.Viz_Battle_Time_by_Races(df_Battle,targets)
+    st.plotly_chart(fig1, use_container_width=True)
+
+    st.divider()
+    st.divider()
+
+    targets =  ["CHAPUIS Thomas", "BOMPAS Théo"]
+    df_Battle = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
+    races = df_Battle['race_name'].unique()
+    rows = []
+    for r in races:
+        df_race = f.Filter_By_Race(df_Battle, r)
+        for name in targets:
+            t = df_race.loc[df_race['name_key'] == get_clean_key(name),'time']
+            date = df_race.loc[df_race['name_key'] == get_clean_key(name),'race_date']
+
+            if not t.empty:
+                rows.append({
+                    "athlete": name,
+                    "race": r,
+                    'race_date': date.iloc[0],
+                    "time": t.iloc[0]
+                })
+
+    df_cumul = pd.DataFrame(rows)
+    df_cumul = df_cumul.sort_values("race_date")  # si dispo
+    df_cumul["time_sec"] = df_cumul["time"].dt.total_seconds()
+
+    df_cumul["cumul_sec"] = (df_cumul.groupby("athlete")["time_sec"].cumsum())
+    #st.dataframe(df_cumul)
+    df_wide = df_cumul.copy()
+    df_wide = (
+        df_cumul
+        .pivot(index=["race", "race_date"], columns="athlete", values="time_sec")
+        .reset_index()
+    )
+
+
+
+    df_wide["thomas_sec"] = df_wide["CHAPUIS Thomas"]
+
+    df_wide["delta_theo_sec"] = (
+        df_wide["BOMPAS Théo"] - df_wide["CHAPUIS Thomas"]
+    )
+    df_wide = df_wide.sort_values("race_date")  # si dispo
+
+    fig2 = go.Figure()
+
+    # ── Barre Thomas (référence) ─────────────────────
+    #fig.add_trace(go.Bar(
+    #    x=df_wide["race"],
+    #    y=df_wide["thomas_sec"] / 3600,
+    #    name="Thomas – temps cumulé",
+    #))
+
+    # ── Barre delta Théo ─────────────────────────────
+    fig2.add_trace(go.Bar(
+        x=df_wide["race"],
+        y=df_wide["delta_theo_sec"] / 60,
+        name="Delta Théo vs Thomas (min)",
+        yaxis="y2",
+        opacity=0.5
+    ))
+
+    # ── Layout ───────────────────────────────────────
+    fig2.update_layout(
+        title="Temps cumulé de Thomas & écart de Théo",
+        xaxis_title="Course",
+        yaxis=dict(
+            title="Temps cumulé Thomas (heures)"
+        ),
+        yaxis2=dict(
+            title="Delta Théo (minutes)",
+            overlaying="y",
+            side="right",
+            showgrid=False
+        ),
+        barmode="group",
+        hovermode="x unified"
+    )
+    st.plotly_chart(fig2, use_container_width=True)
+
 
 ########################## ########################## ########################## ########################## ########################## 
 

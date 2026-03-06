@@ -7,6 +7,7 @@ from plotly.subplots import make_subplots
 import math
 import numpy as np
 from geopy.geocoders import Nominatim
+import streamlit as st
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -170,28 +171,64 @@ def Viz_Barre_RankPct(df, name_key):
     # 3. Calcul du pourcentage de classement et score
     df_athlete['rank_pct'] = df_athlete['rank'] / df_athlete['total'] * 100
     df_athlete['score'] = 100 - df_athlete['rank_pct']
+    #df_athlete['rank_display'] = df_athlete['rank'].apply(lambda x: f"{int(x)}er" if x == 1 else f"{int(x)}e")
+    df_athlete['rank_pct_display'] = df_athlete['rank_pct'].apply(lambda x: f"Top {x:.1f}%")
+    df_athlete["time_display"] = df_athlete["time"].apply(
+        lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}")
     
+    # 1. On transforme les colonnes en texte (en gérant le cas "1er")
+    df_athlete['rank_display'] = df_athlete['rank'].astype(int).astype(str) + "e"
+    df_athlete['rank_display'] = df_athlete['rank_display'] + "/" + df_athlete['total'].astype(int).astype(str)
+
+    st.write(df_athlete.head())
+
     # 4. Diagramme en barres simple
     fig = px.bar(
         df_athlete.sort_values('score', ascending=False),
         x='race_key',
         y='score',
-        text='rank',  # affiche le rang exact
-        #labels={'race_key':'Course', 'rank_pct':'Top x%'},
-        title=f"Performances de {name_key} par course (top x%)",
+        text='rank_pct_display',  # affiche le rang exact
+        hover_data={
+            'race_key': True,      # Affiche la clé de la course
+            'time_display':True,
+            'rank_pct_display':False,
+            'rank_display': True,  # Affiche le rang formaté (ex: 66e)
+            'score': False,         # On cache le score s'il n'est pas souhaité au survol
+            'total':False
+        },
+        title=f"Les Performances de {name_key}",
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
     )
     
     fig.update_traces(textposition='outside')
+
+    # --- Suppression de l'unité et des chiffres sur l'axe Y ---
+    fig.update_yaxes(
+        showticklabels=False, # Cache les chiffres (0, 20, 40...)
+        title_text="",        # Supprime le titre "score"
+        showgrid=False        # Optionnel : supprime les lignes de grille pour un look plus clean
+    )
+
     fig.update_layout(
-        yaxis=dict(range=[0,100], title="Performance (%)"),
-        xaxis_title="Course",
+        #yaxis=dict(range=[0,110], title="Performance (%)"),
+        yaxis=dict(range=[0,110], title=None),
+        xaxis_title=None,
         showlegend=False
+    )
+
+    # On définit le template personnalisé pour afficher uniquement les valeurs brutes
+    fig.update_traces(
+        hovertemplate=(
+            "%{customdata[1]}<br>" +     
+            "%{customdata[2]}<br>" +    
+            "%{customdata[0]}<br>" +
+            #"<b>%{customdata[3]}</b>" +          # rank_pct_display (ex: 4,2%) seul
+            "<extra></extra>"                    # Cache la boîte secondaire (le nom de la trace)
+        )
     )
     
     return fig
-
 
 
 def Viz_Histogramme_Temps(df_race, col):
@@ -289,7 +326,6 @@ def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
     return fig
 
 
-
 def Viz_Histogramme_Temps_Names(df_race, col, names):
     """
     Trace l'histogramme des temps pour une course donnée avec des traits verticaux pour les temps de plusieurs personnes.
@@ -325,13 +361,18 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
 
     # 3. Création du titre dynamique
     race_name = df['race_name'].iloc[0] if 'race_name' in df.columns else "la course"
-
+    df['col_min_display'] = df['col_min'].apply(lambda m: f"{int(m // 60):02d}h{int((m % 60) // 60):02d}")
+    
     # 4. Tracé de l'histogramme
     fig = px.histogram(
         df,
         x="col_min",
-        title=f"Distribution des temps : {race_name} | {col}",
-        labels={'col_min': 'Temps', 'count': 'Nombre de coureurs'},
+        #title=f"Distribution des temps : {race_name} | {col}",
+        title=f"{race_name} - Distribution des temps",
+        labels={'count': 'Nombre de coureurs'},
+        hover_data={
+            'col_min_display': True
+        },
         nbins=30,
         template='plotly_dark',
         color_discrete_sequence=['#2ecc71']
@@ -360,8 +401,6 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
         for m in tickvals
     ]
 
-
-
     # 7. Mise à jour de l'axe des abscisses
     fig.update_xaxes(
         tickvals=tickvals,
@@ -372,7 +411,7 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     # 8. Améliorations visuelles
     fig.update_layout(
         bargap=0.1,
-        xaxis_title="Temps",
+        xaxis_title=None,
         yaxis_title="Nombre de coureurs",
         showlegend=False,
         template='plotly_dark'
@@ -380,7 +419,10 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
 
      # 9. Ajout d'un "sous-titre"
     if len(names)==1:
-        texte_annotation = "\n".join([f"{k} : {v}" for k, v in temps_dict.items()])
+        texte_annotation = "\n".join([
+            f"{k} : {int(v // 3600):02d}:{int((v % 3600) // 60):02d}:{int(v % 60):02d}" 
+            for k, v in temps_dict.items()
+        ])
         fig.add_annotation(
             text=texte_annotation,   # texte à afficher
             xref="paper", yref="paper",     # coordonnées relatives à la figure (0-1)
@@ -943,6 +985,69 @@ def Viz_Battle_percentage(df_Battle, targets):
 
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
+
+def Viz_Battle_Time_by_Races(df_TT, athletes):
+    """
+    Affiche un diagramme course par course avec le temps des 2 athletes côte à côtes sur chaque course.
+    Parameters:
+    - df_TT: DataFrame contenant les données filtrées par Filter_By_Athlete2(col='race_id', tol=False) -> on ne veut que les courses contenant les 2 athlètes.
+    - athletes = ["chapuisthomas", "bompastheo"] : les 2 athlètes qu'on veut comparer
+    """
+    races = df_TT['race_name'].unique()
+    rows = []
+
+    for r in races:
+        df_race = df_TT[df_TT['race_name'] == r] # Plus rapide que l'appel de fonction si df_TT est petit
+        
+        # On récupère la date de la course une seule fois (commune aux deux athlètes)
+        # On prend la première valeur disponible pour cette course
+        current_race_date = df_race['race_date'].iloc[0] 
+
+        for name in athletes:
+            clean_name = get_clean_key(name)
+            t = df_race.loc[df_race['name_key'] == clean_name, 'time']
+
+            if not t.empty:
+                rows.append({
+                    "athlete": name,
+                    "race": r,
+                    "race_date": current_race_date,
+                    "time": t.iloc[0],
+                    "time_sec": t.iloc[0].total_seconds() # On calcule les secondes ici directement
+                })
+
+    df_cumul = pd.DataFrame(rows)
+    
+    # Tri par date pour que l'axe X soit chronologique
+    df_cumul = df_cumul.sort_values("race_date")
+
+    # Formatage du texte HH:MM:SS
+    df_cumul["time_display"] = (
+        (df_cumul["time_sec"] // 3600).astype(int).astype(str).str.zfill(2) + ":" +
+        ((df_cumul["time_sec"] % 3600) // 60).astype(int).astype(str).str.zfill(2) + ":" +
+        (df_cumul["time_sec"] % 60).astype(int).astype(str).str.zfill(2)
+    )
+
+    fig1 = px.bar(
+        df_cumul,
+        x="race",
+        y="time_sec",           
+        color="athlete",
+        barmode="group",
+        title="Thomas vs Théo",
+        text="time_display",    
+        custom_data=["time_display", 'athlete'] 
+    )
+
+    fig1.update_traces(
+        hovertemplate="<b>%{customdata[1]}</b><br>Course : %{x}<br>Temps : %{customdata[0]}<extra></extra>",        
+        textposition='outside'
+    )
+    
+    fig1.update_yaxes(showticklabels=False, title=None)
+    fig1.update_layout(xaxis_title=None, legend_title=None)
+    
+    return fig1
 
 def Viz_Map(df_Synthese):
     fig = px.scatter_geo(
