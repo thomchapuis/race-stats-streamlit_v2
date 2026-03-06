@@ -150,7 +150,7 @@ def Filter_By_Athlete2(df, name_list, tolerance=True):
         min_required = num_total
     else:
         # Mode flexible : calcul selon la taille du groupe
-        if num_total < 4:
+        if num_total < 5:
             #min_required = max(1, num_total - 1)
             min_required = num_total - 1
         else:
