@@ -263,7 +263,7 @@ with tabGroup:
 
     # 2. Sélection de la Course
     # On filtre les courses dispo pour ce groupe spécifique
-    df_filtered_athletes = f.Filter_By_Athlete(df_all_parquet, groupe_selectionne)
+    df_filtered_athletes = f.Filter_By_Athlete2(df_all_parquet, groupe_selectionne)
     all_races_v1 = sorted(df_filtered_athletes["race_name"].unique())
 
     with col_sel2:
