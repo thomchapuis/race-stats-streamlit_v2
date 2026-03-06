@@ -125,6 +125,49 @@ def Filter_By_Athlete(df, name_list):
 
     return result
 
+def Filter_By_Athlete2(df, name_list, tolerance=True):
+    """
+    Filtre les courses selon la présence des athlètes de name_list.
+    
+    Args:
+        df (DataFrame): Les données de courses.
+        name_list (list|str): Liste des athlètes cibles.
+        tolerance (bool): Si True, autorise 1 absent (si <4 noms) ou 2 absents (si >=4).
+                         Si False, exige 100% de présence.
+    """
+    if 'name_key' not in df.columns:
+        df['name_key'] = df['name'].apply(get_clean_key)
+
+    if isinstance(name_list, str):
+        name_list = [name_list]
+
+    keys_to_filter = [get_clean_key(n) for n in name_list]
+    num_total = len(keys_to_filter)
+    
+    # --- Calcul du seuil de présence ---
+    if not tolerance:
+        # Mode strict : tout le monde doit être là
+        min_required = num_total
+    else:
+        # Mode flexible : calcul selon la taille du groupe
+        if num_total < 4:
+            min_required = max(1, num_total - 1)
+        else:
+            min_required = max(1, num_total - 2)
+
+    # Filtrage des lignes correspondant aux athlètes cibles
+    mask_athletes = df['name_key'].isin(keys_to_filter)
+    
+    # Comptage par course
+    race_counts = df[mask_athletes].groupby('race_name')['name_key'].nunique()
+    
+    # Identification des courses valides selon le seuil
+    valid_races = race_counts[race_counts >= min_required].index
+    
+    # Retourne le DF complet pour ces courses
+    result = df[df['race_name'].isin(valid_races)].reset_index(drop=True)
+
+    return result
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 🔹 Fonction de Calcul
