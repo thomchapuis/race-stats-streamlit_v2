@@ -188,3 +188,19 @@ def get_coords(ville):
     if location:
         return location.latitude, location.longitude
     return None, None
+
+
+import colorsys
+
+def generate_gradient(start_hex, end_hex, n):
+    """Génère une palette de couleurs entre start_hex et end_hex."""
+    start_rgb = tuple(int(start_hex[i:i+2], 16) for i in (1, 3, 5))
+    end_rgb = tuple(int(end_hex[i:i+2], 16) for i in (1, 3, 5))
+    colors = []
+    for i in range(n):
+        ratio = i / (n - 1)
+        r = int(start_rgb[0] * (1 - ratio) + end_rgb[0] * ratio)
+        g = int(start_rgb[1] * (1 - ratio) + end_rgb[1] * ratio)
+        b = int(start_rgb[2] * (1 - ratio) + end_rgb[2] * ratio)
+        colors.append(f"#{r:02x}{g:02x}{b:02x}")
+    return colors

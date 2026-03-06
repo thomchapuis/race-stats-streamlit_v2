@@ -19,7 +19,7 @@ if 'df_complet' in st.session_state:
     df_all_parquet = st.session_state['df_complet']
     df_synthese = st.session_state['df_synthese']
     
-    st.success("Données chargées depuis la session !")
+    #st.success("Données chargées depuis la session !")
     # Ton code Riegel ici...
     
 else:
@@ -28,25 +28,58 @@ else:
         st.switch_page("app.py") # Redirige l'utilisateur
 
 # ------------------------------------------------------------------------------------------------------------------
+st.header(f"👤 Stats par Personne ")
 
+# Initialiser l'état de session dès le début
+if "active_athlete" not in st.session_state:
+    st.session_state.active_athlete = "Athlète 1"
 
 all_athletes_raw = df_all_parquet["name_key"].unique()
 all_athletes = [name for name in all_athletes_raw if isinstance(name, str)]
 all_athletes = sorted(all_athletes)
 
 #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...",key="selectbox_tab3_name")
-nom_recherche = st.selectbox(
-    label="Recherche athlète",
-    options=all_athletes, 
-    index=None, 
-    placeholder="Tapez le nom d'un athlète...",
-    key="selectbox_tab3_name",
-    label_visibility="collapsed" # Supprime l'espace et le texte au-dessus
-)
+col_Athlete1, col_Empty1, col_Athlete2 = st.columns([3, 1, 3])
+
+with col_Athlete1:
+    nom_recherche1 = st.selectbox(
+        label="Recherche athlète",
+        options=all_athletes,
+        index=None,
+        placeholder="Tapez le nom d'un athlète...",
+        key="selectbox_tab3_name1",
+        label_visibility="collapsed"
+    )
+
+with col_Empty1:
+    # Bouton pour basculer entre les deux athlètes
+
+    #if st.button(f"→ {'Athlète 2' if st.session_state.active_athlete == 'Athlète 1' else 'Athlète 1'} ←"):
+    if st.button("← Changer d'Athlète →"):
+        st.session_state.active_athlete = "Athlète 2" if st.session_state.active_athlete == "Athlète 1" else "Athlète 1"
+
+with col_Athlete2:
+    nom_recherche2 = st.selectbox(
+        label="Recherche athlète",
+        options=all_athletes,
+        index=None,
+        placeholder="Tapez le nom d'un athlète...",
+        key="selectbox_tab3_name2",
+        label_visibility="collapsed"
+    )
+
+# Définir nom_recherche en fonction de l'état (en dehors des colonnes)
+nom_recherche = nom_recherche1 if st.session_state.active_athlete == "Athlète 1" else nom_recherche2
+
+# Afficher le nom de l'athlète actif (en dessous des colonnes)
+
+
+#nom_recherche = nom_recherche1
 if nom_recherche:
+    st.write(f"**Athlète actif :** {df_all_parquet.loc[df_all_parquet['name_key'] == nom_recherche, 'name'].iloc[0]}")
     df_coureur = f.Filter_By_Athlete(df_all_parquet, [nom_recherche])
     nom_fiche = f" : {df_coureur.loc[df_coureur['name_key'] == nom_recherche, 'name'].iloc[0]}"
-    st.header(f"👤 Fiche Coureur {nom_fiche}")
+    #st.header(f"👤 Fiche Coureur {nom_fiche}")
     nb_courses_coureur = df_coureur["race_id"].nunique()
     courses_par_sport = (
         df_all_parquet
@@ -106,11 +139,13 @@ if nom_recherche:
                 )
         
                 # Pie chart : distances par course
+                custom_colors = f.generate_gradient("#2ecc71", "#ffffff", 5)
                 fig = px.pie(
                     df_sport,
                     names="race_name",
                     values="Distance",
-                    hole=0.4)
+                    hole=0.4,
+                    color_discrete_sequence=custom_colors)
                 fig.update_traces(
                     textinfo="none",
                     #texttemplate="%{value} km",
@@ -274,8 +309,6 @@ if nom_recherche:
 
 
 else:
-    st.info("Veuillez sélectionner ou taper un nom pour afficher les statistiques.")
-    nom_fiche = ""
-    st.header(f"👤 Fiche Coureur {nom_fiche}")
+    st.info("Aucun Athlète sélectionné")
 
     
