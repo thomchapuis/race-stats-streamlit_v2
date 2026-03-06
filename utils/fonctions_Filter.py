@@ -151,9 +151,10 @@ def Filter_By_Athlete2(df, name_list, tolerance=True):
     else:
         # Mode flexible : calcul selon la taille du groupe
         if num_total < 4:
-            min_required = max(1, num_total - 1)
+            #min_required = max(1, num_total - 1)
+            min_required = num_total - 1
         else:
-            min_required = max(1, num_total - 2)
+            min_required = num_total - 2
 
     # Filtrage des lignes correspondant aux athlètes cibles
     mask_athletes = df['name_key'].isin(keys_to_filter)
