@@ -39,7 +39,7 @@ all_athletes = [name for name in all_athletes_raw if isinstance(name, str)]
 all_athletes = sorted(all_athletes)
 
 #nom_recherche = st.selectbox(label="Recherche athlète",options=all_athletes, index=None, placeholder="Tapez le nom d'un athlète...",key="selectbox_tab3_name")
-col_Athlete1, col_Empty1, col_Athlete2 = st.columns([3, 1, 3])
+col_Athlete1, col_Empty1, col_Athlete2 = st.columns([12, 1, 12])
 
 with col_Athlete1:
     nom_recherche1 = st.selectbox(
@@ -51,13 +51,6 @@ with col_Athlete1:
         label_visibility="collapsed"
     )
 
-with col_Empty1:
-    # Bouton pour basculer entre les deux athlètes
-
-    #if st.button(f"→ {'Athlète 2' if st.session_state.active_athlete == 'Athlète 1' else 'Athlète 1'} ←"):
-    if st.button("← Changer d'Athlète →"):
-        st.session_state.active_athlete = "Athlète 2" if st.session_state.active_athlete == "Athlète 1" else "Athlète 1"
-
 with col_Athlete2:
     nom_recherche2 = st.selectbox(
         label="Recherche athlète",
@@ -68,8 +61,28 @@ with col_Athlete2:
         label_visibility="collapsed"
     )
 
+with col_Empty1:
+    # Bouton pour basculer entre les deux athlètes
+
+    # Création de l'interrupteur
+    option_A = nom_recherche1
+    option_B = nom_recherche2
+    switch = st.toggle(" ")
+    if switch:
+        selection = option_B
+        #st.write(f"Sélection: {selection}")
+    else:
+        selection = option_A
+        #st.write(f"Sélection: {selection}")
+        
+
+    #if st.button(f"→ {'Athlète 2' if st.session_state.active_athlete == 'Athlète 1' else 'Athlète 1'} ←"):
+    #if st.button("← Changer d'Athlète →"):
+    #    st.session_state.active_athlete = "Athlète 2" if st.session_state.active_athlete == "Athlète 1" else "Athlète 1"
+
+
 # Définir nom_recherche en fonction de l'état (en dehors des colonnes)
-nom_recherche = nom_recherche1 if st.session_state.active_athlete == "Athlète 1" else nom_recherche2
+nom_recherche = selection
 
 # Afficher le nom de l'athlète actif (en dessous des colonnes)
 
@@ -157,7 +170,72 @@ if nom_recherche:
                     margin=dict(l=0, r=0, t=0, b=0)  # réduire les marges pour mieux centrer
                 )
                 st.plotly_chart(fig)
+        
+        
+        # même chose, avec fonction
+        # 1. Définition des sports fixes
+        SPORTS_FIXES = ["Cycling", "Trail", "Running", "Triathlon"]
+        stats_cols = st.columns(len(SPORTS_FIXES))
+        #def Viz_Pie_Chart_Summary_Athlete():
+        for i, sport in enumerate(SPORTS_FIXES):
+            with stats_cols[i]:
+                # Filtrage du sport
+                df_sport = df_coureur[df_coureur["sport"] == sport].drop_duplicates(subset=["race_name"])
+                
+                # Calcul des métriques
+                nb_courses = len(df_sport)
+                distance_totale = df_sport["Distance"].sum() if nb_courses > 0 else 0
+                
+                # Affichage de la métrique
+                label_with_icon = f"{sport_icon(sport)} {sport}"
+                st.metric(
+                    label=label_with_icon,
+                    value=f"#{nb_courses} | {int(distance_totale)} km"
+                )
 
+                # Logique du graphique
+                if nb_courses > 0:
+                    # Graphique normal
+                    custom_colors = f.generate_gradient("#2ecc71", "#ffffff", 5)
+                    fig = px.pie(
+                        df_sport,
+                        names="race_name",
+                        values="Distance",
+                        hole=0.4,
+                        color_discrete_sequence=custom_colors
+                    )
+                    fig.update_traces(
+                        textinfo="none",
+                        hovertemplate="<b>%{label}</b><br>%{value} km<extra></extra>"
+                    )
+                else:
+                    # Graphique "Grisé" (Données vides)
+                    fig = px.pie(
+                        values=[1], 
+                        names=["Aucune donnée"], 
+                        hole=0.4,
+                        color_discrete_sequence=["#333333"] # Gris foncé
+                    )
+                    fig.update_traces(
+                        textinfo="none",
+                        hovertemplate="Aucune activité enregistrée<extra></extra>",
+                        hoverinfo="label"
+                    )
+
+                # Mise en forme commune
+                fig.update_layout(
+                    showlegend=False,
+                    width=200,
+                    height=130,
+                    margin=dict(l=0, r=0, t=0, b=0),
+                    paper_bgcolor='rgba(0,0,0,0)', # Fond transparent
+                    plot_bgcolor='rgba(0,0,0,0)'
+                )
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        #return fig   
+        
+    #fig = Viz_Pie_Chart_Summary_Athlete()
+    
 
 
         # --- NOUVELLE SECTION : RECORDS ---
