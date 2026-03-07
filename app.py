@@ -221,31 +221,38 @@ with tab7:
     
     with col_sel2:
         athlete2 = st.selectbox("Sélectionner le second coureur", all_athletes, index=None,placeholder="Tapez le nom d'un athlète...",key="selectbox_Battle_name2")
-    
-    st.divider()
+
     
     # --- 2. SECTION STATISTIQUES (COLONNES GAUCHE / DROITE) ---
     col_stats_left, col_stats_right = st.columns(2)
-
+    with col_stats_left:
+        st.empty()
+    with col_stats_right:
+        st.empty()
     st.divider()
 
     targets =  [athlete1,athlete2]
     df_Battle = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
     
-    fig_Battle = v.Viz_Battle_percentage(df_Battle, targets)
-    st.plotly_chart(fig_Battle, use_container_width=True)
+    if targets and not df_Battle.empty:
+
+        fig_Battle = v.Viz_Battle_percentage(df_Battle, targets)
+        st.plotly_chart(fig_Battle, use_container_width=True)
 
 
-    st.divider()
-    st.divider()
+        st.divider()
+        st.divider()
 
-    #athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
-    #df_TT = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
+        #athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
+        #df_TT = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
+        
+        fig1 = v.Viz_Battle_Time_by_Races(df_Battle,targets)
+        if fig1:
+            st.plotly_chart(fig1, use_container_width=True)
     
-    fig1 = v.Viz_Battle_Time_by_Races(df_Battle,targets)
-    st.plotly_chart(fig1, use_container_width=True)
+    else: 
+        st.warning("🤝 Aucune course commune trouvée pour ces deux athlètes.")
 
-    st.divider()
     st.divider()
 
     targets =  ["CHAPUIS Thomas", "BOMPAS Théo"]
@@ -278,50 +285,215 @@ with tab7:
         .pivot(index=["race", "race_date"], columns="athlete", values="time_sec")
         .reset_index()
     )
-
-
-
+    #st.dataframe(df_wide)
     df_wide["thomas_sec"] = df_wide["CHAPUIS Thomas"]
+    df_wide["theo_sec"] = df_wide["BOMPAS Théo"]
 
     df_wide["delta_theo_sec"] = (
         df_wide["BOMPAS Théo"] - df_wide["CHAPUIS Thomas"]
     )
     df_wide = df_wide.sort_values("race_date")  # si dispo
+    #st.dataframe(df_wide)
+    df_wide["delta_cumul_sec"] = (df_wide["delta_theo_sec"].cumsum())
+    #st.dataframe(df_wide)
 
-    fig2 = go.Figure()
 
-    # ── Barre Thomas (référence) ─────────────────────
-    #fig.add_trace(go.Bar(
-    #    x=df_wide["race"],
-    #    y=df_wide["thomas_sec"] / 3600,
-    #    name="Thomas – temps cumulé",
-    #))
+    # 1. Préparation des formats texte pour les temps individuels
+    def format_simple(seconds):
+        s = abs(int(seconds))
+        m = s // 60
+        h = m // 60
+        sec = s % 60
+        min = m % 60
+        if h > 0 :
+            texte = f"{h}h{min}min"
+        else:
+            texte = f"{min}min{sec:02d}s"
+        return texte
 
-    # ── Barre delta Théo ─────────────────────────────
-    fig2.add_trace(go.Bar(
+    df_wide["thomas_txt"] = df_wide["CHAPUIS Thomas"].apply(format_simple)
+    df_wide["theo_txt"] = df_wide["BOMPAS Théo"].apply(format_simple)
+    df_wide["delta_theo_txt"] = df_wide["delta_theo_sec"].apply(format_simple)
+    df_wide["delta_cumul_txt"] = df_wide["delta_cumul_sec"].apply(format_simple)
+    
+    colors_conditions = ['#2ecc71' if val < 0 else '#e74c3c' for val in df_wide["delta_theo_sec"]]
+    custom_data_list = list(zip(
+        df_wide["thomas_txt"], # Utilise les colonnes formatées min/sec
+        df_wide["theo_txt"], 
+        df_wide["delta_theo_txt"],
+        df_wide["delta_cumul_txt"]
+    ))
+    fig3 = go.Figure()
+
+    # 1. Barre pour le delta de la course (Simple)
+    fig3.add_trace(go.Bar(
         x=df_wide["race"],
         y=df_wide["delta_theo_sec"] / 60,
-        name="Delta Théo vs Thomas (min)",
-        yaxis="y2",
-        opacity=0.5
+        name="Écart Course (min)",
+        marker_color=colors_conditions,
+        #marker_color="rgb(158,202,225)",
+        customdata=custom_data_list,
+        opacity=0.6,
+        hovertemplate=(
+            "Thomas : %{customdata[0]}<br>" +
+            "Théo : %{customdata[1]}<br>" +
+            "Écart : %{customdata[2]}</b>" +
+            "<extra></extra>"
+        ),
     ))
 
-    # ── Layout ───────────────────────────────────────
-    fig2.update_layout(
-        title="Temps cumulé de Thomas & écart de Théo",
-        xaxis_title="Course",
-        yaxis=dict(
-            title="Temps cumulé Thomas (heures)"
-        ),
-        yaxis2=dict(
-            title="Delta Théo (minutes)",
-            overlaying="y",
-            side="right",
-            showgrid=False
-        ),
-        barmode="group",
-        hovermode="x unified"
+    # 2. Ligne pour le delta cumulé
+    fig3.add_trace(go.Scatter(
+        x=df_wide["race"],
+        y=df_wide["delta_cumul_sec"] / 60,
+        name="Écart Cumulé (min)",
+        mode="lines+markers",
+        line=dict(color="firebrick", width=3),
+        customdata=custom_data_list,
+        hovertemplate="<b>Écart Cumulé total : </b><br>%{customdata[3]}<extra></extra>"
+    ))
+
+    # Mise en forme
+    fig3.update_layout(
+        title="Analyse des écarts : Théo vs Thomas",
+        xaxis_title=None,
+        yaxis_title="Minutes",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        template="plotly_dark",
+        hovermode="x unified" # Permet de voir les deux valeurs en même temps au survol
     )
+
+    # Optionnel : Ajouter une ligne horizontale à zéro pour voir qui est devant
+    fig3.add_hline(y=0, line_dash="dash", line_color="white", opacity=0.5)
+
+    st.plotly_chart(fig3, use_container_width=True)
+# --------------------------------------------------------------------------------------------------------------------------------------------
+
+    import pandas as pd
+    import plotly.graph_objects as go
+    import streamlit as st
+
+    def Viz_Athlete_Comparison_Delta(df_Battle, targets):
+        """
+        Génère un graphique comparatif des écarts entre deux athlètes.
+        targets[0] est la référence, targets[1] est l'athlète comparé.
+        """
+        races = df_Battle['race_name'].unique()
+        rows = []
+        
+        # On récupère les clés propres pour le filtrage
+        key0 = get_clean_key(targets[0])
+        key1 = get_clean_key(targets[1])
+
+        for r in races:
+            df_race = df_Battle[df_Battle['race_name'] == r]
+            for name in targets:
+                mask = df_race['name_key'] == get_clean_key(name)
+                t = df_race.loc[mask, 'time']
+                date = df_race.loc[mask, 'race_date']
+
+                if not t.empty:
+                    rows.append({
+                        "athlete": name,
+                        "race": r,
+                        'race_date': date.iloc[0],
+                        "time": t.iloc[0]
+                    })
+
+        if not rows:
+            st.warning("Pas de données communes pour ces athlètes.")
+            return None
+
+        df_cumul = pd.DataFrame(rows)
+        df_cumul = df_cumul.sort_values("race_date")
+        df_cumul["time_sec"] = df_cumul["time"].dt.total_seconds()
+
+        # Pivot dynamique basé sur les noms dans targets
+        df_wide = (
+            df_cumul
+            .pivot(index=["race", "race_date"], columns="athlete", values="time_sec")
+            .reset_index()
+        )
+        
+        # Gestion des noms de colonnes dynamiques
+        name0, name1 = targets[0], targets[1]
+        
+        # Calcul du delta (Athlète 2 - Athlète 1)
+        df_wide["delta_sec"] = df_wide[name1] - df_wide[name0]
+        df_wide = df_wide.sort_values("race_date")
+        df_wide["delta_cumul_sec"] = df_wide["delta_sec"].cumsum()
+
+        # Fonctions de formatage
+        def format_raw(seconds):
+            s = abs(int(seconds))
+            h, m, sec = s // 3600, (s % 3600) // 60, s % 60
+            return f"{h}h{m}min" if h > 0 else f"{m}min{sec:02d}s"
+
+        def format_delta(seconds):
+            signe = "+" if seconds > 0 else "-"
+            s = abs(int(seconds))
+            h, m, sec = s // 3600, (s % 3600) // 60, s % 60
+            res = f"{h}h{m}min" if h > 0 else f"{m}min{sec:02d}s"
+            return f"{signe}{res}"
+
+        df_wide["t0_txt"] = df_wide[name0].apply(format_raw)
+        df_wide["t1_txt"] = df_wide[name1].apply(format_raw)
+        df_wide["delta_txt"] = df_wide["delta_sec"].apply(format_delta)
+        df_wide["delta_cumul_txt"] = df_wide["delta_cumul_sec"].apply(format_delta)
+        
+        # Couleurs : Vert si targets[1] est plus rapide (delta négatif)
+        colors = ['#2ecc71' if val < 0 else '#e74c3c' for val in df_wide["delta_sec"]]
+        
+        custom_data_list = list(zip(
+            df_wide["t0_txt"], 
+            df_wide["t1_txt"], 
+            df_wide["delta_txt"],
+            df_wide["delta_cumul_txt"]
+        ))
+
+        fig = go.Figure()
+
+        # Barres : Delta par course
+        fig.add_trace(go.Bar(
+            x=df_wide["race"],
+            y=df_wide["delta_sec"] / 60,
+            name=f"Écart {name1}",
+            marker_color=colors,
+            customdata=custom_data_list,
+            opacity=0.6,
+            hovertemplate=(
+                f"<b>{name0}</b> : %{{customdata[0]}}<br>" +
+                f"<b>{name1}</b> : %{{customdata[1]}}<br>" +
+                "Écart : %{customdata[2]}<extra></extra>"
+            ),
+        ))
+
+        # Ligne : Delta cumulé
+        fig.add_trace(go.Scatter(
+            x=df_wide["race"],
+            y=df_wide["delta_cumul_sec"] / 60,
+            name="Cumul",
+            mode="lines+markers",
+            line=dict(color="firebrick", width=3),
+            customdata=custom_data_list,
+            hovertemplate="<b>Écart Cumulé total :</b> %{customdata[3]}<extra></extra>"
+        ))
+
+        fig.update_layout(
+            title=f"Duel : {name0} vs {name1}",
+            yaxis_title="Minutes (Ecart)",
+            template="plotly_dark",
+            hovermode="x unified",
+            showlegend=False
+        )
+
+        fig.add_hline(y=0, line_dash="dash", line_color="white", opacity=0.5)
+
+        return fig
+    
+    targets =  [athlete1,athlete2]
+    df_Battle = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
+    fig2 = Viz_Athlete_Comparison_Delta(df_Battle, targets)
     st.plotly_chart(fig2, use_container_width=True)
 
 

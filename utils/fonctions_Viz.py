@@ -9,7 +9,6 @@ import numpy as np
 from geopy.geocoders import Nominatim
 import streamlit as st
 
-
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 🔹 Fonction de Viz
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -581,9 +580,6 @@ def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
-
-
-
 def Viz_Violin_Group(df_race, col, names):
     """
     Trace un violin plot horizontal des temps pour chaque 'race_id' présent dans df_race,
@@ -707,9 +703,6 @@ def Viz_Violin_Group(df_race, col, names):
 
     return fig
 
-import pandas as pd
-import numpy as np
-import plotly.graph_objects as go
 
 def Viz_Violin_Group2(df_race, col, names):
     """
@@ -991,37 +984,44 @@ def Viz_Battle_Time_by_Races(df_TT, athletes):
     Affiche un diagramme course par course avec le temps des 2 athletes côte à côtes sur chaque course.
     Parameters:
     - df_TT: DataFrame contenant les données filtrées par Filter_By_Athlete2(col='race_id', tol=False) -> on ne veut que les courses contenant les 2 athlètes.
-    - athletes = ["chapuisthomas", "bompastheo"] : les 2 athlètes qu'on veut comparer
+    - athletes = ["CHAPUIS Thomas", "BOMPAS Theo"] : les 2 athlètes qu'on veut comparer
     """
+    # 1. Créer un dictionnaire {nom_course: date} pour éviter les .iloc[0] répétitifs
+    race_date_map = df_TT.groupby('race_name')['race_date'].first().to_dict()
+    
     races = df_TT['race_name'].unique()
     rows = []
 
     for r in races:
-        df_race = df_TT[df_TT['race_name'] == r] # Plus rapide que l'appel de fonction si df_TT est petit
-        
-        # On récupère la date de la course une seule fois (commune aux deux athlètes)
-        # On prend la première valeur disponible pour cette course
-        current_race_date = df_race['race_date'].iloc[0] 
+        df_race = df_TT[df_TT['race_name'] == r]
+        current_race_date = race_date_map.get(r) # Récupération directe
 
         for name in athletes:
             clean_name = get_clean_key(name)
             t = df_race.loc[df_race['name_key'] == clean_name, 'time']
+            name_display = df_race.loc[df_race['name_key'] == clean_name, 'name']
 
             if not t.empty:
+                val_t = t.iloc[0]
                 rows.append({
                     "athlete": name,
+                    "athlete_display": name_display.iloc[0],
                     "race": r,
                     "race_date": current_race_date,
-                    "time": t.iloc[0],
-                    "time_sec": t.iloc[0].total_seconds() # On calcule les secondes ici directement
+                    "time_sec": val_t.total_seconds()
                 })
-
-    df_cumul = pd.DataFrame(rows)
     
-    # Tri par date pour que l'axe X soit chronologique
+    df_cumul = pd.DataFrame(rows)
+    #st.write(df_cumul.columns)
+    #st.write(df_cumul['athlete_display'])
+
+    df_cumul["race_date"] = pd.to_datetime(df_cumul["race_date"])
     df_cumul = df_cumul.sort_values("race_date")
 
-    # Formatage du texte HH:MM:SS
+    noms_uniques = df_cumul['athlete_display'].unique()
+    titre_dynamique = f"{noms_uniques[0]} vs {noms_uniques[1]}"
+
+    # Formatage HH:MM:SS (vectorisé)
     df_cumul["time_display"] = (
         (df_cumul["time_sec"] // 3600).astype(int).astype(str).str.zfill(2) + ":" +
         ((df_cumul["time_sec"] % 3600) // 60).astype(int).astype(str).str.zfill(2) + ":" +
@@ -1034,9 +1034,9 @@ def Viz_Battle_Time_by_Races(df_TT, athletes):
         y="time_sec",           
         color="athlete",
         barmode="group",
-        title="Thomas vs Théo",
+        title=titre_dynamique,
         text="time_display",    
-        custom_data=["time_display", 'athlete'] 
+        custom_data=["time_display", 'athlete_display'] 
     )
 
     fig1.update_traces(
@@ -1044,7 +1044,14 @@ def Viz_Battle_Time_by_Races(df_TT, athletes):
         textposition='outside'
     )
     
+    fig1.update_layout(
+        showlegend=False,  # <--- Supprime totalement la légende
+        xaxis_title=None,
+        yaxis_title=None)
+    
     fig1.update_yaxes(showticklabels=False, title=None)
+    # On force l'axe X à suivre l'ordre du DataFrame trié
+    fig1.update_xaxes(type='category', categoryorder='array', categoryarray=df_cumul['race'].unique())
     fig1.update_layout(xaxis_title=None, legend_title=None)
     
     return fig1
