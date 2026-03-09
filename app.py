@@ -492,10 +492,13 @@ with tab7:
 
         return fig
     
-    targets =  [athlete1,athlete2]
-    df_Battle = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
-    fig2 = Viz_Athlete_Comparison_Delta(df_Battle, targets)
-    st.plotly_chart(fig2, use_container_width=True)
+    if targets and not df_Battle.empty:
+        targets =  [athlete1,athlete2]
+        df_Battle = f.Filter_By_Athlete2(df_all_parquet,targets,col='race_id', tolerance=False)
+        fig2 = Viz_Athlete_Comparison_Delta(df_Battle, targets)
+        st.plotly_chart(fig2, use_container_width=True)
+    else : 
+        st.empty()
 
 
 ########################## ########################## ########################## ########################## ########################## 
