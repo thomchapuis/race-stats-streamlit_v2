@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 import streamlit as st
 import plotly.express as px
@@ -36,6 +37,11 @@ if 'df_complet' not in st.session_state:
     
     # Concaténation
     df_all = pd.concat([df_p7, df_p8, df_db], ignore_index=True, sort=False)
+    df_all['rank_sex'] = np.where(
+        df_all['rank'] == 0,
+        0,
+        df_all.groupby(['sex', 'race_id'])['rank'].rank(method='first')
+    )
     
     # Merge et Traitement
     cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
@@ -49,6 +55,8 @@ if 'df_complet' not in st.session_state:
     df_merged["race_key"] = (df_merged["race_name"].astype(str) + " - " + 
                              df_merged["race_date"].astype(str).str[:4] + " - " + 
                              df_merged["Distance"].round().fillna(0).astype("Int64").astype(str) + "km")
+    
+
     
     # Stockage
     st.session_state['df_complet'] = df_merged
@@ -141,7 +149,7 @@ with tab2:
         
         # 3) Affichage du classement
         st.write("Classement complet")
-        df_display = df_Race[["rank", "name", "time", "category", "sex"]].copy()
+        df_display = df_Race[["rank", "name", "time", "category", "sex", "rank_sex"]].copy()
         df_display["time"] = df_display["time"].apply(
             lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
             if pd.notnull(x) else "-"
