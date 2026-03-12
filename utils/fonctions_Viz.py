@@ -703,7 +703,6 @@ def Viz_Violin_Group(df_race, col, names):
 
     return fig
 
-
 def Viz_Violin_Group2(df_race, col, names):
     """
     Trace un violin plot horizontal des temps pour chaque 'race_id' présent dans df_race,
