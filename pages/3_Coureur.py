@@ -160,8 +160,6 @@ if nom_recherche:
         # --- NOUVELLE SECTION : RECORDS ---
         st.subheader("💪🏼 Meilleures Performances")
         df_coureur['Pourcentage'] = df_coureur.groupby('race_id')['rank'].transform(lambda x: (x / x.max()) * 100)
-        #df_coureur['rank_sex'] = df_coureur.groupby(['sex','race_id'])['rank'].rank(method='first')
-
         df_solo = df_coureur[(df_coureur["name_key"] == nom_recherche) & (df_coureur["rank"] > 0)]
         sexe_coureur = df_coureur.loc[
             (df_coureur["name_key"] == nom_recherche) &
@@ -170,7 +168,7 @@ if nom_recherche:
         ].iloc[0]
         
         
-        st.dataframe(df_coureur)
+        #st.dataframe(df_coureur)
 
         longest_race_row = df_solo.loc[df_solo['time'].idxmax()]
         td = longest_race_row['time']            
@@ -204,6 +202,7 @@ if nom_recherche:
         row_best = df_solo.loc[df_solo["rank"].idxmin()]
         row_worst = df_solo.loc[df_solo["rank"].idxmax()]
         participants_best = df_coureur[df_coureur["race_id"] == row_best["race_id"]]["rank"].max()
+        #st.write(participants_best)
         participants_worst = df_coureur[df_coureur["race_id"] == row_worst["race_id"]]["rank"].max()
 
         best_rank_pourcentage= df_solo.loc[df_solo['Pourcentage'].idxmin()]
@@ -213,14 +212,14 @@ if nom_recherche:
 
         row_best_sex = df_solo.loc[df_solo["rank_sex"].idxmin()]
         participants_best_sex = df_coureur[
-            (df_coureur["race_id"] == row_best["race_id"]) &
+            (df_coureur["race_id"] == row_best_sex["race_id"]) &
             (df_coureur["sex"] == sexe_coureur)
-        ]["rank"].max()
+        ]["rank_sex"].max()
 
         best_rank_pourcentage_sex= df_solo.loc[df_solo['Pourcentage'].idxmin()]
-        participants_best_relatif_sex = df_coureur[df_coureur["race_id"] == best_rank_pourcentage["race_id"]]["rank_sex"].max()
+        participants_best_relatif_sex = df_coureur[df_coureur["race_id"] == best_rank_pourcentage_sex["race_id"]]["rank_sex"].max()
 
-        st.dataframe(df_coureur)
+        #st.dataframe(df_coureur)
 
         col_best, col_sex = st.columns(2)
         
@@ -265,7 +264,7 @@ if nom_recherche:
                     )
                     # Affichage du nom de la course et du sport
                     st.caption(f"**Course :** {row_best_sex['race_key']}")
-                    st.caption(f"**Finishers :** {int(participants_best_sex)}")
+                    st.caption(f"**Finishers ({sexe_coureur}):** {int(participants_best_sex)}")
                     #st.caption(f"**Sport :** {sport_icon(row_worst['sport'])} {row_worst['sport']}")
             
             with col_sex_relatif:   
@@ -277,7 +276,7 @@ if nom_recherche:
                                             
                     # Affichage du nom de la course et du sport
                     st.caption(f"**Course :** {best_rank_pourcentage_sex['race_key']}")
-                    st.caption(f"**Finishers :** {int(participants_best_relatif_sex)}")
+                    st.caption(f"**Finishers ({sexe_coureur}):** {int(participants_best_relatif_sex)}")
                     #st.caption(f"**Sport :** {sport_icon(worst_rank_pourcentage['sport'])} {worst_rank_pourcentage['sport']}")
             
             with st.container(border=True):
