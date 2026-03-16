@@ -9,6 +9,8 @@ import numpy as np
 from geopy.geocoders import Nominatim
 import streamlit as st
 
+from utils import fonctions_Filter as f
+
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 🔹 Fonction de Viz
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -824,9 +826,16 @@ def Viz_Violin_Group2(df_race, col, names):
     return fig
 
 def Viz_Radar_Triathlon(df, names_list):
-    # 1. Identifier les courses et filtrer celles qui ont les colonnes nécessaires
-    required_cols = ['swim', 'bike', 'run']
-    # On ne garde que les courses qui ont au moins une valeur non nulle dans ces colonnes
+    """
+    Trace un Radar par course, pour chaque course de df dans laquelle au moins 1 athlète de names_list à participer.
+    Affiche le 'rank' pour swim, bike, run, T1,T2.
+    
+    Parameters:
+    - df : df_Tri = f.Filter_By_Sport(df_all_parquet, "Triathlon") -> un df filtré uniquement sur le Triathlon.
+    - names_lits: la liste des athlètes qu'on veut comparer.
+    """
+
+    required_cols = ['swim', 'bike', 'run'] # On ne garde que les courses qui ont au moins une valeur non nulle dans ces colonnes
     valid_races = []
     for race in df['race_name'].unique():
         df_check = df[df['race_name'] == race]
@@ -910,11 +919,207 @@ def Viz_Radar_Triathlon(df, names_list):
 
     fig.update_layout(
         height=500 * rows,
-        title_text="Analyse Multi-Courses (Uniquement courses avec Splits complets)",
+        title_text="Analyse Multi-Courses - Classement par sports",
         template='plotly_dark'
     )
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
+
+
+
+
+def Viz_Radar_Triathlon2(df, names_list, mode='rank'):
+    """
+    Trace un Radar par course, pour chaque course de df dans laquelle au moins 1 athlète de names_list a participé.
+    Affiche soit le 'rank' (classement absolu) soit le 'rank_pct' (classement en pourcentage).
+    -> la même chose que Viz_Radar_Triathlon, simplement ajouté la sélection du mode 'rank' ou 'rank_pct'.
+
+    Parameters:
+    - df: DataFrame filtré sur le Triathlon.
+    - names_list: Liste des athlètes à comparer.
+    - mode: 'rank' (par défaut) ou 'rank_pct' pour choisir le type de classement à afficher.
+    """
+
+    required_cols = ['swim', 'bike', 'run']
+    valid_races = []
+    for race in df['race_name'].unique():
+        df_check = df[df['race_name'] == race]
+        if not df_check[required_cols].dropna(how='all').empty:
+            valid_races.append(race)
+
+    if not valid_races:
+        print("Aucune course avec des splits (Swim/Bike/Run) n'a été trouvée.")
+        return
+
+    n_races = len(valid_races)
+    cols = min(3, n_races)
+    rows = math.ceil(n_races / cols)
+
+    specs = [[{'type': 'polar'} for _ in range(cols)] for _ in range(rows)]
+    fig = make_subplots(
+        rows=rows, cols=cols,
+        subplot_titles=valid_races,
+        specs=specs,
+        horizontal_spacing=0.1,
+        vertical_spacing=0.1
+    )
+
+    categories = ['Total', 'Swim', 'T1', 'Bike', 'T2', 'Run']
+    cols_metrics = ['rank', 'swim', 't1', 'bike', 't2', 'run']
+    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f', '#9b59b6']
+
+    for idx, race in enumerate(valid_races):
+        row = (idx // cols) + 1
+        col = (idx % cols) + 1
+        df_race = df[df['race_name'] == race].copy()
+
+        for i, name in enumerate(names_list):
+            search_key = get_clean_key(name)
+            indices = df_race[df_race['name_key'].str.contains(search_key, case=False, na=False)].index
+            if indices.empty:
+                continue
+
+            scores = []
+            has_nan = False
+            for m in cols_metrics:
+                if mode == 'rank':
+                    series_rank = df_race[m].rank(method='min', ascending=True)
+                    val = series_rank.loc[indices[0]]
+                elif mode == 'rank_pct':
+                    series_rank = df_race[m].rank(method='min', ascending=True, pct=True)
+                    val = series_rank.loc[indices[0]] * 100  # Convertir en pourcentage
+
+                if pd.isna(val):
+                    has_nan = True
+                    break
+                scores.append(float(val))
+
+            if has_nan:
+                continue
+
+            fig.add_trace(go.Scatterpolar(
+                r=scores + [scores[0]],
+                theta=categories + [categories[0]],
+                fill='toself',
+                name=f"{name}",
+                line_color=colors[i % len(colors)],
+                showlegend=(idx == 0)
+            ), row=row, col=col)
+
+        polar_name = 'polar' if idx == 0 else f'polar{idx + 1}'
+        if mode == 'rank':
+            limit = int(df_race['rank'].max())
+        elif mode == 'rank_pct':
+            limit = 100  # Pourcentage max
+
+        fig.update_layout({
+            polar_name: dict(
+                radialaxis=dict(
+                    range=[1, limit],
+                    visible=True,
+                    tickfont_size=6,
+                    autorange=False
+                )
+            )
+        })
+
+    fig.update_layout(
+        height=500 * rows,
+        title_text=f"Analyse Multi-Courses - Classement {'absolu' if mode == 'rank' else 'en pourcentage'} par sports",
+        template='plotly_dark'
+    )
+    return fig
+
+
+def Viz_Radar_Single_Athlete(df, athlete_name):
+    """
+    Trace un radar superposé pour un seul coureur, sur toutes les courses auxquelles il a participé.
+    Affiche un DataFrame détaillé pour déboguer les calculs de pourcentage.
+    """
+    search_key = get_clean_key(athlete_name)
+    df_athlete = f.Filter_By_Athlete(df, search_key)
+
+    if df_athlete.empty:
+        st.warning(f"Aucune donnée trouvée pour le coureur : {athlete_name}")
+        return
+
+    # Affichage du DataFrame détaillé pour le débogage
+    races = df_athlete['race_name'].unique()
+    debug_data = []
+
+    for race in races:
+        df_race = df_athlete[df_athlete['race_name'] == race]
+        row = {
+            'race_key': df_race['race_key'].iloc[0],
+            'name': df_race['name'].iloc[0],
+            'time': df_race['time'].iloc[0],
+            'rank': df_race['rank'].iloc[0]
+        }
+
+        for m in ['swim', 'bike', 'run', 't1', 't2']:
+            row[f"{m}"] = df_race[m].iloc[0]
+            row[f"{m}_rank"] = df_race[m].rank(method='min', ascending=True).iloc[0]
+            row[f"{m}_rank_pct"] = df_race[m].rank(method='min', ascending=True, pct=True).iloc[0] * 100
+
+        debug_data.append(row)
+
+    df_debug = pd.DataFrame(debug_data)
+    st.dataframe(df_debug)
+
+    # Initialisation de la figure
+    fig = go.Figure()
+
+    categories = ['Total', 'Swim', 'T1', 'Bike', 'T2', 'Run']
+    cols_metrics = ['rank', 'swim', 't1', 'bike', 't2', 'run']
+    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f', '#9b59b6', '#1abc9c', '#d35400']
+
+    # Boucle sur les courses
+    for i, race in enumerate(races):
+        df_race = df_athlete[df_athlete['race_name'] == race]
+        scores = []
+        has_nan = False
+
+        # Calcul des scores en rank_pct
+        for m in cols_metrics:
+            series_rank = df_race[m].rank(method='min', ascending=True, pct=True)
+            val = series_rank.iloc[0] * 100  # Convertir en pourcentage
+            if pd.isna(val):
+                has_nan = True
+                break
+            scores.append(100 - float(val))
+
+        if has_nan:
+            continue
+
+        # Ajout de la trace pour cette course
+        fig.add_trace(go.Scatterpolar(
+            r=scores + [scores[0]],
+            theta=categories + [categories[0]],
+            fill='toself',
+            name=f"{race}",
+            line_color=colors[i % len(colors)],
+            opacity=0.7
+        ))
+
+    # Mise en forme du radar
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                range=[0, 100],  # Échelle en pourcentage
+                visible=True,
+                tickfont_size=10,
+                tickvals=[0, 20, 40, 60, 80, 100],  # Valeurs affichées
+                ticktext=['100%', '80%', '60%', '40%', '20%', '0%']  # Légendes inversées
+            )
+        ),
+        title=f"Comparaison des performances de {athlete_name} (en %) sur toutes ses courses",
+        template='plotly_dark',
+        height=600
+    )
+
+    return fig
+
+
 
 def Viz_Battle_percentage(df_Battle, targets):
     """

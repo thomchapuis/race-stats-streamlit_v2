@@ -70,7 +70,7 @@ df_synthese = st.session_state['df_synthese']
 
 
 
-tab1,tab2, tab4, tab5, tab6, tab7, tabGroup,tabToDo = st.tabs(["Intro","📊 Classement","🚲Triathlon", "⚙️ Settings","Test", "⚔️ Battle", "Groupe","ToDo"])
+tab1,tab2, tab5, tab6, tab7, tabGroup,tabToDo = st.tabs(["Intro","📊 Classement", "⚙️ Settings","Test", "⚔️ Battle", "Groupe","ToDo"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -161,18 +161,6 @@ with tab2:
             height=400
         )
     
-########################## ########################## ########################## ########################## ########################## 
-########################## ########################## ########################## ########################## ########################## 
-with tab4:
-    st.subheader("Analyse comparative : Triathlon")
-
-    liste_athletes = ["CHAPUIS Thomas", "BOMPAS Théo"]
-    df_Tri = f.Filter_By_Sport(df_all_parquet, "Triathlon")
-    with st.container(border=True):
-        st.write("📊 **Comparaison des performances (Radar)**")
-        
-        fig_radar = v.Viz_Radar_Triathlon(df_Tri, liste_athletes)          
-        st.plotly_chart(fig_radar, width='stretch')
 
 ########################## ########################## ########################## ########################## ########################## 
 with tab5:
