@@ -105,7 +105,6 @@ def Viz_Sexes_PieChart(df_single_race):
 
     return fig
 
-
 def Viz_Barre_Categorie(df_race):
     """
     Diagramme en barres du nombre de coureurs par catégorie,
@@ -145,7 +144,6 @@ def Viz_Barre_Categorie(df_race):
     fig.update_layout(xaxis_title="Catégorie", yaxis_title="Nombre de coureurs")
 
     return fig
-
 
 def Viz_Barre_RankPct(df, name_key):
     """
@@ -231,7 +229,6 @@ def Viz_Barre_RankPct(df, name_key):
     
     return fig
 
-
 def Viz_Histogramme_Temps(df_race, col):
     """
     Trace l'histogramme des temps pour une course donnée.
@@ -274,7 +271,6 @@ def Viz_Histogramme_Temps(df_race, col):
     
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
-
 
 def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
     """
@@ -325,7 +321,6 @@ def Viz_Histogramme_Temps_Sex(df_race, col, Sex=False):
     )
 
     return fig
-
 
 def Viz_Histogramme_Temps_Names(df_race, col, names):
     """
@@ -421,7 +416,8 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
      # 9. Ajout d'un "sous-titre"
     if len(names)==1:
         texte_annotation = "\n".join([
-            f"{k} : {int(v // 3600):02d}:{int((v % 3600) // 60):02d}:{int(v % 60):02d}" 
+            #f"{k} : {int(v // 3600):02d}:{int((v % 3600) // 60):02d}:{int(v % 60):02d}"
+            f"{k} : {int((v % 3600) // 60):02d}h{int(v % 60):02d}" 
             for k, v in temps_dict.items()
         ])
         fig.add_annotation(
@@ -925,9 +921,6 @@ def Viz_Radar_Triathlon(df, names_list):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
-
-
-
 def Viz_Radar_Triathlon2(df, names_list, mode='rank'):
     """
     Trace un Radar par course, pour chaque course de df dans laquelle au moins 1 athlète de names_list a participé.
@@ -1030,7 +1023,6 @@ def Viz_Radar_Triathlon2(df, names_list, mode='rank'):
     )
     return fig
 
-
 def Viz_Radar_Single_Athlete(df, athlete_name):
     """
     Trace un radar superposé pour un seul coureur, sur toutes les courses auxquelles il a participé.
@@ -1052,7 +1044,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
         indice = df_race[df_race['name_key'] == search_key].index[0]
         row = {
             'race_key': df_race['race_key'].loc[indice],
-            'name': df_race['name'].loc[indice],
+            #'name': df_race['name'].loc[indice],
             'time': df_race['time'].loc[indice],
             'rank': df_race['rank'].loc[indice]
         }
@@ -1066,9 +1058,14 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
 
     df_debug = pd.DataFrame(debug_data)
     df_display=df_debug.copy()
-    for cols in  ['swim', 't1', 'bike', 't2', 'run']:
+    for cols in  ['time', 'swim', 't1', 'bike', 't2', 'run']:
         df_display[cols] = df_display[cols].apply(
             lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
+            if pd.notnull(x) else "-"
+        )
+    for cols in  ['swim_rank_pct', 't1_rank_pct', 'bike_rank_pct', 't2_rank_pct', 'run_rank_pct']:
+        df_display[cols] = df_display[cols].apply(
+            lambda x: f"{round(float(x), 2):.1f}%".replace(".", ",")
             if pd.notnull(x) else "-"
         )
     st.dataframe(df_display)
@@ -1085,6 +1082,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
         df_race = df_athlete[df_athlete['race_name'] == race]
         indice = df_race[df_race['name_key'] == search_key].index[0]
         scores = []
+        vals = []
         has_nan = False
 
         # Calcul des scores en rank_pct
@@ -1095,6 +1093,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
                 has_nan = True
                 break
             scores.append(100 - float(val))
+            vals.append(float(val))  # Stocker la valeur de `val`
 
         if has_nan:
             continue
@@ -1103,10 +1102,12 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
         fig.add_trace(go.Scatterpolar(
             r=scores + [scores[0]],
             theta=categories + [categories[0]],
-            fill='toself',
+            #fill='toself',
             name=f"{race}",
+            customdata=vals + [vals[0]], 
+            hovertemplate="<b>%{theta}</b><br>Top %{customdata:.1f}%<extra></extra>",
             line_color=colors[i % len(colors)],
-            opacity=0.4
+            #opacity=0.4
         ))
 
     # Mise en forme du radar
@@ -1126,8 +1127,6 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
     )
 
     return fig
-
-
 
 def Viz_Battle_percentage(df_Battle, targets):
     """

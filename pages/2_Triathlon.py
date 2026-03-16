@@ -72,5 +72,20 @@ with tab1:
 
 with tab2:
     #df_Tri = f.Filter_By_Race(df_Tri,["BayMan","Gerarmed"])
-    fig_radar_single = v.Viz_Radar_Single_Athlete(df_Tri, "chapuisthomas")
-    st.plotly_chart(fig_radar_single, width='stretch', key='fig3')
+
+    all_athletes_raw = df_all_parquet["name_key"].unique()
+    all_athletes_filtered = [
+        name for name in all_athletes_raw
+        if re.match(r'^[a-zA-Z]', str(name))
+    ]
+    all_athletes_filtered = sorted(all_athletes_filtered)
+    coureur_cherche2 = st.selectbox("Rechercher un coureur :", options=all_athletes_filtered, index=None, placeholder="Tapez le nom d'un coureur...",key="tri_tab2_v1")
+    if coureur_cherche2 :
+        fig_radar_single = v.Viz_Radar_Single_Athlete(df_Tri, coureur_cherche2)
+        st.plotly_chart(fig_radar_single, width='stretch', key='fig3')
+
+        df_Tri = f.Filter_By_Race(df_Tri,"Gerarmed")
+        fig_histo = v.Viz_Histogramme_Temps_Names(df_Tri,'bike',coureur_cherche2)
+        st.plotly_chart(fig_histo, width='stretch', key='fig4')
+    else: 
+        st.empty()
