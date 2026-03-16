@@ -1049,22 +1049,29 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
 
     for race in races:
         df_race = df_athlete[df_athlete['race_name'] == race]
+        indice = df_race[df_race['name_key'] == search_key].index[0]
         row = {
-            'race_key': df_race['race_key'].iloc[0],
-            'name': df_race['name'].iloc[0],
-            'time': df_race['time'].iloc[0],
-            'rank': df_race['rank'].iloc[0]
+            'race_key': df_race['race_key'].loc[indice],
+            'name': df_race['name'].loc[indice],
+            'time': df_race['time'].loc[indice],
+            'rank': df_race['rank'].loc[indice]
         }
 
         for m in ['swim', 'bike', 'run', 't1', 't2']:
-            row[f"{m}"] = df_race[m].iloc[0]
-            row[f"{m}_rank"] = df_race[m].rank(method='min', ascending=True).iloc[0]
-            row[f"{m}_rank_pct"] = df_race[m].rank(method='min', ascending=True, pct=True).iloc[0] * 100
+            row[f"{m}"] = df_race[m].loc[indice]
+            row[f"{m}_rank"] = df_race[m].rank(method='min', ascending=True).loc[indice]
+            row[f"{m}_rank_pct"] = df_race[m].rank(method='min', ascending=True, pct=True).loc[indice] * 100
 
         debug_data.append(row)
 
     df_debug = pd.DataFrame(debug_data)
-    st.dataframe(df_debug)
+    df_display=df_debug.copy()
+    for cols in  ['swim', 't1', 'bike', 't2', 'run']:
+        df_display[cols] = df_display[cols].apply(
+            lambda x: f"{int(x.total_seconds() // 3600):02d}:{int((x.total_seconds() % 3600) // 60):02d}:{int(x.total_seconds() % 60):02d}"
+            if pd.notnull(x) else "-"
+        )
+    st.dataframe(df_display)
 
     # Initialisation de la figure
     fig = go.Figure()
@@ -1076,13 +1083,14 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
     # Boucle sur les courses
     for i, race in enumerate(races):
         df_race = df_athlete[df_athlete['race_name'] == race]
+        indice = df_race[df_race['name_key'] == search_key].index[0]
         scores = []
         has_nan = False
 
         # Calcul des scores en rank_pct
         for m in cols_metrics:
             series_rank = df_race[m].rank(method='min', ascending=True, pct=True)
-            val = series_rank.iloc[0] * 100  # Convertir en pourcentage
+            val = series_rank.loc[indice] * 100  # Convertir en pourcentage
             if pd.isna(val):
                 has_nan = True
                 break
@@ -1090,7 +1098,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
 
         if has_nan:
             continue
-
+        #st.write(series_rank)
         # Ajout de la trace pour cette course
         fig.add_trace(go.Scatterpolar(
             r=scores + [scores[0]],
@@ -1098,7 +1106,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
             fill='toself',
             name=f"{race}",
             line_color=colors[i % len(colors)],
-            opacity=0.7
+            opacity=0.4
         ))
 
     # Mise en forme du radar

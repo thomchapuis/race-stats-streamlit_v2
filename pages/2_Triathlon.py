@@ -71,6 +71,6 @@ with tab1:
 
 
 with tab2:
-    df_Tri = f.Filter_By_Race(df_Tri,["Gerarmed"])
+    #df_Tri = f.Filter_By_Race(df_Tri,["BayMan","Gerarmed"])
     fig_radar_single = v.Viz_Radar_Single_Athlete(df_Tri, "chapuisthomas")
     st.plotly_chart(fig_radar_single, width='stretch', key='fig3')
