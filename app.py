@@ -584,6 +584,8 @@ with tabToDo:
         st.write("ajouter un warning pour les homonymes")
     with st.container(border=True):
         st.write("ajouter de quoi remplir le fichier synthese")
+    with st.container(border=True):
+        st.write("imports : (i) Yzeron les temps sont en minutes, pas en heure. (ii) Annecy pb avec des NaN dans les catégories ? ajouter unknow en plus de M et F ")
     
 
         

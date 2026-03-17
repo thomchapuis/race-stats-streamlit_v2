@@ -432,6 +432,121 @@ def Viz_Histogramme_Temps_Names(df_race, col, names):
     #return fig.show() pour notebook .ipynb
     return fig   #pour streamlit
 
+def Viz_Histogrammes_Temps_Names_Triathlon(df, col, names):
+    """
+    Trace un histogramme des temps pour chaque course du DataFrame, pour une colonne donnée.
+
+    Parameters:
+    - df: DataFrame contenant les données de toutes les courses.
+    - col: Nom de la colonne contenant les temps (ex: 'swim', 'bike', 'run', 't1', 't2').
+    - names: Liste des noms des personnes dont les temps seront mis en évidence.
+    
+
+    Returns:
+    - Liste de figures Plotly (une par course).
+    """
+    if isinstance(names, str):
+        names = [names]
+
+    race_names = df['race_name'].unique()
+
+    # Liste pour stocker les figures
+    figures = []
+
+    for race_name in race_names:
+        # Filtrer le DataFrame pour la course actuelle
+        df_race = df[df['race_name'] == race_name].copy()
+
+        # 1. Conversion des temps en format timedelta puis en minutes
+        if df_race[col].dtype == 'object' or pd.api.types.is_timedelta64_dtype(df_race[col]):
+            df_race['col_td'] = pd.to_timedelta(df_race[col])
+            df_race['col_min'] = df_race['col_td'].dt.total_seconds() / 60
+        else:
+            df_race['col_min'] = df_race[col]
+
+        # Supprimer les valeurs nulles ou négatives
+        df_race = df_race[df_race['col_min'] > 0]
+
+        # 2. Récupération des temps des personnes cherchées
+        temps_dict = {}
+        for name in names:
+            clean_name = get_clean_key(name)
+            temps = df_race.loc[df_race['name_key'] == clean_name, 'col_min'].values
+            if len(temps) > 0:
+                full_name = df_race.loc[df_race['name_key'] == clean_name, 'name'].values[0]
+                temps_dict[full_name] = temps[0]
+
+        # 3. Création du titre dynamique
+        df_race['col_min_display'] = df_race['col_min'].apply(lambda m: f"{int(m // 60):02d}h{int(m % 60):02d}")
+
+        # 4. Tracé de l'histogramme
+        fig = px.histogram(
+            df_race,
+            x="col_min",
+            title=f"{race_name} - {col}",
+            labels={'count': 'Nombre de coureurs'},
+            hover_data={'col_min_display': True},
+            nbins=30,
+            template='plotly_dark',
+            color_discrete_sequence=['#2ecc71']
+        )
+
+        # 5. Ajout des traits verticaux pour chaque personne
+        colors = ['red', 'blue', 'green', 'orange', 'purple', 'cyan']
+        for i, (name, temps) in enumerate(temps_dict.items()):
+            fig.add_vline(
+                x=temps,
+                line_dash="dash",
+                line_color=colors[i % len(colors)],
+                annotation_text=f"{name}",
+                annotation_position="top left",
+                annotation_textangle=-90
+            )
+
+        # 6. Calcul des bornes inférieures des barres pour les ticks
+        bin_edges = np.histogram_bin_edges(df_race['col_min'], bins=30)
+        tickvals = bin_edges[:-1]
+        ticktext = [
+            f"{int(m // 60):02d}h{int(m % 60):02d}"
+            for m in tickvals
+        ]
+
+        # 7. Mise à jour de l'axe des abscisses
+        fig.update_xaxes(
+            tickvals=tickvals,
+            ticktext=ticktext,
+            tickangle=45
+        )
+
+        # 8. Améliorations visuelles
+        fig.update_layout(
+            bargap=0.1,
+            xaxis_title=None,
+            yaxis_title="Nombre de coureurs",
+            showlegend=False,
+            template='plotly_dark'
+        )
+
+        # 9. Ajout d'un "sous-titre" si un seul nom est fourni
+        if len(names) == 1:
+            texte_annotation = "\n".join([
+                f"{k} : {int((v % 3600) // 60):02d}h{int(v % 60):02d}"
+                for k, v in temps_dict.items()
+            ])
+            fig.add_annotation(
+                text=texte_annotation,
+                xref="paper", yref="paper",
+                x=1, y=1.2,
+                xanchor='right', yanchor='top',
+                showarrow=False,
+            )
+
+        # Ajouter la figure à la liste
+        figures.append(fig)
+
+    return figures
+
+
 def Viz_Histogramme_Temps_Names_Horizontal(df_race, col, names):
     """
     Trace l'histogramme des temps pour une course donnée avec des traits verticaux pour les temps de plusieurs personnes.
@@ -1029,6 +1144,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
     Affiche un DataFrame détaillé pour déboguer les calculs de pourcentage.
     """
     search_key = get_clean_key(athlete_name)
+    name = df[df['name_key']==search_key]['name'].iloc[0]
     df_athlete = f.Filter_By_Athlete(df, search_key)
 
     if df_athlete.empty:
@@ -1068,7 +1184,7 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
             lambda x: f"{round(float(x), 2):.1f}%".replace(".", ",")
             if pd.notnull(x) else "-"
         )
-    st.dataframe(df_display)
+    #st.dataframe(df_display)
 
     # Initialisation de la figure
     fig = go.Figure()
@@ -1121,12 +1237,12 @@ def Viz_Radar_Single_Athlete(df, athlete_name):
                 ticktext=['100%', '80%', '60%', '40%', '20%', '0%']  # Légendes inversées
             )
         ),
-        title=f"Comparaison des performances de {athlete_name} (en %) sur toutes ses courses",
+        title=f"{name} - Classement - Top X% par sport",
         template='plotly_dark',
         height=600
     )
 
-    return fig
+    return fig, df_display
 
 def Viz_Battle_percentage(df_Battle, targets):
     """

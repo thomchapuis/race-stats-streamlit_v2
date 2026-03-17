@@ -81,11 +81,50 @@ with tab2:
     all_athletes_filtered = sorted(all_athletes_filtered)
     coureur_cherche2 = st.selectbox("Rechercher un coureur :", options=all_athletes_filtered, index=None, placeholder="Tapez le nom d'un coureur...",key="tri_tab2_v1")
     if coureur_cherche2 :
-        fig_radar_single = v.Viz_Radar_Single_Athlete(df_Tri, coureur_cherche2)
-        st.plotly_chart(fig_radar_single, width='stretch', key='fig3')
+        col_tri2_1,col_tri2_2 = st.columns(2)
+        fig_radar_single, df_radar_single = v.Viz_Radar_Single_Athlete(df_Tri, coureur_cherche2)
+        with col_tri2_1:
+            st.dataframe(df_radar_single[['race_key','rank','time','swim','t1','bike','t2','run']],hide_index=True)
+            st.dataframe(df_radar_single[[
+                'race_key',
+                'swim_rank',
+                'swim_rank_pct',
+                'bike_rank',
+                'bike_rank_pct',
+                'run_rank',
+                'run_rank_pct'
+            ]].rename(columns={
+                'race_key':'course',
+                'swim_rank_pct': 'Swim (%)',
+                'bike_rank_pct': 'Bike (%)',
+                'run_rank_pct': 'Run (%)',
+                'swim_rank': 'Swim',
+                'bike_rank': 'Bike',
+                'run_rank': 'Run'
+            }),hide_index=True)
+        with col_tri2_2:
+            st.plotly_chart(fig_radar_single, width='stretch', key='fig3')
 
-        df_Tri = f.Filter_By_Race(df_Tri,"Gerarmed")
-        fig_histo = v.Viz_Histogramme_Temps_Names(df_Tri,'bike',coureur_cherche2)
-        st.plotly_chart(fig_histo, width='stretch', key='fig4')
+
+        tri_sports = ['swim', 't1', 'bike', 't2', 'run']
+        sport_cherche2 = st.selectbox("Choisisr un sport :", options=tri_sports, index=None, placeholder="Choisir un sport",key="tri_tab2_v2")
+
+        #df_Tri = f.Filter_By_Race(df_Tri,"Yzeron")
+        #fig_histo = v.Viz_Histogramme_Temps_Names(df_Tri,'bike',coureur_cherche2)
+        #st.plotly_chart(fig_histo, width='stretch', key='fig4')
+        if sport_cherche2 : 
+            figures_histo = v.Viz_Histogrammes_Temps_Names_Triathlon(df_Tri, sport_cherche2, coureur_cherche2)
+            # Supposons que figures_histo est votre liste de figures Plotly
+            for i in range(0, len(figures_histo), 3):
+                # Créer 3 colonnes par ligne
+                cols = st.columns(3)
+
+                # Remplir chaque colonne avec un graphique
+                for j in range(3):
+                    if i + j < len(figures_histo):
+                        with cols[j]:
+                            st.plotly_chart(figures_histo[i + j], use_container_width=True)
+        else: 
+            st.empty()
     else: 
         st.empty()
