@@ -55,6 +55,8 @@ if 'df_complet' not in st.session_state:
     df_merged["race_key"] = (df_merged["race_name"].astype(str) + " - " + 
                              df_merged["race_date"].astype(str).str[:4] + " - " + 
                              df_merged["Distance"].round().fillna(0).astype("Int64").astype(str) + "km")
+    df_merged['category_unisex'] = df_merged['category'].str.replace(r'[HF]$', '', regex=True)
+
     
 
     
@@ -70,7 +72,7 @@ df_synthese = st.session_state['df_synthese']
 
 
 
-tab1,tab2, tab5, tab6, tab7, tabGroup,tabToDo = st.tabs(["Intro","📊 Classement", "⚙️ Settings","Test", "⚔️ Battle", "Groupe","ToDo"])
+tab1,tab2, tab5, tab7, tabGroup,tabToDo = st.tabs(["Intro","📊 Classement", "⚙️ Settings", "⚔️ Battle", "Groupe","ToDo"])
 ########################## ########################## ########################## ########################## ########################## 
 with tab1:
     st.header("📌 Introduction")
@@ -82,27 +84,7 @@ with tab1:
     st.caption("© 2026 - Application de suivi")
 
 ########################## ########################## ########################## ########################## ########################## 
-with tab6:
-    st.write(df_synthese)
-    #st.write(df_all_parquet.head())
-    st.write(
-        df_all_parquet[["Race1", "race_name", "race_key", "Distance"]]
-        .drop_duplicates(subset="race_key")
-    )
 
-    dist_par_sport = (
-        df_all_parquet.drop_duplicates(subset=['race_name']) # On garde 1 ligne par course
-        .groupby('sport')['Distance']                 # On groupe par sport
-        .sum()                                        # On additionne
-    )
-
-    st.write(dist_par_sport)
-
-    # Test
-    #lat, lon = f.get_coords("Lyon, France")
-    #st.write(f"Lat: {lat}, Lon: {lon}")
-    
-########################## ########################## ########################## ########################## ########################## 
 with tab2:
     #st.write(df_synthese.head())
     st.subheader("📊 Consulter un classement")
@@ -201,7 +183,9 @@ with tab5:
         with st.container(border=True):
             fig_sex = v.Viz_Sexes(df_all_parquet)
             st.plotly_chart(fig_sex, use_container_width=True)
-            
+    
+    df_all_parquet['category_unisex'] = df_all_parquet['category'].str.replace(r'[HF]$', '', regex=True)
+    st.write(df_all_parquet['category_unisex'].unique())
 ########################## ########################## ########################## ########################## ########################## 
 
 with tab7:

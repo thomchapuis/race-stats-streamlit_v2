@@ -35,30 +35,26 @@ else:
 #st.write(df_synthese.head())
 st.subheader("📊 Consulter un classement")
 
-all_races_v1 = sorted(df_all_parquet["race_name"].unique())
-race_recherche_v1 = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v1")
+#all_races_v1 = sorted(df_all_parquet["race_name"].unique())
+#race_recherche_v1 = st.selectbox("Rechercher une course :", options=all_races_v1, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v1")
 
 all_races_v2 = sorted(df_all_parquet["race_key"].unique())
 race_recherche_v2 = st.selectbox("Rechercher une course :", options=all_races_v2, index=None, placeholder="Tapez le nom d'une course...",key="selectbox_tab2_v2")
 
+
+
 if not race_recherche_v2:
     st.warning("Veuillez sélectionner une course pour afficher le classement.")
 
-else: 
-    st.write(int(df_all_parquet.loc[df_all_parquet["race_key"] == race_recherche_v2, "race_date"].astype(str).str[:4].iloc[0]))
-    st.write(int(df_all_parquet.loc[df_all_parquet["race_key"] == race_recherche_v2, "Distance"].iloc[0]))
-
-if not race_recherche_v1:
-    st.warning("Veuillez sélectionner une course pour afficher le classement.")
-
-
 else:
-    df_Race = f.Filter_By_Race_v2(df_all_parquet, race_recherche_v1)
+    race_recherche_v1 = df_all_parquet[df_all_parquet["race_key"]==race_recherche_v2]['race_name'].iloc[0]
+    race_recherche_v1_distance = df_all_parquet[df_all_parquet["race_key"]==race_recherche_v2]['Distance'].iloc[0]
+    df_Race = f.Filter_By_Race_v2(df_all_parquet, race_recherche_v1, distance=race_recherche_v1_distance)
     df_Race = df_Race.sort_values("rank")
 
     distance = int(df_Race['Distance'].loc[0])
     course = df_Race['race_name'].loc[0]
-    d_plus = int(df_Race['D+'].loc[0])
+    d_plus = int(df_Race['D+'].loc[0]) if pd.notna(df_Race['D+'].loc[0]) else None
     race_date = df_Race['race_date'].loc[0]
     sport = df_Race['sport'].loc[0]
     participants = df_Race['name'].count()
@@ -68,78 +64,64 @@ else:
 
 
     # État du toggle (par défaut, le container est masqué)
-    show_details = st.checkbox("Afficher/Masquer les détails de la course", value=False)
+    with st.container(border=True):
+        show_details = st.checkbox("Afficher/Masquer les détails de la course", value=False)
 
     if show_details:
+        
         with st.container(border=True):
-            # Titre de la section
-            st.markdown(
-                "<h4 style='text-align: center; color: #f1c40f; margin-bottom: 1rem;'>Détails de la course</h4>",
-                unsafe_allow_html=True
-            )
+            st.markdown(course)    
 
-            # Deux colonnes principales
-            col1, col2 = st.columns(2)
 
-            # --- Colonne 1 : Infos sur la course ---
-            with col1:
-                with st.container(border=True):
-                    st.markdown(
-                        """
-                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                            <span style='font-size: 20px;'>🏁</span>
-                            <div>
-                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Nom de la course</p>
-                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
+            with st.container(border=True):
+                col1, col2, col3 = st.columns(3)
+
+                # --- Colonne 1 : Infos sur la course ---
+                with col1:
+
+                    with st.container(border=True):
+                        st.markdown(
+                            """
+                            <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
+                                <span style='font-size: 20px;'>📅</span>
+                                <div>
+                                    <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Date</p>
+                                    <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
+                                </div>
                             </div>
-                        </div>
-                        """.format(course),
-                        unsafe_allow_html=True
-                    )
+                            """.format(formatted_date),
+                            unsafe_allow_html=True
+                        )
 
-                with st.container(border=True):
-                    st.markdown(
-                        """
-                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                            <span style='font-size: 20px;'>📅</span>
-                            <div>
-                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Date</p>
-                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
+                # --- Colonne 2 : Infos sur le sport et la distance ---
+                with col2:
+                    with st.container(border=True):
+                        st.markdown(
+                            """
+                            <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
+                                <span style='font-size: 20px;'>🚴‍♂️</span>
+                                <div>
+                                    <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Sport</p>
+                                    <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
+                                </div>
                             </div>
-                        </div>
-                        """.format(formatted_date),
-                        unsafe_allow_html=True
-                    )
-
-            # --- Colonne 2 : Infos sur le sport et la distance ---
-            with col2:
-                with st.container(border=True):
-                    st.markdown(
-                        """
-                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                            <span style='font-size: 20px;'>🚴‍♂️</span>
-                            <div>
-                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Sport</p>
-                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
+                            """.format(sport),
+                            unsafe_allow_html=True
+                        )
+                with col3:
+                    with st.container(border=True):
+                        st.markdown(
+                            """
+                            <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
+                                <span style='font-size: 20px;'>📏</span>
+                                <div>
+                                    <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Distance/Dénivelé</p>
+                                    <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
+                                </div>
                             </div>
-                        </div>
-                        """.format(sport),
-                        unsafe_allow_html=True
-                    )
-
-                with st.container(border=True):
-                    st.markdown(
-                        """
-                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                            <span style='font-size: 20px;'>📏</span>
-                            <div>
-                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Distance/Dénivelé</p>
-                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
-                            </div>
-                        </div>
-                        """.format(formatted_distance_dplus),
-                        unsafe_allow_html=True
-                    )
+                            """.format(formatted_distance_dplus),
+                            unsafe_allow_html=True
+                        )
 
             # --- Ligne du bas : Participants et DNF ---
             st.markdown("<hr style='border: 0; border-top: 1px solid #34495e; margin: 0.5rem 0;'>", unsafe_allow_html=True)

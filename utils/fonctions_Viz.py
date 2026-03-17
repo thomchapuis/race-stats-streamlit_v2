@@ -115,11 +115,11 @@ def Viz_Barre_Categorie(df_race):
     df = df_race.copy()
 
     # Vérifie qu'on a bien les colonnes nécessaires
-    if not {'category', 'sex'}.issubset(df.columns):
-        raise ValueError("Le DataFrame doit contenir les colonnes 'category' et 'sex'")
+    if not {'category_unisex', 'sex'}.issubset(df.columns):
+        raise ValueError("Le DataFrame doit contenir les colonnes 'category_unisex' et 'sex'")
 
     # 1. Compter le nombre de coureurs par catégorie et sexe
-    df_count = df.groupby(['category', 'sex']).size().reset_index(name='count')
+    df_count = df.groupby(['category_unisex', 'sex']).size().reset_index(name='count')
 
     # 2. Titre dynamique
     #race_key = df['race_key'].iloc[0] if 'race_key' in df.columns else "la course"
@@ -127,12 +127,12 @@ def Viz_Barre_Categorie(df_race):
     # 3. Diagramme en barres empilées
     fig = px.bar(
         df_count,
-        x='category',
+        x='category_unisex',
         y='count',
         color='sex',
         text='count',  # Affiche le nombre sur chaque barre
         barmode='stack',
-        labels={'category':'Catégorie', 'count':'Nombre de coureurs', 'sex':'Sexe'},
+        labels={'category_unisex':'Catégorie', 'count':'Nombre de coureurs', 'sex':'Sexe'},
         #title=f"Répartition des coureurs par catégorie et sexe : {race_key}",
         title="Répartition des coureurs par catégorie et sexe",
         color_discrete_map={'H':'#3498db','F':'#e84393'},  # Bleu homme, rouge femme
