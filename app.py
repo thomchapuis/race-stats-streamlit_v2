@@ -40,7 +40,7 @@ if 'df_complet' not in st.session_state:
     df_all['rank_sex'] = np.where(
         df_all['rank'] == 0,
         0,
-        df_all.groupby(['sex', 'race_id'])['rank'].rank(method='first')
+        df_all[df_all['rank'] > 0].groupby(['sex', 'race_id'])['rank'].rank(method='first')
     )
     
     # Merge et Traitement

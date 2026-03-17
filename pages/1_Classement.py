@@ -73,55 +73,54 @@ else:
             st.markdown(course)    
 
 
-            with st.container(border=True):
-                col1, col2, col3 = st.columns(3)
+            col1, col2, col3 = st.columns(3)
 
-                # --- Colonne 1 : Infos sur la course ---
-                with col1:
+            # --- Colonne 1 : Infos sur la course ---
+            with col1:
 
-                    with st.container(border=True):
-                        st.markdown(
-                            """
-                            <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                                <span style='font-size: 20px;'>📅</span>
-                                <div>
-                                    <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Date</p>
-                                    <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
-                                </div>
+                with st.container(border=True):
+                    st.markdown(
+                        """
+                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
+                            <span style='font-size: 20px;'>📅</span>
+                            <div>
+                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Date</p>
+                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
                             </div>
-                            """.format(formatted_date),
-                            unsafe_allow_html=True
-                        )
+                        </div>
+                        """.format(formatted_date),
+                        unsafe_allow_html=True
+                    )
 
-                # --- Colonne 2 : Infos sur le sport et la distance ---
-                with col2:
-                    with st.container(border=True):
-                        st.markdown(
-                            """
-                            <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                                <span style='font-size: 20px;'>🚴‍♂️</span>
-                                <div>
-                                    <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Sport</p>
-                                    <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
-                                </div>
+            # --- Colonne 2 : Infos sur le sport et la distance ---
+            with col2:
+                with st.container(border=True):
+                    st.markdown(
+                        """
+                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
+                            <span style='font-size: 20px;'>🚴‍♂️</span>
+                            <div>
+                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Sport</p>
+                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
                             </div>
-                            """.format(sport),
-                            unsafe_allow_html=True
-                        )
-                with col3:
-                    with st.container(border=True):
-                        st.markdown(
-                            """
-                            <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
-                                <span style='font-size: 20px;'>📏</span>
-                                <div>
-                                    <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Distance/Dénivelé</p>
-                                    <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
-                                </div>
+                        </div>
+                        """.format(sport),
+                        unsafe_allow_html=True
+                    )
+            with col3:
+                with st.container(border=True):
+                    st.markdown(
+                        """
+                        <div style='display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem;'>
+                            <span style='font-size: 20px;'>📏</span>
+                            <div>
+                                <p style='margin: 0; color: #bdc3c7; font-size: 14px;'>Distance/Dénivelé</p>
+                                <p style='margin: 0; font-size: 18px; font-weight: bold; color: #ecf0f1;'>{}</p>
                             </div>
-                            """.format(formatted_distance_dplus),
-                            unsafe_allow_html=True
-                        )
+                        </div>
+                        """.format(formatted_distance_dplus),
+                        unsafe_allow_html=True
+                    )
 
             # --- Ligne du bas : Participants et DNF ---
             st.markdown("<hr style='border: 0; border-top: 1px solid #34495e; margin: 0.5rem 0;'>", unsafe_allow_html=True)
