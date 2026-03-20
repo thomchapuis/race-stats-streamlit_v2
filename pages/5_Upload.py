@@ -44,7 +44,14 @@ def interface_ajout_course():
                 race_date = st.date_input("Date de la course", datetime.now())
             with col1_2:
                 ville = st.text_input("Ville")   
-            submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
+                # Ajout du champ optionnel pour le lien vers le classement officiel
+        
+        lien_classement = st.text_input(
+            "Lien vers le classement officiel (optionnel)",
+            placeholder="Ex: https://exemple.com/classement",
+            help="Laissez vide si non disponible"
+        )
+        submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
 
 
     if submit_button:
@@ -61,7 +68,8 @@ def interface_ajout_course():
                 "Ville": ville,
                 "Distance": str(distance),
                 "Format": format_tri,
-                "D+": denivele}
+                "D+": denivele,
+                "link_official_rank": lien_classement}
 
             try:
                 # Utilisation de .upsert() pour mettre à jour si l'ID existe déjà, sinon insérer
@@ -78,10 +86,6 @@ def interface_ajout_course():
 # Appel de la fonction dans ton app
 interface_ajout_course()
 
-
-
-
-st.divider()
 st.markdown("""
 Pour ajouter un nouveau classement,  glisser un fichier **Excel (.xlsx)** ci-dessous. 
 colonnes : name, bib, rank, time, category, sex.
@@ -115,10 +119,39 @@ if uploaded_file:
                     st.metric("Colonnes traitées", len(data.columns))
                 
                 st.info(f"Course détectée : **{data['race_name'].iloc[0]}** ({data['race_distance'].iloc[0]})")
+                
+                #gère le cache pour ajouter les nouvelles données
+                df_db = load_supabase_data()  # Assurez-vous que cette fonction n'est pas en cache
+                df_syn = load_supabase_synthese()
+                # Mettez à jour le session_state directement
+                st.session_state['df_complet'] = pd.concat([st.session_state['df_complet'], df_db], ignore_index=True)
+                st.session_state['df_synthese'] = df_syn
+                st.rerun()
+
             else:
                 st.error("L'importation a échoué. Vérifiez vos secrets Supabase ou le format du fichier.")
 st.divider()
 
+st.subheader("Actions avancées")
+
+if st.button("↻ Rafraîchir les données depuis Supabase"):
+    with st.spinner("Rechargement des données en cours..."):
+        # Recharger les données depuis Supabase (sans cache)
+        df_db = load_supabase_data()
+        df_syn = load_supabase_synthese()
+
+        # Mettre à jour le session_state
+        st.session_state['df_complet'] = pd.concat(
+            [st.session_state['df_complet'], df_db],
+            ignore_index=True
+        )
+        st.session_state['df_synthese'] = df_syn
+
+        # Afficher un message de succès
+        st.success("✅ Données mises à jour depuis Supabase !")
+        st.rerun()  # Relancer l'application pour appliquer les changements
+
+st.divider()
 # Test de lecture brute
 try:
     st.write("Vérification de la connexion subpabase (secrets) ...")

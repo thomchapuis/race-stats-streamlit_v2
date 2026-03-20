@@ -14,8 +14,8 @@ from utils import fonctions_Viz as v
 #from utils.Upload_xlsx import *
 from utils.Upload_xlsx_to_supabase import *
 # ---------------------------------------------------------------------------------
-#from utils.config import get_supabase #codespace
-#supabase = get_supabase() #codespace
+from utils.config import get_supabase #codespace
+supabase = get_supabase() #codespace
 
 st.set_page_config(layout="wide")
 parquet_file7 = "data/races7.parquet"
@@ -37,12 +37,11 @@ if 'df_complet' not in st.session_state:
     
     # Concaténation
     df_all = pd.concat([df_p7, df_p8, df_db], ignore_index=True, sort=False)
-    df_all['rank_sex'] = np.where(
-        df_all['rank'] == 0,
-        0,
-        df_all[df_all['rank'] > 0].groupby(['sex', 'race_id'])['rank'].rank(method='first')
-    )
-    
+    df_all['rank_sex'] = 0  # Initialize with 0
+    mask = df_all['rank'] > 0
+    df_all.loc[mask, 'rank_sex'] = df_all.loc[mask].groupby(['sex', 'race_id'])['rank'].rank(method='first')
+
+        
     # Merge et Traitement
     cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
     df_merged = pd.merge(
@@ -52,6 +51,20 @@ if 'df_complet' not in st.session_state:
     
     # Nettoyage
     df_merged["Distance"] = pd.to_numeric(df_merged["Distance"], errors='coerce')
+
+    #debug
+    # Afficher les types de données
+    print("Types de données :")
+    print(df_merged[["race_name", "race_date", "Distance"]].dtypes)
+
+    # Afficher le nombre de valeurs manquantes
+    print("\nValeurs manquantes :")
+    print(df_merged[["race_name", "race_date", "Distance"]].isna().sum())
+
+    # Afficher les premières lignes pour repérer les anomalies
+    print("\nAperçu des données :")
+    print(df_merged[["race_name", "race_date", "Distance"]].head(10))
+
     df_merged["race_key"] = (df_merged["race_name"].astype(str) + " - " + 
                              df_merged["race_date"].astype(str).str[:4] + " - " + 
                              df_merged["Distance"].round().fillna(0).astype("Int64").astype(str) + "km")
@@ -568,6 +581,8 @@ with tabToDo:
         st.write("ajouter un warning pour les homonymes")
     with st.container(border=True):
         st.write("ajouter de quoi remplir le fichier synthese")
+        st.write("calcul de latitude liongitude dans le upload synthèse")
+        st.write("ajout d'un champ date d'import ?")
     with st.container(border=True):
         st.write("imports : (i) Yzeron les temps sont en minutes, pas en heure. (ii) Annecy pb avec des NaN dans les catégories ? ajouter unknow en plus de M et F ")
     
