@@ -152,6 +152,12 @@ if st.button("↻ Rafraîchir les données depuis Supabase"):
         st.rerun()  # Relancer l'application pour appliquer les changements
 
 st.divider()
+df = load_supabase_data()
+unique_race_ids = df["race_id"].dropna().unique()  # On supprime les NaN et on garde les uniques
+unique_race_ids.sort()  # Tri alphabétique
+st.dataframe(df["race_id"].unique())
+
+st.divider()
 # Test de lecture brute
 try:
     st.write("Vérification de la connexion subpabase (secrets) ...")
@@ -163,11 +169,13 @@ except Exception as e:
     st.error(f"Erreur de lecture des secrets : {e}")
 
 # Tentative de connexion
-st.divider()
 from st_supabase_connection import SupabaseConnection
 try:
     conn = st.connection("supabase", type=SupabaseConnection)
     st.success("✅ Connexion établie avec succès !")
 except Exception as e:
     st.error(f"La connexion a échoué : {e}")
-    
+
+
+
+
