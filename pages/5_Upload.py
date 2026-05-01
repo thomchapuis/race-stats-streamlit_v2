@@ -54,20 +54,44 @@ def interface_ajout_course():
         submit_button = st.form_submit_button("🚀 Enregistrer dans la base de données")
 
 
+    def get_format_course(sport, distance, format_tri=None):
+        distance = float(distance)
+
+        if sport == "Triathlon":
+            return format_tri
+
+        if sport == "Running":
+            formats = [5, 10, 15, 21, 42]
+        elif sport == "Trail":
+            formats = [10, 15, 25, 35, 50, 100, 180]
+        elif sport == "Cycling":
+            formats = [50, 100, 130, 180]
+        else:
+            return None
+
+        return min(formats, key=lambda x: abs(x - distance))
+
+
     if submit_button:
         if not race_id or not race_name:
             st.error("L'ID et le Nom de la course sont obligatoires.")
         else:
+            format_course = get_format_course(
+                sport=sport,
+                distance=distance,
+                format_tri=format_tri if sport == "Triathlon" else None)   
+            
             # Préparation des données
             nouvelle_ligne = {
                 "Race_id": race_id,
                 "Race1": race_name,
+                "Race2" = f"{race_name}_{int(round(float(distance)))}km",
                 "date": str(race_date), # Format YYYY-MM-DD pour SQL
                 "Année": race_date.year,
                 "sport": sport,
                 "Ville": ville,
                 "Distance": str(distance),
-                "Format": format_tri,
+                "Format":str(format_course) if format_course is not None else None,
                 "D+": denivele,
                 "link_official_rank": lien_classement}
 

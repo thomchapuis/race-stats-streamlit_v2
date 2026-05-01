@@ -18,10 +18,11 @@ from utils.Upload_xlsx_to_supabase import *
 #supabase = get_supabase() #codespace
 
 st.set_page_config(layout="wide")
+
 parquet_file7 = "data/races7.parquet"
 parquet_file8 = "data/races8.parquet"
 
-# 1. Définition des fonctions de cache (si pas déjà dans utils)
+
 @st.cache_data
 def load_all_initial_data():
     df7 = pd.read_parquet(parquet_file7)
@@ -30,77 +31,100 @@ def load_all_initial_data():
     df_syn = load_supabase_synthese()
     return df7, df8, df_db, df_syn
 
-# 2. Logique de Session State
-if 'df_complet' not in st.session_state:
-    # Chargement
+
+def build_df_complet():
     df_p7, df_p8, df_db, df_syn = load_all_initial_data()
-    
-    # Concaténation
-    df_all = pd.concat([df_p7, df_p8, df_db], ignore_index=True, sort=False)
-    df_all['rank_sex'] = 0  # Initialize with 0
-    mask = df_all['rank'] > 0
-    df_all.loc[mask, 'rank_sex'] = df_all.loc[mask].groupby(['sex', 'race_id'])['rank'].rank(method='first')
 
-        
-    # Merge et Traitement
-    cols_to_add = ['Race_id','Race1', 'Distance', 'D+']
-    df_merged = pd.merge(
-        df_all, df_syn[cols_to_add],
-        left_on='race_id', right_on='Race_id', how='left'
+    df_all = pd.concat(
+        [df_p7, df_p8, df_db],
+        ignore_index=True,
+        sort=False
     )
-    
-    # Nettoyage
-    df_merged["Distance"] = pd.to_numeric(df_merged["Distance"], errors='coerce')
 
-    #debug
-    # Afficher les types de données
-    print("Types de données :")
-    print(df_merged[["race_name", "race_date", "Distance"]].dtypes)
+    df_all["rank_sex"] = 0
+    mask = df_all["rank"] > 0
 
-    # Afficher le nombre de valeurs manquantes
-    print("\nValeurs manquantes :")
-    print(df_merged[["race_name", "race_date", "Distance"]].isna().sum())
+    df_all.loc[mask, "rank_sex"] = (
+        df_all.loc[mask]
+        .groupby(["sex", "race_id"])["rank"]
+        .rank(method="first")
+    )
 
-    # Afficher les premières lignes pour repérer les anomalies
-    print("\nAperçu des données :")
-    print(df_merged[["race_name", "race_date", "Distance"]].head(10))
+    cols_to_add = ["Race_id", "Race1", "Distance", "D+"]
 
-    df_merged["race_key"] = (df_merged["race_name"].astype(str) + " - " + 
-                             df_merged["race_date"].astype(str).str[:4] + " - " + 
-                             df_merged["Distance"].round().fillna(0).astype("Int64").astype(str) + "km")
-    df_merged['category_unisex'] = df_merged['category'].str.replace(r'[HF]$', '', regex=True)
+    df_merged = pd.merge(
+        df_all,
+        df_syn[cols_to_add],
+        left_on="race_id",
+        right_on="Race_id",
+        how="left"
+    )
 
-    
+    df_merged["Distance"] = pd.to_numeric(
+        df_merged["Distance"],
+        errors="coerce"
+    )
 
-    
-    # Stockage
-    st.session_state['df_complet'] = df_merged
-    st.session_state['df_synthese'] = df_syn
+    df_merged["race_key"] = (
+        df_merged["race_name"].astype(str)
+        + " - "
+        + df_merged["race_date"].astype(str).str[:4]
+        + " - "
+        + df_merged["Distance"]
+            .round()
+            .fillna(0)
+            .astype("Int64")
+            .astype(str)
+        + "km"
+    )
 
-# 3. Récupération pour l'usage local dans app.py
-df_all_parquet = st.session_state['df_complet']
-df_synthese = st.session_state['df_synthese']
+    df_merged["category_unisex"] = (
+        df_merged["category"]
+        .astype(str)
+        .str.replace(r"[HF]$", "", regex=True)
+    )
 
-# ---------------------------------------------------------------------------------
+    return df_merged, df_syn
 
 
+tab1, tab2, tab5, tab7, tabGroup, tabToDo = st.tabs(
+    ["Intro", "📊 Classement", "⚙️ Settings", "⚔️ Battle", "Groupe", "ToDo"]
+)
 
-tab1,tab2, tab5, tab7, tabGroup,tabToDo = st.tabs(["Intro","📊 Classement", "⚙️ Settings", "⚔️ Battle", "Groupe","ToDo"])
-########################## ########################## ########################## ########################## ########################## 
+
 with tab1:
     st.header("📌 Introduction")
     st.markdown("Bienvenue dans l'application de suivi des Performances !")
 
-    st.markdown(df_all_parquet.columns)
-    st.markdown(df_all_parquet['race_id'].unique())
-    st.markdown("---")
-    
-    st.markdown("load_supabase_data")
-    df_db = load_supabase_data()
-    st.markdown(f"df_db: {df_db.shape} | colonnes: {list(df_db.columns)}")
-    st.markdown(f"df_db sample:\n{df_db.head(3)}")
-    st.caption("© 2026 - Application de suivi")
+    if st.button("🔄 Clear cache + reload data"):
+        st.cache_data.clear()
+        st.cache_resource.clear()
 
+        for key in ["df_complet", "df_synthese"]:
+            if key in st.session_state:
+                del st.session_state[key]
+
+        st.rerun()
+
+    if "df_complet" not in st.session_state:
+        df_complet, df_synthese = build_df_complet()
+
+        st.session_state["df_complet"] = df_complet
+        st.session_state["df_synthese"] = df_synthese
+
+    df_all_parquet = st.session_state["df_complet"]
+    df_synthese = st.session_state["df_synthese"]
+
+    st.markdown("df_all_parquet:")
+
+    st.write(
+        df_all_parquet.groupby(["race_id", "race_name"])
+        .size()
+        .reset_index(name="nb_lignes")
+    )
+
+    st.markdown("---")
+    st.caption("© 2026 - Application de suivi")
 ########################## ########################## ########################## ########################## ########################## 
 
 with tab2:

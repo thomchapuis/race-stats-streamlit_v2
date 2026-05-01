@@ -223,47 +223,63 @@ def save_to_database2(file):
         st.error(f"Erreur Supabase : {e}")
         return False, None
 
-# Remplacement de ta commande :
-def load_supabase_data():
-    conn = st.connection("supabase", type=SupabaseConnection)
-    # .select("*") récupère toutes les colonnes
-    # .execute() lance la requête
-    response = conn.table("resultats_courses").select("*").execute()
-    
-    # On transforme le résultat en DataFrame Pandas
-    return pd.DataFrame(response.data)
-
 from st_supabase_connection import SupabaseConnection
 
 def load_supabase_data():
     conn = st.connection("supabase", type=SupabaseConnection)
     
-    # Récupération des données
-    response = conn.table("resultats_courses").select("*").execute()
-    df = pd.DataFrame(response.data)
-
-    # --- RECONVERSION DES TYPES (Crucial pour éviter ton erreur) ---
+    all_data = []
+    page_size = 1000
+    offset = 0
     
-    # 1. Reconvertir la date (pour pouvoir utiliser .dt.year etc.)
+    while True:
+        response = conn.table("resultats_courses") \
+            .select("*") \
+            .range(offset, offset + page_size - 1) \
+            .execute()
+        
+        batch = response.data
+        if not batch:
+            break
+        all_data.extend(batch)
+        if len(batch) < page_size:
+            break
+        offset += page_size
+    
+    df = pd.DataFrame(all_data)
+    if df.empty:
+        return df
+    
     if "race_date" in df.columns:
         df["race_date"] = pd.to_datetime(df["race_date"])
     
-    # 2. Reconvertir les temps (Interval Postgres -> Timedelta Pandas)
     time_cols = ["time", "swim", "bike", "t1", "t2", "run"]
     for col in time_cols:
         if col in df.columns:
-            # On s'assure que les colonnes de temps sont bien des Timedelta
             df[col] = pd.to_timedelta(df[col])
     
     return df
 
+
 def load_supabase_synthese():
-    """Remplace load_synthese_data(synthese_file)
-    Lis la tab synthese de supabase."""
-    conn = st.connection("supabase", type=SupabaseConnection)   
-    # Lecture de la table 'synthese'
-    response = conn.table("synthese").select("*").execute()
-    df = pd.DataFrame(response.data)
-    return df
-
-
+    conn = st.connection("supabase", type=SupabaseConnection)
+    
+    all_data = []
+    page_size = 1000
+    offset = 0
+    
+    while True:
+        response = conn.table("synthese") \
+            .select("*") \
+            .range(offset, offset + page_size - 1) \
+            .execute()
+        
+        batch = response.data
+        if not batch:
+            break
+        all_data.extend(batch)
+        if len(batch) < page_size:
+            break
+        offset += page_size
+    
+    return pd.DataFrame(all_data)
