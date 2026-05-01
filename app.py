@@ -97,7 +97,9 @@ with tab1:
     
     st.markdown("load_supabase_data")
     df_db = load_supabase_data()
-    st.markdown(df_db)
+    print(f"df_db: {df_db.shape} | colonnes: {list(df_db.columns)}")
+    print(f"df_db sample:\n{df_db.head(3)}")
+    print(f"df_syn: {df_syn.shape}")
     st.caption("© 2026 - Application de suivi")
 
 ########################## ########################## ########################## ########################## ########################## 
