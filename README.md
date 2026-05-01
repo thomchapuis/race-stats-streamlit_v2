@@ -6,3 +6,4 @@ Race Statistics Vizualisation using Streamlit.
   - ajouter index pour la nouvelle course ajoutée
   - format de la date de la course ajoutée
   - calcul de la distance (tri)
+  - nom "Race2" pour les Tri
