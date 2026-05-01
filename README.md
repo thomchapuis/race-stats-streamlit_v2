@@ -2,6 +2,10 @@
 Race Statistics Vizualisation using Streamlit. 
 
 ## to do : 
+
+### 
+les éléments de supabase ne sont pas lus.
+
 ### tab upload : 
   - ajouter index pour la nouvelle course ajoutée
   - format de la date de la course ajoutée
