@@ -94,7 +94,10 @@ with tab1:
     st.markdown(df_all_parquet.columns)
     st.markdown(df_all_parquet['race_id'].unique())
     st.markdown("---")
-
+    
+    st.markdown("load_supabase_data")
+    df_db = load_supabase_data()
+    st.markdown(df_db)
     st.caption("© 2026 - Application de suivi")
 
 ########################## ########################## ########################## ########################## ########################## 
