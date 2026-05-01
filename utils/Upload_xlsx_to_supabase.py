@@ -169,7 +169,59 @@ def save_to_database(file):
         st.error(f"Erreur Supabase : {e}")
         return False, None
 
+import math
 
+def save_to_database2(file):
+    conn = st.connection("supabase", type=SupabaseConnection)
+    df = load_race(file)
+
+    filename_base = os.path.splitext(file.name)[0]
+    race_info = parse_race_key(filename_base)
+    if race_info is None:
+        return None, None
+
+    race_id, race_name, sport, race_date, race_distance = race_info
+
+    df["race_id"] = race_id
+    df["race_name"] = race_name
+    df["sport"] = sport
+    df["race_date"] = str(race_date)
+    df["race_distance"] = race_distance
+
+    if "name" in df.columns:
+        df["name_key"] = df["name"].apply(get_clean_key)
+
+    # ✅ Conversion temps : gère Timedelta ET strings ET NaN flottants
+    def to_time_str(x):
+        if x is None:
+            return None
+        if isinstance(x, float) and math.isnan(x):  # NaN dans colonne object
+            return None
+        if pd.isnull(x):                             # NaT, pd.NA, np.nan
+            return None
+        return str(x).split()[-1]
+
+    time_cols = ["time", "swim", "bike", "t1", "t2", "run"]
+    for col in time_cols:
+        if col in df.columns:
+            df[col] = df[col].apply(to_time_str)
+
+    # ✅ Nettoyage NaN → None pour toutes les autres colonnes (ex: team)
+    def clean_record(record):
+        return {
+            k: (None if (isinstance(v, float) and math.isnan(v)) else v)
+            for k, v in record.items()
+        }
+
+    try:
+        records = [clean_record(r) for r in df.to_dict(orient="records")]
+        conn.table("resultats_courses").insert(records).execute()
+        st.success(f"✅ {len(df)} lignes insérées dans la base de données !")
+        return True, df
+
+    except Exception as e:
+        st.error(f"Erreur Supabase : {e}")
+        return False, None
 
 # Remplacement de ta commande :
 def load_supabase_data():
