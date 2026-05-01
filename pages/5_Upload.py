@@ -103,7 +103,7 @@ if uploaded_file:
             #path, data = save_as_parquet(uploaded_file)
             #st.write(load_race(uploaded_file).head(3))
             #path, data = load_all_races(uploaded_file)
-            success, data = save_to_database(uploaded_file)
+            success, data = save_to_database2(uploaded_file)
             if success:
                 st.success("✅ Données enregistrées avec succès dans Supabase !")
                 
