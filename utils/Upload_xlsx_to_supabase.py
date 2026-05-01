@@ -153,6 +153,9 @@ def save_to_database(file):
 
     # 7. Envoi vers Supabase
     try:
+        # ✅ Nettoyage NaN → None (null JSON) pour TOUTES les colonnes restantes
+        df = df.where(pd.notnull(df), None)
+
         # On convertit le DF en liste de dictionnaires
         records = df.to_dict(orient="records")
         
