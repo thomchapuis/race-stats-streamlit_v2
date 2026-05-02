@@ -72,6 +72,14 @@ def interface_ajout_course():
         return min(formats, key=lambda x: abs(x - distance))
 
 
+    def get_distance_naming(sport,distance,format_tri=None):
+        distance = float(distance)
+        if sport == "Triathlon":
+            return format_tri
+        else:
+            return f"{int(round(distance))}km"
+
+
     if submit_button:
         if not race_id or not race_name:
             st.error("L'ID et le Nom de la course sont obligatoires.")
@@ -79,18 +87,28 @@ def interface_ajout_course():
             format_course = get_format_course(
                 sport=sport,
                 distance=distance,
-                format_tri=format_tri if sport == "Triathlon" else None)   
+                format_tri=format_tri if sport == "Triathlon" else None) 
+            distance_naming = get_distance_naming(
+                sport=sport,
+                distance=distance,
+                format_tri=format_tri if sport == "Triathlon" else None)
             
+            latitude, longitude = v.get_coords(ville)
+
             # Préparation des données
             nouvelle_ligne = {
                 "Race_id": race_id,
                 "Race1": race_name,
-                "Race2" = f"{race_name}_{int(round(float(distance)))}km",
+                "Race2" : f"{race_name}_{int(round(float(distance)))}km",
                 "date": str(race_date), # Format YYYY-MM-DD pour SQL
                 "Année": race_date.year,
                 "sport": sport,
                 "Ville": ville,
+                "lat":latitude,
+                "lon":longitude,
                 "Distance": str(distance),
+                "Distance_naming": distance_naming,
+                #"index": index,
                 "Format":str(format_course) if format_course is not None else None,
                 "D+": denivele,
                 "link_official_rank": lien_classement}
@@ -177,8 +195,8 @@ if st.button("↻ Rafraîchir les données depuis Supabase"):
 
 st.divider()
 df = load_supabase_data()
-unique_race_ids = df["race_id"].dropna().unique()  # On supprime les NaN et on garde les uniques
-unique_race_ids.sort()  # Tri alphabétique
+#unique_race_ids = df["race_id"].dropna().unique()  # On supprime les NaN et on garde les uniques
+#unique_race_ids.sort()  # Tri alphabétique
 st.dataframe(df["race_id"].unique())
 
 st.divider()
